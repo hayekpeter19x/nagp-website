@@ -255,6 +255,10 @@
       'not-member': !(u && u.isMember),
     };
     NAGP.$$('[data-auth]').forEach((el) => { el.hidden = !show[el.dataset.auth]; });
+    // No "Join NAGP" button in the header while someone is already joining or paying.
+    if (/^\/(join|checkout|payment-complete)/.test(location.pathname)) {
+      NAGP.$$('.header-actions a[href="/join"], .site-header a[href="/join"][data-auth]').forEach((el) => { el.hidden = true; });
+    }
     NAGP.$$('[data-user-name]').forEach((el) => { el.textContent = u ? u.name : ''; });
     gate(session);
   }
@@ -357,11 +361,17 @@
     // Mobile menu
     const toggle = NAGP.$('.menu-toggle');
     const nav = NAGP.$('#site-nav');
-    if (toggle && nav) toggle.addEventListener('click', () => {
-      const open = toggle.getAttribute('aria-expanded') !== 'true';
+    const setMenu = (open) => {
       toggle.setAttribute('aria-expanded', String(open));
       nav.classList.toggle('open', open);
-    });
+    };
+    if (toggle && nav) {
+      toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
+      // Escape closes the open menu and puts focus back on the Menu button.
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') { setMenu(false); toggle.focus(); }
+      });
+    }
 
     NAGP.$$('[data-signout]').forEach((b) => b.addEventListener('click', NAGP.signOut));
 
