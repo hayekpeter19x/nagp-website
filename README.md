@@ -39,20 +39,22 @@ Read **docs/CONVENTIONS.md** before changing anything. It explains the structure
 
 ## Put the preview online (Cloudflare Pages, free)
 
+**The preview is live at https://nagp-website.pages.dev.** It is a Cloudflare Pages project called `nagp-website`, connected to this GitHub repository, and it redeploys automatically on every push to `main`.
+
 ### Option A: connect the GitHub repository (recommended, auto-deploys on every change)
-1. In the Cloudflare dashboard go to **Workers & Pages → Create → Pages → Connect to Git**, and pick this repository.
+1. In the Cloudflare dashboard go to **Workers & Pages → Create application**, click **Continue to Pages** at the bottom (not "Connect GitHub", which makes a Worker), then **Connect to Git**, and pick this repository.
 2. Use these build settings: Framework preset **None**, Build command `npm run build`, Build output directory `dist`. Under environment variables, add `SKIP_DEPENDENCY_INSTALL` = `1` (the build needs only Node, so this makes deploys faster). Click **Save and Deploy**.
-3. Go to **Storage & Databases → D1 → Create database** and name it `nagp-preview-db`.
-4. Open the Pages project and go to **Settings → Bindings → Add → D1 database**. Set Variable name `DB` and select `nagp-preview-db`. Do this for Production and for Preview.
+3. Go to **Storage & Databases → D1 → Create database** and name it `nagp-website-db`.
+4. Open the Pages project and go to **Settings → Bindings → Add → D1 database**. Set Variable name `DB` and select `nagp-website-db`. Do this for Production and for Preview.
 5. Go to **Deployments → ⋯ → Retry deployment**. Bindings apply from the next deployment.
 6. Open `https://<project-name>.pages.dev`. The database sets itself up with sample data on the first visit.
 
 ### Option B: from the command line (wrangler)
 ```
 npx wrangler login
-npx wrangler d1 create nagp-preview-db          # copy the database_id it prints
+npx wrangler d1 create nagp-website-db          # copy the database_id it prints
 cp wrangler.toml.example wrangler.toml           # paste the database_id into it
-npx wrangler pages project create nagp-preview --production-branch main
+npx wrangler pages project create nagp-website --production-branch main
 npm run deploy
 ```
 

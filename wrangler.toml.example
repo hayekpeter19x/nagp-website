@@ -1,12 +1,12 @@
 # Only needed for Option B in the README (deploying from the command line).
-# Copy to wrangler.toml and paste your database_id from `npx wrangler d1 create nagp-preview-db`.
-name = "nagp-preview"
+# Copy to wrangler.toml and paste your database_id from `npx wrangler d1 create nagp-website-db`.
+name = "nagp-website"
 pages_build_output_dir = "dist"
 compatibility_date = "2025-09-01"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "nagp-preview-db"
+database_name = "nagp-website-db"
 database_id = "PASTE-YOUR-DATABASE-ID-HERE"
 
 [vars]
