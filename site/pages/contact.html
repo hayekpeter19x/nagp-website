@@ -1,0 +1,68 @@
+<!--meta { "title": "Contact us", "nav": "contact", "description": "Send a message to the NAGP Founding Council.", "styles": ["content.css"], "scripts": ["contact.js"] } -->
+<section class="page-header">
+  <div class="container">
+    <h1>Contact us</h1>
+    <p class="lede">Send a message to the Founding Council. A Council member will reply to you by email.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split">
+    <div class="card">
+      <h2>Send us a message</h2>
+      <form id="contact-form" class="form" novalidate>
+        <div class="field">
+          <label for="contact-name">Your name</label>
+          <input id="contact-name" name="name" type="text" autocomplete="name" maxlength="120" required>
+        </div>
+        <div class="field">
+          <label for="contact-email">Your email address</label>
+          <span class="hint" id="contact-email-hint">We will reply to this address.</span>
+          <input id="contact-email" name="email" type="email" autocomplete="email" aria-describedby="contact-email-hint" required>
+        </div>
+        <div class="field">
+          <label for="contact-topic">What is your message about?</label>
+          <select id="contact-topic" name="topic">
+            <option>General question</option>
+            <option>Membership</option>
+            <option>Events and trainings</option>
+            <option>Sign-in help</option>
+            <option>The website</option>
+            <option>Something else</option>
+          </select>
+        </div>
+        <div id="signin-help-tip" class="notice notice-info" hidden>
+          <p>Forgot your password? Please tell us the email address you use for NAGP. A Council member will set a new password for you and let you know by email.</p>
+        </div>
+        <div class="field">
+          <label for="contact-message">Your message</label>
+          <textarea id="contact-message" name="message" rows="7" maxlength="5000" required></textarea>
+        </div>
+        <div class="hp-field" aria-hidden="true"><label>Leave this empty <input name="hp" tabindex="-1" autocomplete="off"></label></div>
+        <div class="form-actions">
+          <button class="btn btn-large" type="submit">Send message</button>
+        </div>
+        <div class="form-status" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+
+    <aside>
+      <div class="card card-flat aside-card">
+        <h2>Email us</h2>
+        <p>You can also write to us directly:</p>
+        <p><a href="mailto:{{org.email}}"><strong>{{org.email}}</strong></a></p>
+        <span class="placeholder-note">Please confirm this email address. It comes from the current usgestalt.org website.</span>
+      </div>
+      <div class="card card-flat aside-card">
+        <h2>The community mailing list</h2>
+        <p>NAGP's community conversation happens on a Google Group mailing list, with about 150 or more members.</p>
+        <p>Messages sent to the group go to everyone on it. For a private question, please use this form instead.</p>
+        <p><a href="/newsletter">Join the mailing list</a></p>
+      </div>
+      <div class="card card-flat aside-card">
+        <h2>Quick answers</h2>
+        <p>Many common questions are answered on our <a href="/faq">Questions &amp; Answers</a> page.</p>
+      </div>
+    </aside>
+  </div>
+</section>

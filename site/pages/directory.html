@@ -1,0 +1,39 @@
+<!--meta { "title": "Find a Practitioner", "description": "Find Gestalt therapists, coaches, organizational consultants and educators who are professional members of NAGP.", "nav": "directory", "scripts": ["members-listing.js", "directory.js"], "styles": ["members.css"] } -->
+<section class="page-header">
+  <div class="container">
+    <h1>Find a Practitioner</h1>
+    <p class="lede">Find Gestalt therapists, coaches, organizational consultants and educators who are professional members of NAGP. Choose a specialty or a state, or search by name.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="notice notice-info directory-about">
+      <p>Listings are by NAGP professional members who chose to appear here. Each person wrote their own listing, so please contact them directly to ask about their work.</p>
+      <p>Are you a professional member? <a href="/members/profile">Add or update your listing</a>.</p>
+    </div>
+
+    <form id="directory-filters" class="filters directory-filters" role="search" aria-label="Search the directory">
+      <div class="filter-group">
+        <span class="field-label" id="specialty-label">Specialty</span>
+        <ul class="filter-pills" id="specialty-pills" aria-labelledby="specialty-label"></ul>
+      </div>
+      <div class="field">
+        <label for="dir-state">State or province</label>
+        <select id="dir-state" name="state"></select>
+      </div>
+      <div class="field">
+        <label for="dir-q">Name or keyword <span class="optional">(optional)</span></label>
+        <input id="dir-q" name="q" type="search" maxlength="100" autocomplete="off" placeholder="For example: grief or couples">
+      </div>
+      <div class="filter-buttons">
+        <button class="btn" type="submit">Search</button>
+        <button class="btn btn-secondary" type="button" id="dir-clear">Clear search</button>
+      </div>
+    </form>
+
+    <h2 class="visually-hidden">Results</h2>
+    <p class="results-count" id="dir-count" role="status" aria-live="polite"></p>
+    <div id="dir-results" class="grid-2 listing-grid"><p class="loading">Loading the directory…</p></div>
+  </div>
+</section>

@@ -1,0 +1,144 @@
+<!--meta { "title": "Events", "description": "Add and change NAGP events and trainings, and see who has registered.", "section": "council", "access": "council", "scripts": ["council-common.js", "council-events.js"], "styles": ["council.css"], "noindex": true } -->
+<section class="page-header">
+  <div class="container">
+    <h1>Events</h1>
+    <p class="lede">All events, including past ones and ones that are not published yet. Add a new event, change the details, and see who has registered.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container-mid">
+    <div id="list-view">
+      <div class="toolbar">
+        <ul class="filter-pills" id="event-pills" aria-label="Show events">
+          <li><button type="button" data-value="upcoming" aria-pressed="true">Upcoming <span class="pill-count" data-count="upcoming"></span></button></li>
+          <li><button type="button" data-value="past" aria-pressed="false">Past <span class="pill-count" data-count="past"></span></button></li>
+          <li><button type="button" data-value="unpublished" aria-pressed="false">Not published <span class="pill-count" data-count="unpublished"></span></button></li>
+        </ul>
+        <button class="btn btn-large" type="button" id="add-event">Add an event</button>
+      </div>
+      <div id="page-status" class="form-status" role="status" aria-live="polite"></div>
+      <div id="event-list" aria-live="polite"><p class="loading">Loading events…</p></div>
+    </div>
+
+    <div id="form-view" hidden>
+      <p><button class="link-button" type="button" data-back>&larr; Back to all events</button></p>
+      <h2 id="form-title" tabindex="-1">Add an event</h2>
+      <form id="event-form" class="form form-panel" novalidate>
+        <fieldset>
+          <legend>About the event</legend>
+          <div class="field">
+            <label for="ev-title">Title</label>
+            <input id="ev-title" name="title" type="text" required maxlength="150">
+          </div>
+          <div class="field">
+            <label for="ev-category">Kind of event</label>
+            <select id="ev-category" name="category" required></select>
+          </div>
+          <div class="field">
+            <label for="ev-summary">Short summary <span class="optional">(optional)</span></label>
+            <span class="hint" id="ev-summary-hint">One or two sentences, shown in the list of events.</span>
+            <input id="ev-summary" name="summary" type="text" maxlength="300" aria-describedby="ev-summary-hint">
+          </div>
+          <div class="field">
+            <label for="ev-description">Full description <span class="optional">(optional)</span></label>
+            <span class="hint" id="ev-description-hint">Shown on the event's own page. Leave an empty line between paragraphs.</span>
+            <textarea id="ev-description" name="description" rows="7" aria-describedby="ev-description-hint"></textarea>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="ev-presenter">Presenter or host <span class="optional">(optional)</span></label>
+              <input id="ev-presenter" name="presenter" type="text" maxlength="200">
+            </div>
+            <div class="field">
+              <label for="ev-ce">Continuing education note <span class="optional">(optional)</span></label>
+              <input id="ev-ce" name="ce_info" type="text" maxlength="500" placeholder="For example: 6 CE hours for LCSWs">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>When</legend>
+          <div class="form-grid">
+            <div class="field">
+              <label for="ev-date">Date</label>
+              <input id="ev-date" name="start_date" type="date" required>
+            </div>
+            <div class="field">
+              <label for="ev-start">Start time</label>
+              <input id="ev-start" name="start_time" type="time" required step="300">
+            </div>
+            <div class="field">
+              <label for="ev-end">End time <span class="optional">(optional)</span></label>
+              <input id="ev-end" name="end_time" type="time" step="300">
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="ev-tz">Time zone</label>
+              <span class="hint" id="ev-tz-hint">The time zone of the times above.</span>
+              <select id="ev-tz" name="timezone" required aria-describedby="ev-tz-hint"></select>
+            </div>
+            <div class="field">
+              <label for="ev-end-date">End date <span class="optional">(optional)</span></label>
+              <span class="hint" id="ev-end-date-hint">Only for events over several days.</span>
+              <input id="ev-end-date" name="end_date" type="date" aria-describedby="ev-end-date-hint">
+            </div>
+          </div>
+          <p class="mb-0" aria-live="polite">Shown on the site as: <span class="when-preview" id="when-preview">choose a date and time</span></p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Where</legend>
+          <div class="choice-cards mb-1" role="radiogroup" aria-label="Online or in person">
+            <label class="choice-card"><input type="radio" name="is_online" value="1" checked><span class="choice-title">Online</span>For example on Zoom</label>
+            <label class="choice-card"><input type="radio" name="is_online" value="0"><span class="choice-title">In person</span>At a venue</label>
+          </div>
+          <div class="field mb-0">
+            <label for="ev-location">Location</label>
+            <span class="hint" id="ev-location-hint"></span>
+            <input id="ev-location" name="location" type="text" maxlength="200" aria-describedby="ev-location-hint">
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Price and registration</legend>
+          <div class="form-grid">
+            <div class="field">
+              <label for="ev-price-member">Price for members</label>
+              <div class="money-input"><input id="ev-price-member" name="price_member" type="text" inputmode="decimal" value="0"></div>
+            </div>
+            <div class="field">
+              <label for="ev-price-public">Price for non-members</label>
+              <div class="money-input"><input id="ev-price-public" name="price_public" type="text" inputmode="decimal" value="0"></div>
+            </div>
+            <div class="field">
+              <label for="ev-capacity">Number of places <span class="optional">(optional)</span></label>
+              <input id="ev-capacity" name="capacity" type="number" min="1" step="1" inputmode="numeric">
+            </div>
+          </div>
+          <p class="hint">Enter 0 for a free event. Leave "Number of places" empty if there is no limit.</p>
+          <label class="check"><input type="checkbox" name="members_only"> Only members can register</label>
+          <label class="check"><input type="checkbox" name="registration_open" checked> Registration is open</label>
+          <label class="check"><input type="checkbox" name="published" checked> Published: show it on the Events page</label>
+        </fieldset>
+
+        <div class="form-status" role="status" aria-live="polite"></div>
+        <div class="form-actions">
+          <button class="btn btn-large" type="submit">Save event</button>
+          <button class="btn btn-secondary btn-large" type="button" data-back>Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<dialog id="reg-dialog" class="council-dialog" aria-labelledby="reg-title">
+  <div class="dialog-body">
+    <h2 id="reg-title">Registrations</h2>
+    <div id="reg-body"><p class="loading">Loading…</p></div>
+    <div class="form-actions">
+      <button class="btn btn-secondary" type="button" data-close>Close</button>
+    </div>
+  </div>
+</dialog>

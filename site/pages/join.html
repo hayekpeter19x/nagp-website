@@ -1,0 +1,130 @@
+<!--meta { "title": "Join NAGP", "description": "Become a member of North American Gestalt Professionals online, in a few short steps.", "nav": "membership", "scripts": ["payments-common.js", "join.js"], "styles": ["payments.css"] } -->
+<section class="page-header">
+  <div class="container container-mid">
+    <h1>Join NAGP</h1>
+    <p class="lede">Becoming a member takes about five minutes. Choose your membership, tell us a little about yourself, and then pay online or by check.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container-mid">
+    <div id="join-status"></div>
+
+    <div id="join-wrap">
+      <ol class="steps-inline" id="join-steps" aria-label="Joining, step by step">
+        <li aria-current="step">Choose membership</li>
+        <li>Your details</li>
+        <li>Review</li>
+        <li>Payment</li>
+      </ol>
+
+      <form id="join-form" class="form form-wide wrap-errors" novalidate>
+        <!-- Step 1 -->
+        <div class="join-step" data-step="1">
+          <h2 tabindex="-1">Step 1: Choose your membership</h2>
+          <div id="price-note"></div>
+          <fieldset>
+            <legend>Type of membership</legend>
+            <p class="hint">Membership lasts one year from the day you pay.</p>
+            <div class="choice-cards tier-cards" id="tier-cards"><p class="loading">Loading…</p></div>
+          </fieldset>
+          <p>Not sure which one fits you? <a href="/membership">Read more about membership</a> or <a href="/contact?topic=Membership">ask us a question</a>.</p>
+          <div class="step-actions">
+            <button type="button" class="btn btn-large" data-next>Continue</button>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="join-step" data-step="2" hidden>
+          <h2 tabindex="-1">Step 2: Your details</h2>
+          <fieldset>
+            <legend>About you</legend>
+            <div class="field">
+              <label for="join-name">Your full name</label>
+              <input id="join-name" name="name" type="text" autocomplete="name" required maxlength="120">
+            </div>
+            <div class="field">
+              <label for="join-email">Email address</label>
+              <span class="hint" id="join-email-hint">You will use this to sign in. We will also send your receipt and NAGP news here.</span>
+              <input id="join-email" name="email" type="email" autocomplete="email" required aria-describedby="join-email-hint">
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label for="join-city">City or town</label>
+                <input id="join-city" name="city" type="text" autocomplete="address-level2" required maxlength="80">
+              </div>
+              <div class="field">
+                <label for="join-state">State or province</label>
+                <select id="join-state" name="state" autocomplete="address-level1" required></select>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Choose a password</legend>
+            <p class="hint">You will use your email address and this password to sign in to the Members' Area. Use at least 8 characters. A short sentence you will remember works well.</p>
+            <div class="field">
+              <label for="join-password">Password</label>
+              <input id="join-password" name="password" type="password" autocomplete="new-password" required minlength="8">
+            </div>
+            <div class="field">
+              <label for="join-password2">Type the same password again</label>
+              <input id="join-password2" name="password_confirm" type="password" autocomplete="new-password" required>
+            </div>
+            <label class="check"><input type="checkbox" id="join-show-password"> Show my password</label>
+          </fieldset>
+
+          <fieldset id="pro-fields" hidden>
+            <legend>Your professional background</legend>
+            <p class="hint">Professional members can be listed in the public "Find a Practitioner" directory. You can change all of this later on your profile page.</p>
+            <div class="field">
+              <label for="join-credentials">Your credentials</label>
+              <span class="hint" id="join-credentials-hint">For example: LCSW, PhD, LMFT, PCC</span>
+              <input id="join-credentials" name="credentials" type="text" required maxlength="120" aria-describedby="join-credentials-hint" data-pro>
+            </div>
+            <div class="field">
+              <label for="join-training">Your Gestalt training</label>
+              <span class="hint" id="join-training-hint">Where and when you trained, for example "Three-year Gestalt therapy training, 2014".</span>
+              <textarea id="join-training" name="training" rows="3" required maxlength="1000" aria-describedby="join-training-hint" data-pro></textarea>
+            </div>
+            <div class="field" role="group" aria-labelledby="join-spec-label">
+              <span class="field-label" id="join-spec-label">Your areas of practice</span>
+              <span class="hint">Choose all that apply.</span>
+              <div class="check-group" id="specialty-checks"></div>
+            </div>
+            <div class="field">
+              <span class="field-label">The public directory</span>
+              <label class="check"><input type="checkbox" name="show_public" id="join-public" data-pro> <span>List me in the public "Find a Practitioner" directory</span></label>
+              <span class="hint">If you tick this box, anyone visiting the NAGP website will be able to see your name, city, state, credentials, training and areas of practice, so that people looking for a Gestalt practitioner can find you. Your email address and phone number are never shown unless you add them to your profile yourself. You can turn this on or off at any time.</span>
+            </div>
+          </fieldset>
+
+          <div class="step-actions">
+            <button type="button" class="btn btn-large" data-next>Continue</button>
+            <button type="button" class="btn btn-secondary" data-back>Back</button>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="join-step" data-step="3" hidden>
+          <h2 tabindex="-1">Step 3: Review and agree</h2>
+          <p>Please check that everything is right. You can go back and change anything.</p>
+          <div id="review"></div>
+          <div class="field mt-2">
+            <label class="check"><input type="checkbox" name="agree" id="join-agree" required> <span>I have read and agree to follow the NAGP <a href="/community-guidelines" target="_blank" rel="noopener">community guidelines</a> (opens in a new tab).</span></label>
+          </div>
+          <div class="step-actions">
+            <button type="submit" class="btn btn-accent btn-large" id="join-submit">Continue to payment</button>
+            <button type="button" class="btn btn-secondary" data-back>Back</button>
+          </div>
+          <p class="hint mt-1">On the next page you can pay by card, or choose to pay by check. Nothing is charged until you press the Pay button.</p>
+        </div>
+
+        <div class="hp-field" aria-hidden="true"><label>Leave this empty <input name="hp" tabindex="-1" autocomplete="off"></label></div>
+        <div class="form-status" role="status" aria-live="polite"></div>
+      </form>
+
+      <p class="mt-2 muted">Already a member? <a href="/signin">Sign in here</a>. Questions about joining? <a href="/contact?topic=Membership">Send us a message</a>.</p>
+    </div>
+  </div>
+</section>

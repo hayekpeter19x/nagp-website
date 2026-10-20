@@ -1,0 +1,146 @@
+/* Members' area, directories, announcements and community board.
+   Only small additions to styles.css; colors come from its variables. */
+
+/* ---------- Directory filters ---------- */
+.directory-filters .filter-group { flex: 1 1 100%; }
+.directory-filters .filter-pills { margin: 0; }
+.directory-filters .field-label { margin-bottom: .5rem; }
+.filter-buttons { display: flex; flex-wrap: wrap; gap: .75rem; flex: 0 1 auto; min-width: 0; }
+.results-count { font-size: 1.1rem; }
+
+/* ---------- Directory listing cards ---------- */
+.listing-grid { align-items: start; }
+.listing .person { gap: 1.1rem; }
+.listing-body { min-width: 0; flex: 1; }
+.listing-body > * { margin-bottom: .55rem; }
+.listing-body > :last-child { margin-bottom: 0; }
+.listing .person-name { overflow-wrap: anywhere; }
+.listing-cred { font-family: var(--font-body); font-weight: 400; font-size: 1.05rem; color: var(--ink-soft); }
+.listing-badges { display: flex; flex-wrap: wrap; gap: .4rem; }
+.listing-place { font-weight: 700; color: var(--ink-soft); }
+.listing .tag-list { margin: 0 0 .55rem; }
+.listing-training { font-size: .97rem; }
+.listing-bio p { margin-bottom: .5rem; }
+.listing-bio .link-button { font-weight: 700; }
+.listing-contact { list-style: none; padding: .75rem 0 0; margin: .75rem 0 0; border-top: 1px solid var(--line); display: grid; gap: .3rem; font-size: .97rem; }
+.listing-contact li { margin: 0; overflow-wrap: anywhere; }
+.listing-contact-label { font-weight: 700; }
+@media (max-width: 560px) {
+  .listing .avatar { width: 3.25rem; height: 3.25rem; font-size: 1.15rem; }
+  .listing .person { gap: .85rem; }
+  .card.listing { padding: 1.15rem; }
+}
+
+/* Members' directory: one group per state */
+.state-group + .state-group { margin-top: 2.5rem; }
+.state-group > h2 { margin: 0 0 1rem; padding-bottom: .4rem; border-bottom: 2px solid var(--line); font-size: 1.5rem; }
+.state-group .count { font-family: var(--font-body); font-size: 1rem; font-weight: 400; color: var(--ink-soft); }
+
+/* ---------- Members' home ---------- */
+.status-card h2 { margin-bottom: .75rem; }
+.status-list { display: grid; gap: .6rem; margin: 0 0 .5rem; }
+.status-list > div { display: grid; grid-template-columns: minmax(9rem, 13rem) 1fr; gap: .25rem 1rem; }
+.status-list dt { font-weight: 700; }
+.status-list dd { margin: 0; }
+@media (max-width: 560px) { .status-list > div { grid-template-columns: 1fr; } }
+.quick-actions .card-link { display: flex; flex-direction: column; height: 100%; }
+.quick-actions .card-link h3 { margin: 0 0 .4rem; font-size: 1.25rem; }
+.quick-actions .card-link p { flex: 1; color: var(--ink-soft); margin-bottom: .75rem; }
+.status-layout { display: grid; gap: 1.25rem 2.5rem; grid-template-columns: minmax(0, 1fr) minmax(14rem, 18rem); align-items: start; }
+.status-actions { display: grid; gap: .75rem; }
+@media (max-width: 860px) { .status-layout { grid-template-columns: 1fr; } }
+.council-card { border-color: var(--accent); }
+.council-banner { display: flex; align-items: center; gap: 1rem 1.25rem; flex-wrap: wrap; }
+.council-banner .card-icon { margin: 0; flex: none; }
+.council-banner-text { flex: 1 1 18rem; }
+.council-banner-title { display: block; font-family: var(--font-head); font-size: 1.3rem; font-weight: 600; }
+.council-card .card-icon { background: var(--accent-soft); color: var(--accent-strong); }
+
+/* ---------- Topic lists (board + members' home) ---------- */
+.topic-list { list-style: none; padding: 0; margin: 0; }
+.topic-list > li { margin: 0; }
+.topic-item h3 { margin: 0 0 .25rem; font-size: 1.2rem; }
+.topic-item h3 a { text-decoration-thickness: 1px; }
+.topic-item .meta { margin-bottom: .35rem; }
+.topic-item p:last-child { margin-bottom: 0; }
+.topic-item.is-hidden h3, .topic-item.is-hidden .topic-excerpt { color: var(--ink-soft); font-style: italic; }
+.topic-stats { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; }
+
+/* ---------- Topic page: posts ---------- */
+.post { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+.post-first { border: 2px solid var(--primary); }
+.post-header { display: flex; gap: .85rem; align-items: center; margin-bottom: .75rem; flex-wrap: wrap; }
+.post-header .avatar { width: 3rem; height: 3rem; font-size: 1.1rem; }
+.post-author { font-weight: 700; display: block; }
+.post-when { color: var(--ink-soft); font-size: .92rem; }
+.post-badges { display: flex; flex-wrap: wrap; gap: .4rem; margin-left: auto; }
+.post-body > :last-child { margin-bottom: 0; }
+.post-body { overflow-wrap: anywhere; }
+.post-footer { margin-top: .75rem; display: flex; justify-content: flex-end; flex-wrap: wrap; gap: .5rem 1rem; font-size: .92rem; color: var(--ink-soft); }
+.post-footer .link-button { color: var(--ink-soft); font-size: .92rem; min-height: 2.25rem; }
+.post-footer .link-button:hover { color: var(--danger); }
+.post-hidden { background: var(--sand); border-style: dashed; }
+.post-hidden .post-placeholder { font-style: italic; color: var(--ink-soft); }
+.council-note { border: 1px dashed var(--danger); background: var(--danger-soft); border-radius: var(--radius); padding: .6rem .9rem; margin-bottom: .75rem; font-size: .95rem; }
+.council-note > :last-child { margin-bottom: 0; }
+.replies-heading { font-size: 1.35rem; margin: 2rem 0 1rem; }
+@media (max-width: 560px) { .post { padding: 1rem 1.1rem; } .post-badges { margin-left: 0; } }
+
+/* ---------- Announcements ---------- */
+.ann-list { display: grid; gap: 1.25rem; }
+.ann-badges { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .6rem; }
+.ann-title { font-size: 1.5rem; margin: 0 0 .3rem; }
+.ann-title a { color: var(--ink); text-decoration-color: var(--line-strong); }
+.ann-title a:hover { color: var(--primary); }
+.ann .meta { margin-bottom: .9rem; }
+.ann-body { overflow-wrap: anywhere; }
+.ann-official { border-left: 6px solid var(--primary); }
+.ann-link { font-weight: 700; overflow-wrap: anywhere; }
+.ann-single .ann-body p { font-size: 1.08rem; }
+
+/* My submissions */
+.submission { display: grid; gap: .35rem; }
+.submission h3 { margin: 0; font-size: 1.15rem; }
+.submission .notice { margin: .5rem 0 0; }
+
+/* ---------- Profile ---------- */
+.profile-layout { display: grid; gap: 2.5rem; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); align-items: start; }
+@media (max-width: 960px) { .profile-layout { grid-template-columns: minmax(0, 1fr); } }
+.profile-layout fieldset { min-width: 0; }
+#pf-login-email { overflow-wrap: anywhere; }
+.profile-preview { position: sticky; top: 1rem; }
+.profile-preview h2 { font-size: 1.4rem; margin-bottom: .4rem; }
+.preview-status { margin-bottom: 1rem; }
+.check-explain { margin: -.35rem 0 1rem 2.25rem; color: var(--ink-soft); font-size: .95rem; }
+.check-explain > :last-child { margin-bottom: 0; }
+.check.is-disabled { cursor: not-allowed; color: var(--ink-soft); }
+.check.is-disabled input { cursor: not-allowed; }
+.specialty-checks { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+.specialty-checks .check { border: 2px solid var(--line-strong); border-radius: var(--radius); padding: .7rem .9rem; margin: 0; background: #fff; font-weight: 700; align-items: center; }
+.specialty-checks .check:has(input:checked) { border-color: var(--primary); background: var(--primary-soft); }
+.specialty-checks .check input { margin: 0; }
+.char-count { display: block; text-align: right; color: var(--ink-soft); font-size: .88rem; margin-top: .25rem; }
+.password-card { max-width: 40rem; }
+
+/* ---------- Documents ---------- */
+.doc-group + .doc-group { margin-top: 2.5rem; }
+.doc-group > h2 { margin: 0 0 1rem; }
+.doc-list { display: grid; gap: 1rem; }
+.doc h3 { margin: 0 0 .3rem; font-size: 1.2rem; }
+.doc .ann-badges { margin-bottom: .4rem; }
+.doc details { margin-top: .75rem; }
+.doc summary { cursor: pointer; font-weight: 700; color: var(--primary); min-height: 2.25rem; display: list-item; }
+.doc-text { margin-top: .75rem; padding: 1rem 1.25rem; background: var(--sand); border-radius: var(--radius); }
+.doc-text > :last-child { margin-bottom: 0; }
+
+/* ---------- Small helpers ---------- */
+.h3-size { font-size: 1.3rem; }
+.topic-list.card, .list-plain.card { padding: .25rem 1.5rem; }
+@media (max-width: 560px) { .topic-list.card, .list-plain.card { padding: .25rem 1.1rem; } }
+.aside-stack { display: flex; flex-direction: column; gap: 1.25rem; }
+.section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .5rem 1rem; margin-bottom: 1rem; }
+.section-head h2 { margin: 0; }
+.profile-layout .grid-2 { gap: 0 1.5rem; }
+/* Let long specialty names wrap on narrow screens and at the largest text size. */
+.listing .badge { white-space: normal; text-align: left; }
+@media (max-width: 860px) { .listing-grid { grid-template-columns: minmax(0, 1fr); } }

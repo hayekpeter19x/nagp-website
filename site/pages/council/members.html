@@ -1,0 +1,188 @@
+<!--meta { "title": "Members", "description": "Look after NAGP members: status, membership type, dates, roles and passwords.", "section": "council", "access": "council", "scripts": ["council-common.js", "council-members.js"], "styles": ["council.css"], "noindex": true } -->
+<section class="page-header">
+  <div class="container">
+    <h1>Members</h1>
+    <p class="lede">Everyone who has an account on the website. Choose "Edit" to change someone's membership or set a new password for someone who forgot theirs.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="toolbar">
+      <div class="actions">
+        <button class="btn btn-large" type="button" id="open-add">Add a member by hand</button>
+        <a class="btn btn-secondary btn-large" id="csv-link" href="/api/council/members?format=csv">Download as spreadsheet (CSV)</a>
+      </div>
+    </div>
+
+    <form class="filters" id="member-filters" role="search">
+      <div class="field">
+        <label for="f-q">Search</label>
+        <input id="f-q" name="q" type="search" placeholder="Name, email or city" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="f-status">Membership status</label>
+        <select id="f-status" name="status">
+          <option value="">Everyone</option>
+          <option value="active">Active</option>
+          <option value="pending">Waiting for payment</option>
+          <option value="lapsed">Lapsed</option>
+          <option value="suspended">Suspended</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-role">Role</label>
+        <select id="f-role" name="role">
+          <option value="">Members and Council</option>
+          <option value="council">Council members only</option>
+          <option value="member">Members only (not Council)</option>
+        </select>
+      </div>
+      <div class="filter-buttons"><button class="btn btn-secondary" type="reset">Clear</button></div>
+    </form>
+
+    <div id="page-status" class="form-status" role="status" aria-live="polite"></div>
+    <div id="member-list" aria-live="polite"><p class="loading">Loading members…</p></div>
+  </div>
+</section>
+
+<dialog id="edit-dialog" class="council-dialog" aria-labelledby="edit-title">
+  <div class="dialog-body">
+    <h2 id="edit-title">Edit member</h2>
+    <p id="edit-who" class="muted"></p>
+    <form id="edit-form" class="form" novalidate>
+      <div class="form-grid">
+        <div class="field">
+          <label for="e-status">Membership status</label>
+          <select id="e-status" name="status">
+            <option value="active">Active</option>
+            <option value="pending">Waiting for payment</option>
+            <option value="lapsed">Lapsed (did not renew)</option>
+            <option value="suspended">Suspended (cannot sign in)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="e-tier">Membership type</label>
+          <select id="e-tier" name="tier"></select>
+        </div>
+        <div class="field">
+          <label for="e-expires">Active until</label>
+          <input id="e-expires" name="membership_expires" type="date">
+        </div>
+        <div class="field">
+          <label for="e-role">Role</label>
+          <select id="e-role" name="role">
+            <option value="member">Member</option>
+            <option value="council">Council member</option>
+          </select>
+        </div>
+      </div>
+      <p id="self-note" class="hint" hidden>This is your own account. You cannot remove your own Council role or suspend yourself. Please ask another Council member if this needs to change.</p>
+      <fieldset>
+        <legend>Directory listings</legend>
+        <label class="check"><input type="checkbox" name="show_members"> Show in the members-only directory</label>
+        <label class="check" id="public-check"><input type="checkbox" name="show_public"> Show in the public "Find a Practitioner" directory</label>
+        <span class="hint" id="public-hint">The public directory is for Professional Members only.</span>
+      </fieldset>
+      <div class="form-status" role="status" aria-live="polite"></div>
+      <div class="form-actions">
+        <button class="btn btn-large" type="submit">Save changes</button>
+        <button class="btn btn-secondary" type="button" data-close>Cancel</button>
+      </div>
+    </form>
+
+    <hr>
+    <h3>Set a new password</h3>
+    <p>For someone who forgot their password. Choose a new one and save it, then tell them by phone or in a private email.</p>
+    <form id="password-form" class="form" novalidate>
+      <div class="password-row">
+        <div class="field">
+          <label for="p-password">New password</label>
+          <input id="p-password" name="password" type="text" autocomplete="off" spellcheck="false" required minlength="8">
+        </div>
+        <button class="btn btn-secondary" type="button" data-make-password="#p-password">Make one up for me</button>
+      </div>
+      <span class="hint mt-1">At least 8 characters. Easy to read out loud is best, for example "quiet-river-2048".</span>
+      <div class="form-status" role="status" aria-live="polite"></div>
+      <div class="form-actions">
+        <button class="btn" type="submit">Save the new password</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<dialog id="add-dialog" class="council-dialog" aria-labelledby="add-title">
+  <div class="dialog-body">
+    <h2 id="add-title">Add a member by hand</h2>
+    <p>For someone who joined by mail or paid by check. They can sign in straight away with the temporary password you choose here.</p>
+    <form id="add-form" class="form" novalidate>
+      <div class="field">
+        <label for="a-name">Full name</label>
+        <input id="a-name" name="name" type="text" autocomplete="off" required>
+      </div>
+      <div class="field">
+        <label for="a-email">Email address</label>
+        <input id="a-email" name="email" type="email" autocomplete="off" required>
+      </div>
+      <div class="field">
+        <label for="a-tier">Membership type</label>
+        <select id="a-tier" name="tier" required></select>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="a-city">City <span class="optional">(optional)</span></label>
+          <input id="a-city" name="city" type="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="a-state">State or province <span class="optional">(optional)</span></label>
+          <select id="a-state" name="state"></select>
+        </div>
+      </div>
+      <div class="password-row">
+        <div class="field">
+          <label for="a-password">Temporary password</label>
+          <input id="a-password" name="password" type="text" autocomplete="off" spellcheck="false" required minlength="8">
+        </div>
+        <button class="btn btn-secondary" type="button" data-make-password="#a-password">Make one up for me</button>
+      </div>
+      <span class="hint mt-1">Tell them this password by phone or in a private email. They can change it under "My Profile".</span>
+
+      <fieldset class="mt-2">
+        <legend>Payment</legend>
+        <label class="check"><input type="checkbox" name="record_payment" id="a-record"> They have paid. Record the payment now.</label>
+        <div id="a-payment" hidden>
+          <div class="form-grid">
+            <div class="field">
+              <label for="a-amount">Amount received</label>
+              <div class="money-input"><input id="a-amount" name="amount" type="text" inputmode="decimal"></div>
+            </div>
+            <div class="field">
+              <label for="a-method">How they paid</label>
+              <select id="a-method" name="method">
+                <option value="check">Check</option>
+                <option value="cash">Cash</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="a-note">Note <span class="optional">(optional)</span></label>
+            <input id="a-note" name="note" type="text" placeholder="For example: check number 1042, received October 3">
+          </div>
+          <p class="hint">Their membership will be active for one year from today. The payment appears on the Payments page.</p>
+        </div>
+        <div id="a-no-payment">
+          <div class="field mb-0">
+            <label for="a-expires">Active until <span class="optional">(optional)</span></label>
+            <span class="hint">If you leave this empty, their membership runs for one year from today.</span>
+            <input id="a-expires" name="membership_expires" type="date">
+          </div>
+        </div>
+      </fieldset>
+      <div class="form-status" role="status" aria-live="polite"></div>
+      <div class="form-actions">
+        <button class="btn btn-large" type="submit">Add this member</button>
+        <button class="btn btn-secondary" type="button" data-close>Cancel</button>
+      </div>
+    </form>
+  </div>
+</dialog>

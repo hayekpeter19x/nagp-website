@@ -13,7 +13,7 @@
 //   access       "public" (default) | "member" | "council"  (pages that need sign-in)
 //   scripts      extra scripts from site/assets/js/, e.g. ["directory.js"]
 //   styles       extra stylesheets from site/assets/css/
-// Pages can include snippets from site/partials/ with {{> name}} or {{> name id=home}}.
+// Pages can include snippets from site/partials/ with {{> name}} or {{> name id=home interest=membership}}.
 
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync, cpSync, rmSync, existsSync, watch } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
@@ -91,6 +91,7 @@ async function build() {
     if (!(name in partials)) { console.warn(`  ! missing partial "${name}"`); return ''; }
     let body = partials[name];
     for (const [, k, v] of args.matchAll(/(\w+)=([\w-]+)/g)) body = body.split(`{{${k}}}`).join(v);
+    body = body.replace(/\{\{\w+\}\}/g, ''); // settings that were not given are left empty
     return depth < 4 ? applyPartials(body, depth + 1) : body;
   });
   const applyOrg = (html) => html.replace(/\{\{org\.(\w+)\}\}/g, (_, k) => esc(ORG[k] ?? ''));
@@ -106,7 +107,7 @@ async function build() {
   const layout = readFileSync(join(SITE, 'layout.html'), 'utf8');
   const previewBanner = ORG.preview ? `<div class="preview-banner" role="note"><div class="container">
   <span><strong>Preview site.</strong> This is a draft of the new NAGP website for the Council to review. It is not the live site. Made-up examples are marked &ldquo;Sample&rdquo;.</span>
-  <button type="button" class="link-button" data-feedback-open>Comment on this page</button>
+  <span><a href="/preview-guide">How to review</a> &middot; <button type="button" class="link-button" data-feedback-open>Comment on this page</button></span>
 </div></div>` : '';
 
   const pages = walk(join(SITE, 'pages')).filter((f) => f.endsWith('.html'));

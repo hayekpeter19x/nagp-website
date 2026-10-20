@@ -1,0 +1,48 @@
+<!--meta { "title": "Community Board topic", "description": "A conversation on the NAGP Community Board.", "section": "members", "access": "member", "scripts": ["members-topic.js"], "styles": ["members.css"] } -->
+<section class="page-header">
+  <div class="container container-mid">
+    <p class="breadcrumbs"><a href="/members/board">&larr; Back to the Community Board</a></p>
+    <h1 id="topic-title">Community Board</h1>
+    <p class="lede" id="topic-meta"></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container-mid">
+    <div id="thread"><p class="loading">Loading the conversation…</p></div>
+
+    <div id="reply-area" hidden>
+      <h2 id="reply-heading" tabindex="-1">Write a reply</h2>
+      <form id="reply-form" class="form card form-wide">
+        <div class="field">
+          <label for="rp-body">Your reply</label>
+          <span class="hint" id="rp-body-hint">Please keep to the <a href="/community-guidelines">community guidelines</a>. Leave an empty line between paragraphs.</span>
+          <textarea id="rp-body" name="body" maxlength="5000" rows="6" required aria-describedby="rp-body-hint"></textarea>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-large" type="submit">Post my reply</button>
+        </div>
+        <div class="form-status" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<dialog id="report-dialog" aria-labelledby="report-title">
+  <div class="dialog-body">
+    <h2 id="report-title">Report this post to the Council</h2>
+    <p>If a post does not follow the community guidelines, let the Council know. They will read it and decide what to do. Only the Council sees who sent a report.</p>
+    <form id="report-form" class="form">
+      <input type="hidden" name="post_id">
+      <div class="field">
+        <label for="report-reason">What is the problem? <span class="optional">(optional)</span></label>
+        <textarea id="report-reason" name="reason" maxlength="1000" rows="4"></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-danger" type="submit">Send report</button>
+        <button class="btn btn-secondary" type="button" data-close>Cancel</button>
+      </div>
+      <div class="form-status" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+</dialog>

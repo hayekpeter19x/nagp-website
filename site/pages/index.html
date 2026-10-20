@@ -1,3 +1,105 @@
-<!--meta { "title": "Home", "nav": "home", "description": "A national community of Gestalt therapists, practitioners and educators." } -->
-<section class="hero"><div class="container"><h1>Welcome to NAGP</h1><p class="lede">Temporary home page. The content agent will replace this.</p>
-<div class="cta-band mt-2"><h2>Stay Connected</h2>{{> signup-form id=home}}</div></div></section>
+<!--meta { "title": "Home", "nav": "home", "description": "A national community of Gestalt therapists, practitioners and educators building a professional home for Gestalt therapy.", "styles": ["content.css"], "scripts": ["home.js"] } -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <h1>Welcome to NAGP: <span class="hero-title-sub">The North American Gestalt Professionals</span></h1>
+      <p class="lede">We are a national community of Gestalt therapists, practitioners, and educators building a professional home for Gestalt therapy in the United States.</p>
+      <p>NAGP is in its founding phase. A Founding Council is actively working to establish the organization: developing governance, launching membership, and creating opportunities for Gestalt practitioners to connect, learn, and grow together.</p>
+      <p>Whether you are a seasoned Gestalt therapist or just beginning your training, you belong here.</p>
+      <div class="actions">
+        <a class="btn btn-accent btn-large" href="#stay-connected">Stay connected</a>
+        <a class="btn btn-secondary btn-large" href="/membership">Learn about membership</a>
+      </div>
+    </div>
+    <svg class="hero-art" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+      <circle class="art-disc" cx="200" cy="200" r="192"/>
+      <circle class="art-ring-outer" cx="200" cy="200" r="150" stroke-dasharray="127.08 30" transform="rotate(-90 200 200)"/>
+      <circle class="art-dot" cx="321.8" cy="112.4" r="11"/>
+      <circle class="art-dot-accent" cx="336.7" cy="261.7" r="11"/>
+      <circle class="art-dot" cx="215" cy="349.3" r="11"/>
+      <circle class="art-dot" cx="78.2" cy="287.6" r="11"/>
+      <circle class="art-dot-accent" cx="63.3" cy="138.3" r="11"/>
+      <circle class="art-dot" cx="185" cy="50.7" r="11"/>
+      <circle class="art-ring" cx="200" cy="200" r="105" stroke-dasharray="183.26 36.65" transform="rotate(-80 200 200)"/>
+      <circle class="art-ring-inner" cx="200" cy="200" r="62" stroke-dasharray="26.78 21.91"/>
+      <circle class="art-center" cx="200" cy="200" r="34"/>
+    </svg>
+  </div>
+</section>
+
+<section class="section" id="stay-connected">
+  <div class="container">
+    <div class="cta-band">
+      <h2>Stay Connected</h2>
+      <p class="lede">NAGP membership is coming soon. In the meantime, join our mailing list to stay informed about upcoming events, community meetings, and news from the Founding Council.</p>
+      {{> signup-form id=home}}
+      <p class="privacy-line">We respect your privacy. You may unsubscribe at any time. <a href="/privacy">Read our privacy page</a>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <h2>What NAGP is building</h2>
+    <p class="section-intro">A professional home for Gestalt practitioners across North America, and for everyone who values the Gestalt approach.</p>
+    <div class="grid-2">
+      <a class="card card-link" href="/membership">
+        <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9.5" r="2.6"/><path d="M3 19.5c.6-3.4 3-5.4 6-5.4s5.4 2 6 5.4"/><path d="M15.6 14.4c2.6-.2 4.7 1.4 5.4 4.4"/></svg></span>
+        <h3>A community of colleagues</h3>
+        <p>Meet Gestalt practitioners from across the country. Share ideas, ask questions, and find support from people who understand your work.</p>
+        <span class="card-cta">Learn about membership</span>
+      </a>
+      <a class="card card-link" href="/events">
+        <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>
+        <h3>Learning and events</h3>
+        <p>Salons, presentations, trainings and community meetings, online and in person.</p>
+        <span class="card-cta">See upcoming events</span>
+      </a>
+      <a class="card card-link" href="/directory">
+        <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg></span>
+        <h3>Find a Practitioner</h3>
+        <p>A public directory of Gestalt professionals in clinical work, coaching, organizational development, and teaching and training.</p>
+        <span class="card-cta">Search the directory</span>
+      </a>
+      <a class="card card-link" href="/about">
+        <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10.5H10.5L6 19.5v-4H4z"/><path d="M8 9.5h8M8 12.5h5"/></svg></span>
+        <h3>A voice for the field</h3>
+        <p>Together we can speak up for Gestalt theory and practice, and shape the future of the profession.</p>
+        <span class="card-cta">Read about NAGP</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container grid-2">
+    <div>
+      <h2>Upcoming events</h2>
+      <div id="home-events" aria-live="polite"><p class="loading">Loading upcoming events…</p></div>
+    </div>
+    <div>
+      <h2>Latest announcements</h2>
+      <div id="home-announcements" aria-live="polite"><p class="loading">Loading announcements…</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <ul class="avatar-row avatar-stack" aria-label="Founding Council members">
+      <li><span class="avatar" aria-hidden="true">SE</span><span class="visually-hidden">Steven Elkind</span></li>
+      <li><span class="avatar" aria-hidden="true">KH</span><span class="visually-hidden">Ken Hutchinson</span></li>
+      <li><span class="avatar" aria-hidden="true">GE</span><span class="visually-hidden">Galina Emmerich</span></li>
+      <li><span class="avatar" aria-hidden="true">LC</span><span class="visually-hidden">Laura Carite</span></li>
+      <li><span class="avatar" aria-hidden="true">JB</span><span class="visually-hidden">James Battaglia</span></li>
+    </ul>
+    <div class="prose">
+      <h2>Meet the Founding Council</h2>
+      <p class="lede">NAGP is led by a Founding Council of five Gestalt practitioners who are donating their time and expertise to build this organization.</p>
+      <p>The Council has been meeting since mid-2026. It held its first open community meeting on September 27, 2026, and is now preparing to launch membership.</p>
+    </div>
+    <div class="actions">
+      <a class="btn btn-large" href="/founding-council">Meet the Founding Council</a>
+    </div>
+  </div>
+</section>

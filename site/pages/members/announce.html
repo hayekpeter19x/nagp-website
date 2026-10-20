@@ -1,0 +1,79 @@
+<!--meta { "title": "Post an Announcement", "description": "Share news, events and opportunities with the NAGP community.", "section": "members", "access": "member", "scripts": ["members-announce.js"], "styles": ["members.css"] } -->
+<section class="page-header">
+  <div class="container">
+    <h1>Post an Announcement</h1>
+    <p class="lede">Share news with the Gestalt community: an event, a training, an opportunity, a resource, or news about your work. The Council reads each announcement before it is posted.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split">
+    <div>
+      <div data-auth="council" hidden>
+        <div class="notice notice-info"><span class="notice-title">You are a Council member</span>
+          <p>Your announcements are published right away, without waiting for approval.</p></div>
+      </div>
+
+      <form id="announce-form" class="form card">
+        <div class="field">
+          <label for="an-title">Title</label>
+          <span class="hint" id="an-title-hint">A short, clear headline, for example “Weekend training in Denver this spring”.</span>
+          <input id="an-title" name="title" type="text" maxlength="150" required aria-describedby="an-title-hint">
+        </div>
+        <div class="field">
+          <label for="an-category">Category</label>
+          <select id="an-category" name="category" required></select>
+        </div>
+        <div class="field">
+          <label for="an-body">Your announcement</label>
+          <span class="hint" id="an-body-hint">Write it the way you would like people to read it. Leave an empty line between paragraphs. Web addresses become links.</span>
+          <textarea id="an-body" name="body" maxlength="5000" rows="9" required aria-describedby="an-body-hint"></textarea>
+        </div>
+        <div class="field">
+          <label for="an-link">A link for more information <span class="optional">(optional)</span></label>
+          <span class="hint" id="an-link-hint">For example, a registration page: www.example.com/workshop</span>
+          <input id="an-link" name="link_url" type="text" inputmode="url" maxlength="300" aria-describedby="an-link-hint">
+        </div>
+        <div class="field" role="radiogroup" aria-labelledby="an-vis-label">
+          <span class="field-label" id="an-vis-label">Who can see it?</span>
+          <div class="choice-cards">
+            <label class="choice-card"><input type="radio" name="visibility" value="public" checked>
+              <span class="choice-title">Everyone</span>
+              <span class="muted">Shown on the public Announcements page.</span></label>
+            <label class="choice-card"><input type="radio" name="visibility" value="members">
+              <span class="choice-title">Members only</span>
+              <span class="muted">Only signed-in NAGP members can read it.</span></label>
+          </div>
+        </div>
+        <div class="field" data-auth="council" hidden>
+          <label class="check"><input type="checkbox" name="official" id="an-official">
+            <span><strong>Post as an official NAGP announcement</strong><br>
+            <span class="muted">It will show “NAGP Founding Council” as the author, with an “Official NAGP” badge. Leave this unticked to post under your own name.</span></span></label>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-large" type="submit" id="an-submit">Send to the Council for approval</button>
+        </div>
+        <div class="form-status" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+
+    <aside class="aside-stack" aria-labelledby="how-heading">
+      <div class="card card-flat" id="how-it-works">
+        <h2 id="how-heading" class="h3-size">How it works</h2>
+        <ol class="steps">
+          <li>You send your announcement using this form.</li>
+          <li>The Council reads it, usually within a few days.</li>
+          <li>Once it is approved, it appears on the <a href="/announcements">Announcements page</a>.</li>
+        </ol>
+        <p class="mb-0">You can follow its progress under “Your submissions” below. If it is not approved, you will see the reason there.</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <h2>Your submissions</h2>
+    <div id="my-submissions"><p class="loading">Loading…</p></div>
+  </div>
+</section>

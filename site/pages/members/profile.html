@@ -1,0 +1,126 @@
+<!--meta { "title": "My Profile", "description": "Update your details, your directory listings and your password.", "section": "members", "access": "member", "scripts": ["members-listing.js", "members-profile.js"], "styles": ["members.css"] } -->
+<section class="page-header">
+  <div class="container">
+    <h1>My Profile</h1>
+    <p class="lede">Update your details and choose what appears in the NAGP directories. Remember to press <strong>Save my profile</strong> at the bottom when you are done.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div id="profile-loading"><p class="loading">Loading your profile…</p></div>
+    <form id="profile-form" class="form form-wide" hidden>
+      <div class="profile-layout">
+        <div>
+          <fieldset>
+            <legend>About you</legend>
+            <div class="field">
+              <label for="pf-name">Your name</label>
+              <span class="hint" id="pf-name-hint">As you would like other members to see it. Your sign-in email is <strong id="pf-login-email"></strong> (to change it, please contact the Council).</span>
+              <input id="pf-name" name="name" type="text" autocomplete="name" maxlength="120" required aria-describedby="pf-name-hint">
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label for="pf-city">City or town <span class="optional">(optional)</span></label>
+                <input id="pf-city" name="city" type="text" autocomplete="address-level2" maxlength="80">
+              </div>
+              <div class="field">
+                <label for="pf-state">State or province <span class="optional">(optional)</span></label>
+                <select id="pf-state" name="state"></select>
+              </div>
+            </div>
+            <div class="field mb-0">
+              <label for="pf-bio">A few words about you <span class="optional">(optional)</span></label>
+              <span class="hint" id="pf-bio-hint">A few sentences about you and your work, as you would like other people to read it.</span>
+              <textarea id="pf-bio" name="bio" maxlength="1500" aria-describedby="pf-bio-hint pf-bio-count"></textarea>
+              <span class="char-count" id="pf-bio-count" aria-live="polite"></span>
+            </div>
+          </fieldset>
+
+          <fieldset id="practice-fieldset">
+            <legend id="practice-legend">Your practice</legend>
+            <div class="field" data-pro-only>
+              <label for="pf-credentials">Your credentials <span class="optional">(optional)</span></label>
+              <span class="hint" id="pf-credentials-hint">Licenses and degrees, for example: LCSW, PhD</span>
+              <input id="pf-credentials" name="credentials" type="text" maxlength="120" aria-describedby="pf-credentials-hint">
+            </div>
+            <div class="field">
+              <label for="pf-training">Your Gestalt training <span class="optional">(optional)</span></label>
+              <span class="hint" id="pf-training-hint">For example: Three-year Gestalt therapy training, Cleveland (2014)</span>
+              <input id="pf-training" name="training" type="text" maxlength="300" aria-describedby="pf-training-hint">
+            </div>
+            <div class="field mb-0" data-pro-only role="group" aria-labelledby="pf-spec-label">
+              <span class="field-label" id="pf-spec-label">Your specialties <span class="optional">(tick all that apply)</span></span>
+              <span class="hint">People can search the public directory by these.</span>
+              <div class="specialty-checks" id="pf-specialties"></div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>What other people can see</legend>
+            <label class="check"><input type="checkbox" name="show_members" id="pf-show-members"> <span><strong>List me in the Member Directory</strong></span></label>
+            <div class="check-explain"><p>Only signed-in NAGP members can see this directory. It shows your name, city and state, membership type, the details above, and the contact details you choose below.</p></div>
+
+            <label class="check" id="pf-public-label"><input type="checkbox" name="show_public" id="pf-show-public"> <span><strong>List me in “Find a Practitioner”, the public directory</strong></span></label>
+            <div class="check-explain" id="pf-public-explain"></div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Contact details shown in directories</legend>
+            <p class="hint">All of these are optional. Leave a box empty to keep it private. We never show your sign-in email unless you type it here.</p>
+            <div class="field">
+              <label for="pf-public-email">Email address to show <span class="optional">(optional)</span></label>
+              <input id="pf-public-email" name="public_email" type="email" autocomplete="email" maxlength="200">
+            </div>
+            <div class="field">
+              <label for="pf-public-phone">Phone number to show <span class="optional">(optional)</span></label>
+              <input id="pf-public-phone" name="public_phone" type="tel" autocomplete="tel" maxlength="40">
+            </div>
+            <div class="field mb-0">
+              <label for="pf-website">Your website <span class="optional">(optional)</span></label>
+              <span class="hint" id="pf-website-hint">For example: www.yourpractice.com</span>
+              <input id="pf-website" name="website" type="text" inputmode="url" autocomplete="url" maxlength="300" aria-describedby="pf-website-hint">
+            </div>
+          </fieldset>
+
+          <div class="form-actions">
+            <button class="btn btn-large" type="submit">Save my profile</button>
+          </div>
+          <div class="form-status" role="status" aria-live="polite"></div>
+        </div>
+
+        <aside class="profile-preview" aria-labelledby="preview-heading">
+          <h2 id="preview-heading">Preview of your listing</h2>
+          <p class="preview-status" id="preview-status"></p>
+          <div id="profile-preview"></div>
+          <p class="hint mt-1">The preview changes as you type. Press <strong>Save my profile</strong> to keep your changes.</p>
+        </aside>
+      </div>
+    </form>
+
+    <div class="card password-card mt-2" id="password">
+      <h2>Change your password</h2>
+      <p>Type your current password, then the new one twice. Choose at least 8 characters. A short sentence you can remember works well.</p>
+      <form id="password-form" class="form">
+        <div class="field">
+          <label for="pw-current">Your current password</label>
+          <input id="pw-current" name="current_password" type="password" autocomplete="current-password" required>
+        </div>
+        <div class="field">
+          <label for="pw-new">New password</label>
+          <input id="pw-new" name="new_password" type="password" autocomplete="new-password" minlength="8" required>
+        </div>
+        <div class="field">
+          <label for="pw-confirm">New password again</label>
+          <input id="pw-confirm" name="confirm_password" type="password" autocomplete="new-password" required>
+        </div>
+        <label class="check"><input type="checkbox" id="pw-show"> Show the passwords as I type</label>
+        <div class="form-actions">
+          <button class="btn" type="submit">Change my password</button>
+        </div>
+        <div class="form-status" role="status" aria-live="polite"></div>
+      </form>
+      <p class="muted mt-1 mb-0">Forgot your current password? <a href="/contact?topic=Sign-in%20help">Send the Council a message</a> and someone will help you.</p>
+    </div>
+  </div>
+</section>

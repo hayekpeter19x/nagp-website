@@ -1,0 +1,102 @@
+<!--meta { "title": "Payments", "description": "Every payment to NAGP, and a form for recording checks and cash.", "section": "council", "access": "council", "scripts": ["council-common.js", "council-payments.js"], "styles": ["council.css"], "noindex": true } -->
+<section class="page-header">
+  <div class="container">
+    <h1>Payments</h1>
+    <p class="lede">Every payment to NAGP: memberships, event registrations and donations. When someone pays by check or cash, record it here so their membership or registration is switched on.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div id="totals"><p class="loading">Loading…</p></div>
+
+    <div class="toolbar mt-2">
+      <ul class="filter-pills" id="order-pills" aria-label="Show payments">
+        <li><button type="button" data-value="paid" aria-pressed="true">Paid <span class="pill-count" data-count="paid"></span></button></li>
+        <li><button type="button" data-value="pending" aria-pressed="false">Not completed <span class="pill-count" data-count="pending"></span></button></li>
+        <li><button type="button" data-value="all" aria-pressed="false">All <span class="pill-count" data-count="all"></span></button></li>
+      </ul>
+      <div class="actions">
+        <button class="btn btn-large" type="button" id="open-record">Record a check or cash payment</button>
+        <a class="btn btn-secondary btn-large" href="/api/council/orders?format=csv">Download as spreadsheet (CSV)</a>
+      </div>
+    </div>
+    <div id="page-status" class="form-status" role="status" aria-live="polite"></div>
+    <div id="order-list" aria-live="polite"><p class="loading">Loading payments…</p></div>
+  </div>
+</section>
+
+<dialog id="record-dialog" class="council-dialog" aria-labelledby="record-title">
+  <div class="dialog-body">
+    <h2 id="record-title">Record a check or cash payment</h2>
+    <p>Use this when someone pays NAGP by check or in cash. Recording a membership payment switches their membership on, or adds a year to it.</p>
+    <form id="record-form" class="form" novalidate>
+      <fieldset>
+        <legend>Who paid?</legend>
+        <div class="choice-cards mb-1">
+          <label class="choice-card"><input type="radio" name="person" value="member" checked><span class="choice-title">A member</span>Someone with an account</label>
+          <label class="choice-card"><input type="radio" name="person" value="other"><span class="choice-title">Someone else</span>Type their name and email</label>
+        </div>
+        <div id="who-member" class="field mb-0">
+          <label for="r-user">Member</label>
+          <select id="r-user" name="user_id"></select>
+        </div>
+        <div id="who-other" hidden>
+          <div class="field">
+            <label for="r-name">Their name</label>
+            <input id="r-name" name="name" type="text" autocomplete="off">
+          </div>
+          <div class="field mb-0">
+            <label for="r-email">Their email address</label>
+            <input id="r-email" name="email" type="email" autocomplete="off">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>What was it for?</legend>
+        <div class="choice-cards mb-1">
+          <label class="choice-card"><input type="radio" name="kind" value="membership" checked><span class="choice-title">Membership</span>Joining or renewing</label>
+          <label class="choice-card"><input type="radio" name="kind" value="event"><span class="choice-title">An event</span>A training, salon or gathering</label>
+          <label class="choice-card"><input type="radio" name="kind" value="donation"><span class="choice-title">A donation</span>A gift to NAGP</label>
+        </div>
+        <div id="for-membership" class="field mb-0">
+          <label for="r-tier">Membership type</label>
+          <select id="r-tier" name="tier"></select>
+          <span class="hint mt-1" id="r-tier-note"></span>
+        </div>
+        <div id="for-event" class="field mb-0" hidden>
+          <label for="r-event">Event</label>
+          <select id="r-event" name="event_id"></select>
+          <span class="hint mt-1">They are registered for the event when you save.</span>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>The payment</legend>
+        <div class="form-grid">
+          <div class="field">
+            <label for="r-amount">Amount received</label>
+            <div class="money-input"><input id="r-amount" name="amount" type="text" inputmode="decimal" required></div>
+          </div>
+          <div class="field">
+            <label for="r-method">How they paid</label>
+            <select id="r-method" name="method">
+              <option value="check">Check</option>
+              <option value="cash">Cash</option>
+            </select>
+          </div>
+        </div>
+        <div class="field mb-0">
+          <label for="r-note">Note <span class="optional">(optional)</span></label>
+          <input id="r-note" name="note" type="text" maxlength="500" placeholder="For example: check number 1042, received October 3">
+        </div>
+      </fieldset>
+      <div class="form-status" role="status" aria-live="polite"></div>
+      <div class="form-actions">
+        <button class="btn btn-large" type="submit">Record this payment</button>
+        <button class="btn btn-secondary" type="button" data-close>Cancel</button>
+      </div>
+    </form>
+  </div>
+</dialog>

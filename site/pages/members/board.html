@@ -1,0 +1,44 @@
+<!--meta { "title": "Community Board", "description": "A place for NAGP members to talk with each other.", "section": "members", "access": "member", "scripts": ["members-board.js"], "styles": ["members.css"] } -->
+<section class="page-header">
+  <div class="container">
+    <h1>Community Board</h1>
+    <p class="lede">A place for members to talk with each other: questions about practice, ideas for NAGP, introductions and local news.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container-mid">
+    <div class="notice notice-info">
+      <span class="notice-title">Before you post, please read our community guidelines</span>
+      <p>This board works best when we speak from our own experience, stay respectful when we disagree, and keep what members share here within the community. The Council looks after the board and may hide posts that do not follow the guidelines.</p>
+      <p><a href="/community-guidelines">Read the community guidelines</a></p>
+    </div>
+
+    <div class="section-head">
+      <h2>Topics</h2>
+      <a class="btn" href="#new-topic">Start a new topic</a>
+    </div>
+    <p class="results-count" id="topic-count" role="status" aria-live="polite"></p>
+    <div id="topics"><p class="loading">Loading topics…</p></div>
+
+    <h2 id="new-topic" class="mt-2" tabindex="-1">Start a new topic</h2>
+    <form id="topic-form" class="form card form-wide">
+      <div class="field">
+        <label for="tp-title">Title</label>
+        <span class="hint" id="tp-title-hint">A short question or subject, for example “Finding a Gestalt supervisor in Ohio”.</span>
+        <input id="tp-title" name="title" type="text" maxlength="150" required aria-describedby="tp-title-hint">
+      </div>
+      <div class="field">
+        <label for="tp-body">Your message</label>
+        <span class="hint" id="tp-body-hint">Leave an empty line between paragraphs. Web addresses become links.</span>
+        <textarea id="tp-body" name="body" maxlength="5000" rows="8" required aria-describedby="tp-body-hint"></textarea>
+      </div>
+      <label class="check"><input type="checkbox" name="agree" required>
+        <span>I have read the <a href="/community-guidelines">community guidelines</a>, and my post follows them.</span></label>
+      <div class="form-actions">
+        <button class="btn btn-large" type="submit">Post my topic</button>
+      </div>
+      <div class="form-status" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+</section>

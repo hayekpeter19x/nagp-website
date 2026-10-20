@@ -1,0 +1,32 @@
+<!--meta { "title": "Announcements", "description": "News from the NAGP Founding Council and from NAGP members.", "nav": "announcements", "scripts": ["announcements.js"], "styles": ["members.css"] } -->
+<section class="page-header">
+  <div class="container">
+    <h1>Announcements</h1>
+    <p class="lede">News from the NAGP Founding Council and from our members: events, opportunities, resources and updates. The newest is first.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split">
+    <div>
+      <div class="filter-group mb-1">
+        <span class="field-label" id="category-label">Show</span>
+        <ul class="filter-pills" id="category-pills" aria-labelledby="category-label"></ul>
+      </div>
+      <p class="results-count" id="ann-count" role="status" aria-live="polite"></p>
+      <div id="ann-list" class="ann-list"><p class="loading">Loading announcements…</p></div>
+    </div>
+
+    <aside class="aside-stack" aria-label="Share your news">
+      <div class="card card-highlight">
+        <h2 class="h3-size">Members can share news</h2>
+        <p>Have an event, an opportunity or a resource to share with the Gestalt community? Members can post an announcement. The Council reads each one before it appears here.</p>
+        <a class="btn btn-block" href="/members/announce">Post an announcement</a>
+      </div>
+      <div class="card card-flat" data-auth="not-member">
+        <h2 class="h3-size">Members see more</h2>
+        <p>Some announcements are for NAGP members only. <a href="/signin?next=/announcements">Sign in</a> to see them, or <a href="/membership">read about membership</a>.</p>
+      </div>
+    </aside>
+  </div>
+</section>

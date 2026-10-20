@@ -1,0 +1,24 @@
+<!--meta { "title": "Website feedback", "description": "Comments left with the 'Comment on this page' button while the Council reviews the new website.", "section": "council", "access": "council", "scripts": ["council-common.js", "council-feedback.js"], "styles": ["council.css"], "noindex": true } -->
+<section class="page-header">
+  <div class="container">
+    <h1>Website feedback</h1>
+    <p class="lede">Comments left with the "Comment on this page" button, grouped by page. Mark each one as done once it has been dealt with.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container-mid">
+    <div class="notice notice-info">
+      <span class="notice-title">Only during the review</span>
+      <p>The "Comment on this page" button is there while the Council reviews the new website. It disappears when the site goes live, and this page will no longer be needed.</p>
+    </div>
+    <div class="toolbar">
+      <ul class="filter-pills" id="fb-pills" aria-label="Show comments">
+        <li><button type="button" data-value="open" aria-pressed="true">Still to do <span class="pill-count" data-count="open"></span></button></li>
+        <li><button type="button" data-value="done" aria-pressed="false">Done <span class="pill-count" data-count="done"></span></button></li>
+        <li><button type="button" data-value="all" aria-pressed="false">All <span class="pill-count" data-count="all"></span></button></li>
+      </ul>
+    </div>
+    <div id="fb-list" aria-live="polite"><p class="loading">Loading comments…</p></div>
+  </div>
+</section>

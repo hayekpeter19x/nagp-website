@@ -1,0 +1,74 @@
+<!--meta { "title": "Membership", "nav": "membership", "description": "NAGP membership categories, what to expect, and how joining works.", "styles": ["content.css"], "scripts": ["membership.js"] } -->
+<section class="page-header">
+  <div class="container">
+    <h1>Membership</h1>
+    <p class="lede">A professional home for Gestalt practitioners across North America, and a place for everyone who values Gestalt.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="notice notice-info">
+      <span class="notice-title">Membership is being finalized</span>
+      <p>The Founding Council is working to establish membership categories, dues, and benefits that reflect the needs of the Gestalt community. What you see below is a draft.</p>
+    </div>
+    <span class="placeholder-note">Please decide whether membership opens when this website launches. If it does not, this page can say “Coming soon” and show only the sign-up form at the bottom.</span>
+
+    <div class="prose">
+      <h2>What to expect</h2>
+      <ul class="list-check">
+        <li>A professional home for Gestalt practitioners across North America</li>
+        <li>Access to community events, salons, and presentations</li>
+        <li>Connection with colleagues who share your commitment to Gestalt practice</li>
+        <li>A voice in shaping the future of the profession</li>
+      </ul>
+    </div>
+
+    <h2 id="categories">Membership categories</h2>
+    <p class="section-intro">Choose the category that fits you best. People who are not practicing professionals are warmly welcome.</p>
+    <span class="placeholder-note">These categories, benefits and prices are drafts. Please confirm or change them. No dues will be shown as final until the Council confirms them.</span>
+    <div id="tiers"><p class="loading">Loading membership categories…</p></div>
+
+    <div class="prose">
+      <h2>Charter membership</h2>
+      <p>NAGP is considering a charter membership category for early joiners who want to help shape the organization from the ground up. Details to come.</p>
+      <span class="placeholder-note">Please confirm the phrase “charter membership”, and whether this paragraph should appear when the site goes live.</span>
+
+      <h2>How joining works</h2>
+      <ol class="steps">
+        <li><strong>Choose a membership.</strong> Pick the category that fits you.</li>
+        <li><strong>Fill in your details.</strong> Your name, email address, where you live, and, for professionals, your training and specialties.</li>
+        <li><strong>Pay securely online, or by check.</strong> Card payments are handled by Stripe. NAGP never sees your full card number.</li>
+        <li><strong>Use your Members' Area.</strong> Update your profile, find colleagues in the Member Directory, join the community board, and post announcements.</li>
+      </ol>
+    </div>
+
+    <div class="card card-highlight join-box mt-2">
+      <h2>Ready to join?</h2>
+      <p class="lede">You can join online in a few simple steps.</p>
+      <div class="actions">
+        <a class="btn btn-accent btn-large" href="/join">Join NAGP</a>
+      </div>
+      <p class="mt-1">Questions first? Read our <a href="/faq">Questions &amp; Answers</a> or <a href="/contact?topic=Membership">send us a message</a>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="notify">
+  <div class="container container-mid">
+    <h2>Not ready to join? Get notified</h2>
+    <p class="lede">Be the first to know when membership opens.</p>
+    <div class="card">
+      <form class="inline-form" data-subscribe-form data-interest="membership" novalidate>
+        <div class="field"><label for="membership-first">First name</label><input id="membership-first" name="first_name" type="text" autocomplete="given-name"></div>
+        <div class="field"><label for="membership-last">Last name</label><input id="membership-last" name="last_name" type="text" autocomplete="family-name"></div>
+        <div class="field"><label for="membership-email">Email address</label><input id="membership-email" name="email" type="email" autocomplete="email" required></div>
+        <div class="hp-field" aria-hidden="true"><label>Leave this empty <input name="hp" tabindex="-1" autocomplete="off"></label></div>
+        <input type="hidden" name="source" value="membership">
+        <div><button class="btn btn-accent btn-block" type="submit">Notify me</button></div>
+        <div class="form-status full-row" role="status" aria-live="polite"></div>
+      </form>
+      <p class="privacy-line muted">We respect your privacy. You may unsubscribe at any time.</p>
+    </div>
+  </div>
+</section>

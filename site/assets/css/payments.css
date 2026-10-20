@@ -1,0 +1,122 @@
+/* Payments, joining and events pages (join, checkout, payment-complete, events, event, donate, members/payments).
+   Builds on styles.css: only uses its color variables. */
+
+/* ---------- Step-by-step forms (join) ---------- */
+.join-step > h2:first-child { margin-top: 0; }
+.join-step h2:focus { outline: none; }
+.step-actions { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; margin-top: 1.5rem; }
+.step-actions .btn-large { min-width: 12rem; }
+@media (max-width: 560px) { .step-actions .btn { width: 100%; } }
+
+/* Membership choice cards: price and who-it-is-for */
+.tier-cards { grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+.choice-card .choice-price { display: block; font-family: var(--font-head); font-size: 1.7rem; font-weight: 700; color: var(--primary-strong); line-height: 1.2; margin: .35rem 0 .1rem; }
+.choice-card .choice-price small { font-family: var(--font-body); font-size: .95rem; font-weight: 400; color: var(--ink-soft); }
+.choice-card .choice-who { display: block; color: var(--ink-soft); font-size: .95rem; margin-top: .4rem; }
+.sample-price { display: block; font-size: .85rem; font-style: italic; color: var(--warning); }
+
+/* Review list (join step 3) */
+.review-list { margin: 0; }
+.review-list > div { display: grid; grid-template-columns: minmax(8rem, 13rem) 1fr; gap: .25rem 1rem; padding: .55rem 0; border-bottom: 1px solid var(--line); }
+.review-list > div:last-child { border-bottom: 0; }
+.review-list dt { font-weight: 700; }
+.review-list dd { margin: 0; overflow-wrap: anywhere; }
+@media (max-width: 560px) { .review-list > div { grid-template-columns: 1fr; } }
+.review-edit { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin: .75rem 0 0; }
+
+/* ---------- Summary + totals ---------- */
+.summary-box h2, .summary-box h3 { margin-top: 0; }
+.summary-row > :first-child { color: var(--ink-soft); }
+.summary-row > :last-child { text-align: right; overflow-wrap: anywhere; }
+.summary-item { font-weight: 700; font-size: 1.1rem; margin: 0 0 .5rem; }
+.summary-total > :first-child { color: var(--ink); }
+.summary-total .amount { font-family: var(--font-head); font-size: 1.6rem; color: var(--primary-strong); }
+@media (max-width: 480px) {
+  .summary-row { flex-direction: column; gap: 0; }
+  .summary-row > :last-child { text-align: left; }
+}
+
+/* ---------- Checkout ---------- */
+.pay-card { margin-top: 1.5rem; }
+.pay-card > h2 { margin-top: 0; }
+.sim-card { border: 2px dashed var(--line-strong); border-radius: var(--radius-lg); padding: 1.25rem; background: var(--sand); margin: 0 0 1.25rem; }
+.sim-card .field { margin-bottom: 1rem; }
+.sim-card input[readonly] { background: #fff; color: var(--ink-soft); }
+.sim-card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: end; }
+.btn-pay { font-size: 1.3rem; min-height: 4rem; }
+.secure-note { display: flex; gap: .6rem; align-items: flex-start; color: var(--ink-soft); font-size: .95rem; margin: 1rem 0 0; }
+.secure-note svg { width: 1.3rem; height: 1.3rem; flex: none; margin-top: .15rem; color: var(--primary); }
+.check-option { margin-top: 1.5rem; }
+.check-option > h2 { margin-top: 0; }
+.order-number { font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace; font-size: .95em; background: var(--sand); padding: .05rem .4rem; border-radius: 6px; overflow-wrap: anywhere; }
+
+/* ---------- Receipt ---------- */
+.receipt { border: 2px solid var(--line); }
+.receipt-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 1rem; align-items: flex-start; border-bottom: 2px solid var(--line); padding-bottom: 1rem; margin-bottom: 1rem; }
+.receipt-head h2 { margin: 0; }
+.receipt-org { font-weight: 700; }
+.receipt-org span { display: block; font-weight: 400; color: var(--ink-soft); font-size: .95rem; }
+.receipt .review-list > div { grid-template-columns: minmax(8rem, 11rem) 1fr; }
+.receipt-amount { font-family: var(--font-head); font-size: 1.4rem; font-weight: 700; }
+
+/* ---------- Events ---------- */
+.event-list { display: grid; gap: 1.25rem; }
+.event-card .tag-list { margin-top: 0; }
+.event-card h3 { margin: .2rem 0 .5rem; font-size: 1.35rem; }
+.event-card h3 a { text-decoration: none; }
+.event-card h3 a:hover { text-decoration: underline; }
+.event-facts { list-style: none; padding: 0; margin: 0 0 .75rem; display: grid; gap: .2rem; }
+.event-facts li { margin: 0; }
+.event-facts b { font-weight: 700; }
+.spots-low { color: var(--warning); font-weight: 700; }
+.past-events .event-item { padding: 1rem 0; }
+.past-events .date-block { border-color: var(--line-strong); }
+.past-events .date-block .month { background: var(--ink-soft); }
+.past-events h3 { margin: 0 0 .25rem; font-size: 1.15rem; }
+
+/* Event page */
+.event-aside { position: sticky; top: 1rem; }
+@media (max-width: 860px) { .event-aside { position: static; } }
+.event-price-big { font-family: var(--font-head); font-size: 2rem; font-weight: 700; color: var(--primary-strong); line-height: 1.15; margin: 0 0 .25rem; }
+.event-header .tag-list { margin: 0 0 .75rem; }
+.jump-register { display: none; }
+@media (max-width: 860px) { .jump-register { display: inline-flex; margin-top: 1rem; } }
+
+/* ---------- Donate ---------- */
+.amount-cards { grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr)); }
+.amount-cards .choice-card { padding: 1rem 1rem 1rem 3rem; }
+.amount-cards .choice-card input { top: 1.15rem; left: 1rem; }
+.amount-cards .choice-title { font-size: 1.25rem; }
+.money-input { display: flex; align-items: stretch; max-width: 14rem; }
+.money-input span { display: grid; place-items: center; padding: 0 .8rem; border: 2px solid var(--line-strong); border-right: 0; border-radius: var(--radius) 0 0 var(--radius); background: var(--sand); font-weight: 700; }
+.money-input input { border-radius: 0 var(--radius) var(--radius) 0; }
+
+/* ---------- My Payments ---------- */
+.status-line { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.renew-form { display: flex; flex-wrap: wrap; gap: .75rem 1rem; align-items: flex-end; margin-top: 1rem; }
+.renew-form .field { margin: 0; flex: 1 1 15rem; max-width: 24rem; }
+.reg-list { list-style: none; padding: 0; margin: 0; }
+.reg-list li { margin: 0; }
+.reg-list h3 { font-size: 1.15rem; margin: 0 0 .25rem; }
+.mp-section + .mp-section { margin-top: 2rem; }
+
+/* ---------- Print: only the receipt ---------- */
+@media print {
+  .page-header, .steps-inline, .feedback-fab, .notice:not(.receipt-keep) { display: none !important; }
+  .section { padding: 0; }
+  .receipt { border: 0; padding: 0; }
+  a { color: inherit; text-decoration: none; }
+}
+
+/* Checkbox lists whose error message should appear under the whole group */
+.check-line { display: flex; gap: .75rem; align-items: flex-start; margin-bottom: .6rem; cursor: pointer; }
+.check-line input { width: 1.5rem; height: 1.5rem; margin: .15rem 0 0; flex: none; accent-color: var(--primary); cursor: pointer; }
+/* A single checkbox with an error: show the message on its own line under the label text */
+.wrap-errors .check { flex-wrap: wrap; }
+.wrap-errors .check > span { flex: 1 1 0; min-width: 0; }
+.wrap-errors .check > .field-error { flex-basis: 100%; margin: 0 0 0 2.25rem; }
+
+.renew-form .form-status { flex-basis: 100%; margin-top: 0; }
+details > summary { cursor: pointer; font-weight: 700; color: var(--primary); min-height: var(--tap); display: flex; align-items: center; }
+details[open] > summary { margin-bottom: .5rem; }
+.card .mp-sub { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
