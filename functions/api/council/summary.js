@@ -1,7 +1,7 @@
 // GET /api/council/summary — the numbers on the Council dashboard.
 import { json, requireUser } from '../../../lib/http.js';
 import { first } from '../../../lib/db.js';
-import { daysAgoIso } from '../../../lib/council.js';
+import { daysAgoIso, EXPIRED_SQL } from '../../../lib/council.js';
 
 const count = async (env, sql, ...params) => Number((await first(env, sql, ...params))?.n || 0);
 
@@ -11,15 +11,16 @@ export async function onRequestGet(context) {
   const since30 = daysAgoIso(30);
 
   const [pendingAnnouncements, openReports, unreadMessages, openFeedback,
-    activeMembers, newMembers, waitingForPayment, subscribers, upcomingEvents, payments,
+    activeMembers, expiredMembers, newMembers, waitingForPayment, subscribers, upcomingEvents, payments,
     sampleUsers, sampleOther, realCouncil] = await Promise.all([
     count(env, `SELECT COUNT(*) AS n FROM announcements WHERE status = 'pending'`),
     // Number of board posts with at least one report nobody has looked at yet.
     count(env, `SELECT COUNT(DISTINCT post_id) AS n FROM board_reports WHERE resolved = 0`),
     count(env, `SELECT COUNT(*) AS n FROM messages WHERE handled = 0`),
     count(env, `SELECT COUNT(*) AS n FROM feedback WHERE resolved = 0`),
-    count(env, `SELECT COUNT(*) AS n FROM users WHERE status = 'active'`),
-    count(env, `SELECT COUNT(*) AS n FROM users WHERE status = 'active' AND created_at >= ?`, since30),
+    count(env, `SELECT COUNT(*) AS n FROM users WHERE status = 'active' AND NOT ${EXPIRED_SQL}`),
+    count(env, `SELECT COUNT(*) AS n FROM users WHERE ${EXPIRED_SQL}`),
+    count(env, `SELECT COUNT(*) AS n FROM users WHERE status = 'active' AND NOT ${EXPIRED_SQL} AND created_at >= ?`, since30),
     count(env, `SELECT COUNT(*) AS n FROM users WHERE status = 'pending'`),
     count(env, `SELECT COUNT(*) AS n FROM subscribers`),
     count(env, `SELECT COUNT(*) AS n FROM events WHERE published = 1 AND julianday(COALESCE(ends_at, starts_at)) >= julianday('now')`),
@@ -39,6 +40,7 @@ export async function onRequestGet(context) {
     },
     glance: {
       active_members: activeMembers,
+      expired_members: expiredMembers,
       new_members_30d: newMembers,
       waiting_for_payment: waitingForPayment,
       subscribers,

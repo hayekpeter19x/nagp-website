@@ -25,15 +25,16 @@ Money is in cents. Dates are ISO strings. Booleans in rows are 0/1 from SQLite. 
 | POST | /api/membership/renew | signed-in | `{ tier? }` → `{ checkout_url }` |
 | POST | /api/donate | public | `{ amount_cents, name, email, note }` → `{ checkout_url }` |
 | GET | /api/orders/:id | public with `?token=` | `{ order }` (safe fields). With Stripe, also confirms a pending order via `session_id`. |
-| POST | /api/checkout/demo-complete | public (demo only) | `{ id, token }` → `{ order, receipt_url }` |
+| POST | /api/checkout/demo-complete | public (only when DEMO_MODE is on AND no Stripe key is set) | `{ id, token }` → `{ order, receipt_url }` |
 | POST | /api/stripe/webhook | Stripe | verifies signature → marks paid |
-| GET | /api/me/orders | signed-in | `{ orders: [...], registrations: [...] }` |
+| GET | /api/me/orders | signed-in | `{ membership, orders: [...], registrations: [...] }` |
+| POST | /api/orders/:id | public with `{ token }` | starts or resumes a Stripe payment for a pending order |
 
-`Event = { id, title, category, summary, description, starts_at, ends_at, timezone, location, is_online, presenter, ce_info, price_member_cents, price_public_cents, members_only, capacity, spots_left (null = unlimited), registration_open, is_past, sample, my_registration: null | { status } }`
+`Event = { registration_state, your_price_cents, id, title, category, summary, description, starts_at, ends_at, timezone, location, is_online, presenter, ce_info, price_member_cents, price_public_cents, members_only, capacity, spots_left (null = unlimited), registration_open, is_past, sample, my_registration: null | { status } }`
 
 ### lib/payments.js (payments agent writes it, Council agent imports it)
 ```js
-createOrder(env, { kind, ref_id, description, amount_cents, user_id, name, email, meta })  // -> order row (id 'ord_…', token)
+createOrder(env, { kind, ref_id, description, amount_cents, user_id, name, email, meta })  // -> order row (id like 'ord_7K3M9QX2PD', token)
 startCheckout(env, request, order)        // -> { url }   demo: /checkout?order=ID&token=T   stripe: hosted Checkout URL
 markOrderPaid(env, orderId, { provider = 'demo', provider_ref = null })   // -> order. Idempotent; runs fulfilment once:
    //  membership: user active, tier/member_type from order meta, membership_expires = max(today, current) + 1 year
@@ -82,6 +83,7 @@ orderLinks(order)                         // -> { checkout: '/checkout?…', rec
 | GET | /api/council/subscribers | `?format=csv` |
 | GET | /api/council/orders | all payments |
 | POST | /api/council/orders | record a payment received by check or cash (uses markOrderPaid with provider 'manual') |
+| DELETE | /api/council/subscribers/:id | remove someone from the mailing-list sign-ups |
 | GET | /api/council/reports | community board reports |
 | POST | /api/council/board/:id | `{ action: 'hide'|'unhide'|'delete', reason }` |
 | POST | /api/council/reports/:id/resolve | |

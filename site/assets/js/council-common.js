@@ -10,10 +10,13 @@
   C.STATUS = {
     active: { label: 'Active', badge: 'badge-success' },
     pending: { label: 'Waiting for payment', badge: 'badge-warning' },
+    expired: { label: 'Expired', badge: 'badge-warning' },
     lapsed: { label: 'Lapsed', badge: '' },
     suspended: { label: 'Suspended', badge: 'badge-danger' },
   };
+  // Pass a member row to show "Expired" for an active member past their "active until" date.
   C.statusBadge = (status) => {
+    if (status && typeof status === 'object') status = status.expired ? 'expired' : status.status;
     const s = C.STATUS[status] || { label: status, badge: '' };
     return html`<span class="badge ${s.badge}">${s.label}</span>`;
   };

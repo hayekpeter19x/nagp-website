@@ -70,7 +70,7 @@
     if (!isMember && !ev.members_only && ev.price_member_cents < ev.price_public_cents) {
       const memberPrice = ev.price_member_cents ? `Members pay ${NAGP.money(ev.price_member_cents)}.` : 'Members attend free.';
       note = u
-        ? html`<p>${memberPrice} <a href="/members/payments">Finish joining NAGP</a> to get the member price.</p>`
+        ? html`<p>${memberPrice} <a href="/members/payments">${u.status === 'pending' ? 'Finish joining NAGP' : 'Renew your membership'}</a> to get the member price.</p>`
         : html`<p>${memberPrice} <a href="/signin?next=${next}">Sign in</a> if you are a member, or <a href="/join">become a member</a>.</p>`;
     }
     return html`<p class="eyebrow mb-0">${isMember && differs ? 'Your price (member)' : 'Price'}</p>
@@ -105,11 +105,13 @@
     }
     if (ev.members_only && !isMember) {
       const next = encodeURIComponent(location.pathname + location.search);
-      box.innerHTML = html`${title}${NAGP.notice('info', u
-        ? 'This event is for members with an active membership. Once your membership payment is complete, you can register here.'
-        : 'This event is for NAGP members. Please sign in to register.', 'For members')}
+      const joining = u && u.status === 'pending';
+      box.innerHTML = html`${title}${NAGP.notice('info', !u
+        ? 'This event is for NAGP members. Please sign in to register.'
+        : joining ? 'This event is for members. Once your membership payment is complete, you can register here.'
+          : 'This event is for members with an active membership. Please renew your membership, and then you can register here.', 'For members')}
         <div class="actions mt-0">${u
-          ? html`<a class="btn btn-accent" href="/members/payments">Finish joining</a>`
+          ? html`<a class="btn btn-accent" href="/members/payments">${joining ? 'Finish joining' : 'Renew your membership'}</a>`
           : html`<a class="btn" href="/signin?next=${next}">Sign in</a><a class="btn btn-secondary" href="/join">Become a member</a>`}</div>`;
       return;
     }

@@ -42,7 +42,10 @@
   function glance(g) {
     const stat = (label, value, note) => html`<div class="stat"><dt>${label}</dt><dd>${value}${note ? html`<span class="stat-note">${note}</span>` : ''}</dd></div>`;
     return html`<dl class="stat-grid">
-      ${stat('Active members', g.active_members, g.waiting_for_payment ? `plus ${g.waiting_for_payment} who started joining but have not paid` : '')}
+      ${stat('Active members', g.active_members, [
+        g.expired_members ? `${g.expired_members} more ${g.expired_members === 1 ? 'has' : 'have'} not renewed` : '',
+        g.waiting_for_payment ? `${g.waiting_for_payment} started joining but did not pay` : '',
+      ].filter(Boolean).join('; '))}
       ${stat('New members', g.new_members_30d, 'in the last 30 days')}
       ${stat('Mailing list sign-ups', g.subscribers, 'from the website forms')}
       ${stat('Upcoming events', g.upcoming_events, 'published on the Events page')}
@@ -75,7 +78,8 @@
             <li>the sample announcements, events, documents and community board posts;</li>
             <li>any registrations, payments and sign-ins that belong to them.</li>
           </ul>
-          <p>Real members, messages, mailing-list sign-ups and website comments are kept.</p>
+          <p>Real members, messages, mailing-list sign-ups and website comments are kept. So is anything you posted yourselves while
+            trying the demo accounts (for example a test announcement); you can delete those on the Approvals page.</p>
           ${user.sample ? html`<p><strong>You are using the demo Council account, so you will be signed out.</strong> Sign in again with your own account afterwards.</p>` : ''}
           <p><strong>Are you sure? This cannot be undone.</strong></p>`,
         confirm: 'Yes, delete the sample data',

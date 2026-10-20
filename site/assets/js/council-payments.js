@@ -85,7 +85,7 @@
     } else if (kind === 'event') {
       const ev = (events || []).find((e) => String(e.id) === f.event_id.value);
       const m = value('person') === 'member' ? chosenMember() : null;
-      f.amount.value = ev ? C.centsToInput(m && m.status === 'active' ? ev.price_member_cents : ev.price_public_cents) : '';
+      f.amount.value = ev ? C.centsToInput(m && m.status === 'active' && !m.expired ? ev.price_member_cents : ev.price_public_cents) : '';
     } else {
       f.amount.value = '';
     }
@@ -106,7 +106,9 @@
     const note = $('#r-tier-note');
     const m = person === 'member' ? chosenMember() : null;
     if (kind === 'membership' && m) {
-      const now = m.status === 'active' && m.membership_expires ? `Their membership is active until ${NAGP.formatShortDate(m.membership_expires)}. ` : '';
+      const now = !m.membership_expires ? ''
+        : m.expired ? `Their membership ended on ${NAGP.formatShortDate(m.membership_expires)}. `
+          : m.status === 'active' ? `Their membership is active until ${NAGP.formatShortDate(m.membership_expires)}. ` : '';
       note.textContent = `${now}After this payment it will run until ${NAGP.formatShortDate(nextExpiry(m.membership_expires))}.`;
     } else if (kind === 'membership' && person === 'other') {
       note.textContent = 'They need a member account. If they do not have one yet, use "Add a member by hand" on the Members page instead.';

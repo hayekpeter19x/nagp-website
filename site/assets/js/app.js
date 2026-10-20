@@ -269,9 +269,14 @@
         <p class="lede">This area is only for members of the NAGP Council. You are signed in as ${u.name}.</p>
         <div class="actions"><a class="btn" href="/members/">Go to the Members' Area</a></div></div>`;
     } else if (need === 'member' && !u.isMember && !location.pathname.startsWith('/members/payments')) {
-      html = NAGP.html`<div class="card access-gate"><h1>Your membership is not active yet</h1>
+      const ended = u.status === 'lapsed' || (u.status === 'active' && u.membership_expires);
+      html = ended
+        ? NAGP.html`<div class="card access-gate"><h1>Your membership has ended</h1>
+        <p class="lede">Welcome back, ${u.name}. Your membership ended${u.membership_expires ? NAGP.html` on ${NAGP.formatShortDate(u.membership_expires)}` : ''}. Renew it to use the Members' Area again.</p>
+        <div class="actions"><a class="btn btn-accent btn-large" href="/members/payments">Renew my membership</a><a class="btn btn-secondary btn-large" href="/contact">Ask for help</a></div></div>`
+        : NAGP.html`<div class="card access-gate"><h1>Your membership is not active yet</h1>
         <p class="lede">Welcome, ${u.name}. Once your membership payment is complete you will be able to use this page.</p>
-        <div class="actions"><a class="btn btn-large" href="/members/payments">Finish joining</a><a class="btn btn-secondary btn-large" href="/contact">Ask for help</a></div></div>`;
+        <div class="actions"><a class="btn btn-accent btn-large" href="/members/payments">Finish joining</a><a class="btn btn-secondary btn-large" href="/contact">Ask for help</a></div></div>`;
     }
     if (html) { box.innerHTML = html; document.title = 'Please sign in | NAGP'; }
     else { box.innerHTML = ''; document.body.classList.add('access-ok'); }

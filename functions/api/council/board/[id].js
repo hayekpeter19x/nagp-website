@@ -1,5 +1,6 @@
 // POST /api/council/board/:id  { action: 'hide'|'unhide'|'delete', reason }
-//   hide    the post shows as "hidden by the Council" (members see the reason); its reports are marked as handled
+//   hide    members see only a short "hidden by the Council" note (no text, no author name, no reason);
+//           the reason is kept for the Council's records; its reports are marked as handled
 //   unhide  the post shows again
 //   delete  removes the post for good (a topic is removed with all its replies)
 import { json, readJson, validate, requireUser, HttpError } from '../../../../lib/http.js';
@@ -22,7 +23,7 @@ export async function onRequestPost(context) {
   if (action === 'hide') {
     await run(env, `UPDATE board_posts SET hidden = 1, hidden_reason = ? WHERE id = ?`, reason, id);
     await run(env, `UPDATE board_reports SET resolved = 1 WHERE post_id = ? AND resolved = 0`, id);
-    return json({ ok: true, message: 'Hidden. Members now see "hidden by the Council" instead of this post.' });
+    return json({ ok: true, message: 'Hidden. Members now see only a short note that the post was hidden, without its text or the author\'s name.' });
   }
   if (action === 'unhide') {
     await run(env, `UPDATE board_posts SET hidden = 0, hidden_reason = '' WHERE id = ?`, id);

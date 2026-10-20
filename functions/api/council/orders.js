@@ -5,7 +5,7 @@
 import { json, readJson, validate, requireUser, HttpError } from '../../../lib/http.js';
 import { all, first } from '../../../lib/db.js';
 import { MEMBERSHIP_TIERS } from '../../../lib/config.js';
-import { csvResponse, wantsCsv, dollarsField, orderRow, recordManualPayment, dollars, theirEmail, PROVIDER_LABELS } from '../../../lib/council.js';
+import { csvResponse, wantsCsv, dollarsField, orderRow, recordManualPayment, dollars, theirEmail, longDate, PROVIDER_LABELS } from '../../../lib/council.js';
 
 const STATUS_TEXT = { paid: 'Paid', pending: 'Not completed', cancelled: 'Cancelled', refunded: 'Refunded' };
 const KIND_TEXT = { membership: 'Membership', event: 'Event', donation: 'Donation' };
@@ -79,7 +79,7 @@ export async function onRequestPost(context) {
   if (kind === 'membership') {
     const u = await first(env, `SELECT status, membership_expires FROM users WHERE id = ?`, user.id);
     message += u.status === 'active'
-      ? ` Their membership is active until ${u.membership_expires}.`
+      ? ` Their membership is active until ${longDate(u.membership_expires)}.`
       : ' Their account is suspended, so it was not switched on. Change their status on the Members page if they should have access.';
   } else if (kind === 'event') {
     message += ' They are registered for the event.';

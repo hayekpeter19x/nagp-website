@@ -134,7 +134,7 @@
       </ul>
       <div class="item-body">${NAGP.paragraphs(p.body)}</div>
       ${open.length ? html`<p><b>What members said:</b></p><ul>${open.map((r) => html`<li>${r.reporter_name}, ${C.longDate(r.created_at)}: ${r.reason ? html`"${r.reason}"` : html`<span class="muted">(no reason given)</span>`}</li>`)}</ul>` : ''}
-      ${p.hidden ? html`<p class="item-note">Members see "hidden by the Council" instead of this post.${p.hidden_reason ? html` Council note: ${p.hidden_reason}` : ''}</p>` : ''}
+      ${p.hidden ? html`<p class="item-note">Hidden. Members see only a short note that this post was hidden by the Council, without its text or the author's name.${p.hidden_reason ? html` <b>Reason (Council records only):</b> ${p.hidden_reason}` : ''}</p>` : ''}
       <div class="actions">
         ${p.hidden
           ? html`<button class="btn" type="button" data-act="unhide">Show it again</button>`
@@ -171,8 +171,8 @@
     if (act === 'hide') {
       const r = await C.ask({
         title: 'Hide this post?',
-        message: 'Members will see "This post was hidden by the Council because it did not follow the community guidelines." instead of the text. You can show it again at any time.',
-        input: { label: 'Note for the Council', hint: 'Only Council members see this note, for example which guideline it did not follow.' },
+        message: 'Members will see a short note that the post was hidden by the Council, without its text or the author\'s name. You can show it again at any time.',
+        input: { label: 'Reason', hint: 'For the Council\'s records only, for example which guideline it did not follow. Members do not see it.' },
         confirm: 'Hide the post',
         cancel: 'Go back',
       });

@@ -25,6 +25,7 @@
         <select id="f-status" name="status">
           <option value="">Everyone</option>
           <option value="active">Active</option>
+          <option value="expired">Expired (past their "active until" date)</option>
           <option value="pending">Waiting for payment</option>
           <option value="lapsed">Lapsed</option>
           <option value="suspended">Suspended</option>
@@ -77,6 +78,7 @@
           </select>
         </div>
       </div>
+      <div id="expired-note" class="notice notice-warning" hidden></div>
       <p id="self-note" class="hint" hidden>This is your own account. You cannot remove your own Council role or suspend yourself. Please ask another Council member if this needs to change.</p>
       <fieldset>
         <legend>Directory listings</legend>

@@ -43,8 +43,7 @@
 
   function untilCell(m) {
     if (!m.membership_expires) return html`<span class="muted">Not set</span>`;
-    const ended = m.membership_expires < new Date().toISOString().slice(0, 10);
-    return ended ? html`<span class="badge badge-warning">Ended</span> ${NAGP.formatShortDate(m.membership_expires)}` : NAGP.formatShortDate(m.membership_expires);
+    return m.expired ? html`${NAGP.formatShortDate(m.membership_expires)}<span class="cell-sub">Ended, not renewed</span>` : NAGP.formatShortDate(m.membership_expires);
   }
 
   function row(m) {
@@ -54,8 +53,8 @@
         ${m.credentials ? html`<span class="cell-sub">${m.credentials}</span>` : ''}</td>
       <td data-label="Email"><a href="mailto:${m.email}">${m.email}</a></td>
       <td data-label="Type">${C.tierShort(m.tier) || m.member_type}</td>
-      <td data-label="State">${place || html`<span class="muted">Not given</span>`}</td>
-      <td data-label="Status">${C.statusBadge(m.status)}</td>
+      <td data-label="Place">${place || html`<span class="muted">Not given</span>`}</td>
+      <td data-label="Status">${C.statusBadge(m)}</td>
       <td data-label="Active until" class="nowrap">${untilCell(m)}</td>
       <td data-label="Role">${m.role === 'member' ? 'Member' : html`<span class="badge badge-primary">${C.ROLE[m.role] || m.role}</span>`}</td>
       <td class="cell-actions"><button class="btn btn-small btn-secondary" type="button" data-edit="${m.id}" aria-label="Edit ${m.name}">Edit</button></td>
@@ -75,7 +74,7 @@
     const c = data.counts;
     box.innerHTML = html`<p class="results-count">${filtered
       ? `Showing ${C.plural(members.length, 'person', 'people')} that match.`
-      : `${C.plural(c.all, 'person', 'people')} in total: ${c.active} active, ${c.pending} waiting for payment, ${c.lapsed} lapsed, ${c.suspended} suspended.`}</p>
+      : `${C.plural(c.all, 'person', 'people')} in total: ${c.active} active, ${c.expired ? `${c.expired} expired, ` : ''}${c.pending} waiting for payment, ${c.lapsed} lapsed, ${c.suspended} suspended.`}</p>
       <div class="table-wrap"><table class="table table-stack">
         <caption class="visually-hidden">Members</caption>
         <thead><tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Type</th><th scope="col">Place</th>
@@ -116,6 +115,9 @@
     });
     const self = m.id === me.id;
     $('#self-note').hidden = !self;
+    const exp = $('#expired-note');
+    exp.hidden = !m.expired;
+    if (m.expired) exp.textContent = `Their membership ended on ${NAGP.formatShortDate(m.membership_expires)} and was not renewed, so they no longer have access to the Members' Area. To renew it, record their payment on the Payments page (this adds a year), or change "Active until" here.`;
     form.role.disabled = self || m.role === 'admin';
     [...form.status.options].forEach((o) => { o.disabled = self && o.value !== m.status; });
     syncPublic();

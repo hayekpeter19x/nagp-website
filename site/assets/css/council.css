@@ -37,7 +37,8 @@
 .section-title h2 { margin: 0; }
 .pill-count { display: inline-block; margin-left: .4rem; min-width: 1.6rem; padding: 0 .45rem; border-radius: 999px; background: var(--sand); color: var(--ink); font-size: .9rem; line-height: 1.6; text-align: center; }
 [aria-pressed="true"] .pill-count { background: #fff; color: var(--primary-strong); }
-.help-box { background: var(--primary-soft); border: 1px solid #bcd6d0; border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; }
+.help-box { background: var(--primary-soft); border: 1px solid #bcd6d0; border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; overflow-wrap: anywhere; }
+.help-box .steps li { min-width: 0; }
 .help-box h2, .help-box h3 { margin-top: 0; font-size: 1.25rem; }
 .help-box > :last-child { margin-bottom: 0; }
 

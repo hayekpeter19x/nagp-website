@@ -5,7 +5,7 @@ import { all, first, run } from '../../../../lib/db.js';
 import { hashPassword, checkPasswordStrength } from '../../../../lib/auth.js';
 import { MEMBERSHIP_TIERS, REGIONS, regionName, tierByKey } from '../../../../lib/config.js';
 import {
-  csvResponse, wantsCsv, dateField, dollarsField, memberTypeFor, memberRow, recordManualPayment, orderRow, theirEmail, MEMBER_COLUMNS, STATUS_LABELS, ROLE_LABELS,
+  csvResponse, wantsCsv, dateField, EXPIRED_SQL, dollarsField, memberTypeFor, memberRow, recordManualPayment, longDate, orderRow, theirEmail, MEMBER_COLUMNS, STATUS_LABELS, ROLE_LABELS,
 } from '../../../../lib/council.js';
 
 const STATUSES = ['pending', 'active', 'lapsed', 'suspended'];
@@ -23,7 +23,9 @@ export async function onRequestGet(context) {
     args.push(like, like, like);
   }
   const status = params.get('status');
-  if (STATUSES.includes(status)) { where.push('status = ?'); args.push(status); }
+  if (status === 'expired') where.push(EXPIRED_SQL);
+  else if (status === 'active') where.push(`status = 'active' AND NOT ${EXPIRED_SQL}`);
+  else if (STATUSES.includes(status)) { where.push('status = ?'); args.push(status); }
   const role = params.get('role');
   if (role === 'council') where.push(`role IN ('council', 'admin')`);
   else if (role === 'member') where.push(`role = 'member'`);
@@ -38,15 +40,15 @@ export async function onRequestGet(context) {
     return csvResponse('nagp-members',
       ['Name', 'Email', 'Membership', 'Status', 'Active until', 'Role', 'City', 'State or province', 'Credentials',
         'In public directory', 'In members directory', 'Joined', 'Last signed in'],
-      members.map((m) => [m.name, m.email, tierByKey(m.tier)?.name || m.member_type, STATUS_LABELS[m.status] || m.status,
+      members.map((m) => [m.name, m.email, tierByKey(m.tier)?.name || m.member_type, STATUS_LABELS[m.expired ? 'expired' : m.status] || m.status,
         m.membership_expires, ROLE_LABELS[m.role] || m.role, m.city, regionName(m.state), m.credentials,
         m.show_public, m.show_members, (m.created_at || '').slice(0, 10), (m.last_login || '').slice(0, 10)]));
   }
 
-  const counts = { all: 0, pending: 0, active: 0, lapsed: 0, suspended: 0 };
-  for (const r of await all(env, `SELECT status, COUNT(*) AS n FROM users GROUP BY status`)) {
+  const counts = { all: 0, pending: 0, active: 0, expired: 0, lapsed: 0, suspended: 0 };
+  for (const r of await all(env, `SELECT CASE WHEN ${EXPIRED_SQL} THEN 'expired' ELSE status END AS s, COUNT(*) AS n FROM users GROUP BY s`)) {
     counts.all += r.n;
-    if (r.status in counts) counts[r.status] = r.n;
+    if (r.s in counts) counts[r.s] = r.n;
   }
   return json({ members, counts });
 }
@@ -108,7 +110,7 @@ export async function onRequestPost(context) {
     });
   }
   const user = await first(env, `SELECT ${MEMBER_COLUMNS} FROM users WHERE id = ?`, userId);
-  const until = user.membership_expires ? ` Their membership is active until ${user.membership_expires}.` : '';
+  const until = user.membership_expires ? ` Their membership is active until ${longDate(user.membership_expires)}.` : '';
   return json({
     ok: true,
     member: memberRow(user),

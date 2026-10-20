@@ -6,7 +6,7 @@
   const box = $('#mp-content');
   const tiers = (NAGP.config && NAGP.config.MEMBERSHIP_TIERS) || [];
 
-  const tierOptions = (selected) => html`${tiers.map((t) => html`<option value="${t.key}"${t.key === selected ? NAGP.raw(' selected') : ''}>${t.name}: ${NAGP.money(t.price_cents)} a year</option>`)}`;
+  const tierOptions = (selected) => html`${tiers.map((t) => html`<option value="${t.key}"${t.key === selected ? NAGP.raw(' selected') : ''}>${t.name}, ${NAGP.money(t.price_cents)}</option>`)}`;
 
   // A small form: membership type + "Renew for one year: $75" (also used to finish joining).
   const renewForm = (selected, verb) => html`<form class="renew-form" id="renew-form" novalidate data-verb="${verb}">
@@ -47,6 +47,35 @@
         <p class="lede">Welcome, ${user.name}. To become a member, choose your type of membership and pay for one year.</p>
         ${renewForm(m.tier || 'professional', 'Continue to payment')}
       </div>
+    </section>`;
+  }
+
+  // One year from today, as the new end date for a lapsed member who renews now.
+  const yearFromToday = () => {
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear() + 1}-${pad(d.getMonth() + 1)}-${pad(Math.min(d.getDate(), 28 + (d.getMonth() === 1 ? 0 : 3)))}`;
+  };
+
+  // Membership ended (or was never paid for after a past membership): a clear "Renew" first.
+  function lapsedCard(m) {
+    const o = m.pending_order;
+    return html`<section class="mp-section card card-highlight">
+      <h2>Your membership has ended</h2>
+      <p class="lede">${m.expires
+        ? `Your membership${m.tier_name ? ` (${m.tier_name})` : ''} ended on ${NAGP.formatDate(m.expires)}.`
+        : 'Your membership is not active at the moment.'}
+        Renew today to get your member benefits back: the member directory, the community board, member prices for events, and more.</p>
+      <ul class="meta-list">
+        <li><b>Membership type:</b> ${m.tier_name || 'Not chosen yet'}</li>
+        <li class="status-line"><b>Status:</b> <span class="badge badge-warning">Ended</span></li>
+      </ul>
+      ${o ? html`<div class="mt-1">${NAGP.notice('warning', html`<p>You started a renewal (${o.description}) but have not paid yet.</p>
+          <p><a class="btn btn-accent" href="${o.links.checkout}">Pay ${NAGP.money(o.amount_cents)}</a></p>`, 'Renewal not finished')}</div>` : ''}
+      <h3 class="mp-sub">Renew your membership</h3>
+      <p>Your new year starts on the day you pay, so it will run until about ${NAGP.formatDate(yearFromToday())}. You can also choose a different type of membership.</p>
+      ${renewForm(m.tier || 'associate', 'Renew now')}
+      <p class="hint mt-1">On the next page you can pay by card, or choose to pay by check.</p>
     </section>`;
   }
 
@@ -143,7 +172,8 @@
     const m = data.membership;
     const user = session.user;
     const joining = !m.is_member && m.status === 'pending';
-    box.innerHTML = html`${joining ? finishJoining(m, user) : membershipCard(m)}
+    const lapsed = !joining && !m.is_council && (!m.is_member || m.expired);
+    box.innerHTML = html`${joining ? finishJoining(m, user) : lapsed ? lapsedCard(m) : membershipCard(m)}
       ${registrationsSection(data.registrations)}
       ${historySection(data.orders)}`;
     wireRenew();
