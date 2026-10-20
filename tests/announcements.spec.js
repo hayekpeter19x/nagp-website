@@ -1,8 +1,8 @@
 // Announcements: members submit, the Council approves or declines, the public sees approved ones.
-import { test, expect, call, uid, signInAs, joinMember, newPerson } from './helpers.js';
+import { test, expect, call, uid, signInAs, joinMember, newPerson, contextOptions } from './helpers.js';
 
 async function councilPage(browser) {
-  const context = await browser.newContext({ baseURL: test.info().project.use.baseURL });
+  const context = await browser.newContext(contextOptions());
   const page = await context.newPage();
   await signInAs(page, 'council');
   return page;

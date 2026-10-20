@@ -2,7 +2,7 @@
 import { test, expect, call, signInAs, joinMember, expectAccessOk } from './helpers.js';
 
 test.describe('pages', () => {
-  test('signed out, the Members\' Area and the Council Area ask you to sign in @phone', async ({ page }) => {
+  test('signed out, the Members\' Area and the Council Area ask you to sign in', async ({ page }) => {
     for (const path of ['/members/', '/members/board', '/council/', '/council/members']) {
       await page.goto(path);
       await expect(page.getByRole('heading', { level: 1 })).toHaveText('Please sign in');

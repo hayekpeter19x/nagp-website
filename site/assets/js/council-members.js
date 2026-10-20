@@ -75,7 +75,7 @@
     box.innerHTML = html`<p class="results-count">${filtered
       ? `Showing ${C.plural(members.length, 'person', 'people')} that match.`
       : `${C.plural(c.all, 'person', 'people')} in total: ${c.active} active, ${c.expired ? `${c.expired} expired, ` : ''}${c.pending} waiting for payment, ${c.lapsed} lapsed, ${c.suspended} suspended.`}</p>
-      <div class="table-wrap"><table class="table table-stack">
+      <div class="table-wrap"><table class="table table-stack table-stack-wide">
         <caption class="visually-hidden">Members</caption>
         <thead><tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Type</th><th scope="col">Place</th>
           <th scope="col">Status</th><th scope="col">Active until</th><th scope="col">Role</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>

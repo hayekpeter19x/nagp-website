@@ -1,7 +1,7 @@
 // Contact form, mailing-list sign-up, and the preview's "Comment on this page" button.
-import { test, expect, call, uid, signInAs } from './helpers.js';
+import { test, expect, call, uid, signInAs, contextOptions } from './helpers.js';
 
-test('contact form: errors for empty and invalid fields, then a thank-you @phone', async ({ page, playwright }) => {
+test('contact form: errors for empty and invalid fields, then a thank-you', async ({ page, playwright }) => {
   const id = uid();
   await page.goto('/contact');
   const form = page.locator('#contact-form');
@@ -74,7 +74,7 @@ test('the home page sign-up form works too', async ({ page }) => {
   await expect(form.getByText(/You're on the list/)).toBeVisible();
 });
 
-test('"Comment on this page" saves a comment that the Council reads in Site Feedback @phone', async ({ page, browser }) => {
+test('"Comment on this page" saves a comment that the Council reads in Site Feedback', async ({ page, browser }) => {
   const comment = `Please make the dates bigger ${uid()}`;
   await page.goto('/events');
   await page.getByRole('button', { name: 'Comment on this page' }).locator('visible=true').first().click();
@@ -89,7 +89,7 @@ test('"Comment on this page" saves a comment that the Council reads in Site Feed
   await dialog.getByRole('button', { name: 'Close' }).click();
   await expect(dialog).toBeHidden();
 
-  const context = await browser.newContext({ baseURL: test.info().project.use.baseURL });
+  const context = await browser.newContext(contextOptions());
   const council = await context.newPage();
   await signInAs(council, 'council');
   await council.goto('/council/feedback');

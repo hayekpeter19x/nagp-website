@@ -1,7 +1,7 @@
 // Signing in and out with an email and password.
 import { test, expect, call, uid, joinMember, newPerson, signInAs, PASSWORD } from './helpers.js';
 
-test('sign in with email and password, then sign out @phone', async ({ page, playwright }) => {
+test('sign in with email and password, then sign out', async ({ page, playwright }) => {
   const person = await newPerson(playwright);
   const { email, name } = await joinMember(person, { tier: 'associate' });
   await person.dispose();

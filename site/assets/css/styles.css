@@ -372,7 +372,7 @@ input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="
 .choice-title { display: block; font-weight: 700; font-size: 1.1rem; }
 
 /* ---------- Tables ---------- */
-.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.table-wrap { position: relative; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
 .table { width: 100%; border-collapse: collapse; margin: 0; font-size: .97rem; }
 .table th, .table td { text-align: left; padding: .75rem 1rem; border-bottom: 1px solid var(--line); vertical-align: top; }
 .table th { background: var(--sand); font-weight: 700; white-space: nowrap; }
@@ -382,6 +382,29 @@ input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="
   .table-stack tr { display: block; border-bottom: 1px solid var(--line); padding: .5rem 0; }
   .table-stack td { display: block; border: 0; padding: .3rem 1rem; }
   .table-stack td[data-label]::before { content: attr(data-label) ': '; font-weight: 700; }
+}
+/* Very wide tables (add .table-stack-wide, e.g. Council > Members) switch earlier, and earlier still with
+   larger text, so nobody has to scroll sideways. On wider screens the cells flow in lines: "Name: … Email: …". */
+@media (min-width: 701px) and (max-width: 1279px) {
+  .table-stack-wide thead { display: none; }
+  .table-stack-wide tr { display: block; border-bottom: 1px solid var(--line); padding: .6rem 1rem; }
+  .table-stack-wide td { display: inline-block; border: 0; padding: .2rem 1.75rem .2rem 0; }
+  .table-stack-wide td.cell-actions { display: block; padding-top: .4rem; }
+  .table-stack-wide td[data-label]::before { content: attr(data-label) ': '; font-weight: 700; }
+}
+@media (min-width: 1280px) and (max-width: 1440px) {
+  html[data-text-size] .table-stack-wide thead { display: none; }
+  html[data-text-size] .table-stack-wide tr { display: block; border-bottom: 1px solid var(--line); padding: .6rem 1rem; }
+  html[data-text-size] .table-stack-wide td { display: inline-block; border: 0; padding: .2rem 1.75rem .2rem 0; }
+  html[data-text-size] .table-stack-wide td.cell-actions { display: block; padding-top: .4rem; }
+  html[data-text-size] .table-stack-wide td[data-label]::before { content: attr(data-label) ': '; font-weight: 700; }
+}
+@media (min-width: 1441px) and (max-width: 1600px) {
+  html[data-text-size="larger"] .table-stack-wide thead { display: none; }
+  html[data-text-size="larger"] .table-stack-wide tr { display: block; border-bottom: 1px solid var(--line); padding: .6rem 1rem; }
+  html[data-text-size="larger"] .table-stack-wide td { display: inline-block; border: 0; padding: .2rem 1.75rem .2rem 0; }
+  html[data-text-size="larger"] .table-stack-wide td.cell-actions { display: block; padding-top: .4rem; }
+  html[data-text-size="larger"] .table-stack-wide td[data-label]::before { content: attr(data-label) ': '; font-weight: 700; }
 }
 
 /* ---------- Lists ---------- */

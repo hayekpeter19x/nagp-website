@@ -1,8 +1,8 @@
 // Community board: topics, replies, reports and Council moderation.
-import { test, expect, call, uid, signInAs, joinMember } from './helpers.js';
+import { test, expect, call, uid, signInAs, joinMember, contextOptions } from './helpers.js';
 
 async function newPage(browser, as) {
-  const context = await browser.newContext({ baseURL: test.info().project.use.baseURL });
+  const context = await browser.newContext(contextOptions());
   const page = await context.newPage();
   if (as) await signInAs(page, as);
   return page;

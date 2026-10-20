@@ -24,12 +24,14 @@ export default defineConfig({
   use: {
     baseURL,
     launchOptions: { executablePath },
+    // The site scrolls smoothly unless reduced motion is asked for; instant scrolling keeps clicks reliable.
+    reducedMotion: 'reduce',
     trace: 'retain-on-failure',
   },
   projects: [
-    { name: 'desktop', use: { ...devices['Desktop Chrome'], launchOptions: { executablePath } } },
+    { name: 'desktop', use: { ...devices['Desktop Chrome'], launchOptions: { executablePath }, reducedMotion: 'reduce' } },
     // The phone run covers the most important journeys only, to keep the suite fast.
-    { name: 'phone', grep: /@phone/, use: { ...devices['Pixel 7'], launchOptions: { executablePath } } },
+    { name: 'phone', grep: /@phone/, use: { ...devices['Pixel 7'], launchOptions: { executablePath }, reducedMotion: 'reduce' } },
   ],
   webServer: external ? undefined : {
     command: `rm -rf .wrangler/state-test && NAGP_DIST=dist-test node build.mjs && npx wrangler pages dev dist-test --d1 DB=nagp-local --binding DEMO_MODE=true --port ${PORT} --persist-to .wrangler/state-test --compatibility-date=2025-09-01`,

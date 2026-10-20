@@ -1,6 +1,7 @@
 // The Council Area: events, documents, check payments, members and spreadsheet downloads.
 import {
   test, expect, call, uid, signInAs, newPerson, joinMember, oneYearFromToday, expectAccessOk, createEvent,
+  contextOptions,
 } from './helpers.js';
 
 test('the Council adds an event, and it appears on the Events page with the right date and time', async ({ page, request }) => {
@@ -51,7 +52,7 @@ test('a members-only document is in the Members\' documents but not on the publi
   await expect(page.getByText(`"${title}" was added.`)).toBeVisible();
 
   // Signed out: not on /governance, not in the API
-  const visitor = await browser.newContext({ baseURL: test.info().project.use.baseURL });
+  const visitor = await browser.newContext(contextOptions());
   const vpage = await visitor.newPage();
   await vpage.goto('/governance');
   await expect(vpage.locator('#documents-list .loading')).toHaveCount(0);

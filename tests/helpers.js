@@ -61,6 +61,9 @@ export async function signOut(target) {
   await call(target, 'POST', '/api/auth/signout');
 }
 
+// Options for a second browser window (a different person) in the same test.
+export const contextOptions = () => ({ baseURL: test.info().project.use.baseURL, reducedMotion: 'reduce' });
+
 // A separate API "person" with their own cookies. Remember to dispose() it.
 export async function newPerson(playwright) {
   return playwright.request.newContext({ baseURL: test.info().project.use.baseURL });

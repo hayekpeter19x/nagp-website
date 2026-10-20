@@ -2,6 +2,7 @@
 // password hashes never leave the server, and receipts need their secret link.
 import {
   test, expect, call, uid, XSS, signInAs, newPerson, joinMember, createEvent, failOnDialog, orderFromUrl,
+  contextOptions,
 } from './helpers.js';
 
 // The page shows the attack as plain text, and nothing was turned into real HTML.
@@ -44,7 +45,7 @@ test('script in names, bios, announcements, board posts and events is shown as t
   }
 
   // What the Council sees
-  const context = await browser.newContext({ baseURL: test.info().project.use.baseURL });
+  const context = await browser.newContext(contextOptions());
   const council = await context.newPage();
   const councilDialogs = failOnDialog(council);
   await signInAs(council, 'council');
