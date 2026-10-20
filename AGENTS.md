@@ -15,7 +15,7 @@ Plain HTML/CSS/vanilla JS with no framework. `build.mjs` turns `site/` into `dis
 ```
 npm install
 npm run dev      # http://localhost:8788 with sample data; one-click demo sign-in on /signin
-npm test         # 185 end-to-end tests (Playwright). Run before every push; all must pass.
+npm test         # end-to-end tests (Playwright). Run before every push; all must pass.
 node build.mjs --strict   # fails on broken internal links
 ```
 

@@ -141,6 +141,6 @@
 .section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .5rem 1rem; margin-bottom: 1rem; }
 .section-head h2 { margin: 0; }
 .profile-layout .grid-2 { gap: 0 1.5rem; }
-/* Let long specialty names wrap on narrow screens and at the largest text size. */
+/* Let long specialty names wrap on narrow screens. */
 .listing .badge { white-space: normal; text-align: left; }
 @media (max-width: 860px) { .listing-grid { grid-template-columns: minmax(0, 1fr); } }

@@ -1,4 +1,4 @@
-// Main menu, the phone "Menu" button and the text-size buttons.
+// Main menu, the phone "Menu" button and the section menus.
 import { test, expect, openMainMenu, signInAs } from './helpers.js';
 
 const mainMenu = (page) => page.getByRole('navigation', { name: 'Main menu', includeHidden: true });
@@ -47,51 +47,6 @@ test('the phone "Menu" button opens and closes the menu @phone', async ({ page, 
   await about.click();
   await expect(page).toHaveURL(/\/about$/);
   await expect(page.getByRole('button', { name: 'Menu' })).toHaveAttribute('aria-expanded', 'false');
-});
-
-// The text-size buttons sit in the header, or inside the menu on small screens.
-async function textSizeButtons(page) {
-  const groups = page.getByRole('group', { name: /text size/i });
-  if (!(await groups.count())) await openMainMenu(page);
-  await expect(groups.first()).toBeVisible();
-  return groups.first().getByRole('button');
-}
-
-test('the text-size buttons change the size, and the choice is kept on other pages @phone', async ({ page }) => {
-  await page.goto('/');
-  const fontSize = () => page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize));
-  const normal = await fontSize();
-  let sizes = await textSizeButtons(page);
-  await expect(sizes).toHaveCount(3);
-  await expect(sizes.first()).toHaveAttribute('aria-pressed', 'true');
-
-  await sizes.nth(1).click();
-  await expect(sizes.nth(1)).toHaveAttribute('aria-pressed', 'true');
-  const large = await fontSize();
-  expect(large).toBeGreaterThan(normal);
-
-  sizes = await textSizeButtons(page);
-  await sizes.last().click();
-  await expect(sizes.last()).toHaveAttribute('aria-pressed', 'true');
-  await expect(sizes.first()).toHaveAttribute('aria-pressed', 'false');
-  const largest = await fontSize();
-  expect(largest).toBeGreaterThan(large);
-
-  // The choice is remembered on the next pages.
-  await page.goto('/about');
-  expect(await fontSize()).toBe(largest);
-  sizes = await textSizeButtons(page);
-  await expect(sizes.last()).toHaveAttribute('aria-pressed', 'true');
-  await page.goto('/events');
-  expect(await fontSize()).toBe(largest);
-
-  sizes = await textSizeButtons(page);
-  await sizes.first().click();
-  await expect(sizes.first()).toHaveAttribute('aria-pressed', 'true');
-  expect(await fontSize()).toBe(normal);
-  await page.reload();
-  expect(await fontSize()).toBe(normal);
-  await expect((await textSizeButtons(page)).first()).toHaveAttribute('aria-pressed', 'true');
 });
 
 test('the section menu of the Members\' Area works @phone', async ({ page }) => {

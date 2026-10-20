@@ -57,10 +57,8 @@
   --tap: 3rem; /* smallest comfortable click/tap size */
 }
 
-/* Text size buttons in the header change this (A / A+ / A++). */
+/* Base text size: 18px. Visitors who want it bigger use their browser zoom. */
 html { font-size: 112.5%; -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-html[data-text-size="large"] { font-size: 125%; }
-html[data-text-size="larger"] { font-size: 140%; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -136,10 +134,9 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
 @media (max-width: 640px) { .preview-banner .preview-banner-more { display: none; } }
 
 /* ---------- Header ----------
-   Laptop: logo + text size + account buttons on top, the main menu in one row below.
-   Narrower (and earlier when the text is enlarged, see "Menu button" below): logo + Menu button on
-   top, text size + account buttons in a second row, and the main menu opens as a list.
-   Phone (640px and less): the text-size buttons and "Sign out" move into the menu. */
+   Laptop: logo + account buttons on top, the main menu in one row below.
+   Narrower: logo + Menu button on top, account buttons in a second row, and the main menu opens as a list.
+   Phone (640px and less): "Sign out" moves into the menu. */
 .site-header { background: var(--surface); border-bottom: 1px solid var(--line); position: relative; z-index: 20; }
 .header-top { display: flex; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; padding-top: .9rem; padding-bottom: .9rem; }
 .brand { display: flex; align-items: center; gap: .8rem; text-decoration: none; color: var(--ink); min-width: 0; }
@@ -153,15 +150,6 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
 @media (max-width: 1340px) { .header-top:has([data-auth="council"]:not([hidden])) .brand-full { display: none; } }
 .account-actions { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
 
-.text-size { display: flex; align-items: center; gap: .3rem; }
-.text-size-label { font-size: .9rem; color: var(--ink-soft); margin-right: .3rem; }
-.text-size button { min-width: 2.5rem; min-height: 2.5rem; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); border-radius: 8px; cursor: pointer; font-family: var(--font-body); font-weight: 700; line-height: 1; padding: 0 .4rem; }
-.text-size button:hover { border-color: var(--primary); }
-.text-size button:nth-of-type(1) { font-size: .9rem; }
-.text-size button:nth-of-type(2) { font-size: 1.1rem; }
-.text-size button:nth-of-type(3) { font-size: 1.3rem; }
-.text-size button[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
-
 .site-nav { border-top: 1px solid var(--line); background: var(--surface); }
 .site-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; }
 .site-nav li { margin: 0; }
@@ -169,7 +157,7 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
 .site-nav li:first-child a { margin-left: -.7rem; } /* line "Home" up with the logo */
 .site-nav a:hover { color: var(--primary); border-bottom-color: var(--sand-strong); }
 .site-nav a[aria-current="page"] { color: var(--primary); border-bottom-color: var(--primary); }
-.site-nav .menu-text-size, .site-nav .menu-signout { display: none; }
+.site-nav .menu-signout { display: none; }
 
 /* Menu button: solid green so it is easy to spot; it turns into an outlined "X Menu" while open. */
 .menu-toggle { display: none; align-items: center; gap: .6rem; min-height: var(--tap); padding: .45rem 1.15rem; border: 2px solid var(--primary); background: var(--primary); color: #fff; border-radius: var(--radius); font: 700 1.05rem/1.2 var(--font-body); cursor: pointer; flex: none; }
@@ -182,9 +170,7 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
 .menu-toggle[aria-expanded="true"] .menu-toggle-icon::before { opacity: 1; transform: translateY(-50%) rotate(45deg); }
 .menu-toggle[aria-expanded="true"] .menu-toggle-icon::after { transform: translateY(-50%) rotate(-45deg); }
 
-/* When the main menu becomes a Menu button. The three blocks below are identical except for
-   the width and the text size they apply to: larger text needs the Menu button sooner, so the
-   eight menu items never wrap onto two lines. Keep them in step. */
+/* When the main menu becomes a Menu button (the eight menu items would otherwise wrap). */
 @media (max-width: 1000px) {
   .header-top { flex-wrap: wrap; }
   .menu-toggle { display: inline-flex; }
@@ -197,32 +183,8 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
   .site-nav a:hover { border-left-color: var(--sand-strong); }
   .site-nav a[aria-current="page"] { border-left-color: var(--primary); background: var(--primary-soft); }
 }
-@media (min-width: 1001px) and (max-width: 1110px) {
-  html[data-text-size] .header-top { flex-wrap: wrap; }
-  html[data-text-size] .menu-toggle { display: inline-flex; }
-  html[data-text-size] .header-actions { order: 3; flex: 1 1 100%; justify-content: space-between; }
-  html[data-text-size] .site-nav { display: none; }
-  html[data-text-size] .site-nav.open { display: block; }
-  html[data-text-size] .site-nav ul { flex-direction: column; padding: .25rem 0 1rem; }
-  html[data-text-size] .site-nav li + li { border-top: 1px solid var(--line); }
-  html[data-text-size] .site-nav a, html[data-text-size] .site-nav li:first-child a { margin: 0; border-bottom: 0; border-left: 5px solid transparent; padding: .55rem 1rem; font-size: 1.1rem; }
-  html[data-text-size] .site-nav a:hover { border-left-color: var(--sand-strong); }
-  html[data-text-size] .site-nav a[aria-current="page"] { border-left-color: var(--primary); background: var(--primary-soft); }
-}
-@media (min-width: 1111px) and (max-width: 1240px) {
-  html[data-text-size="larger"] .header-top { flex-wrap: wrap; }
-  html[data-text-size="larger"] .menu-toggle { display: inline-flex; }
-  html[data-text-size="larger"] .header-actions { order: 3; flex: 1 1 100%; justify-content: space-between; }
-  html[data-text-size="larger"] .site-nav { display: none; }
-  html[data-text-size="larger"] .site-nav.open { display: block; }
-  html[data-text-size="larger"] .site-nav ul { flex-direction: column; padding: .25rem 0 1rem; }
-  html[data-text-size="larger"] .site-nav li + li { border-top: 1px solid var(--line); }
-  html[data-text-size="larger"] .site-nav a, html[data-text-size="larger"] .site-nav li:first-child a { margin: 0; border-bottom: 0; border-left: 5px solid transparent; padding: .55rem 1rem; font-size: 1.1rem; }
-  html[data-text-size="larger"] .site-nav a:hover { border-left-color: var(--sand-strong); }
-  html[data-text-size="larger"] .site-nav a[aria-current="page"] { border-left-color: var(--primary); background: var(--primary-soft); }
-}
 /* Phones: logo + Menu on top, then big "Sign in" and "Join NAGP" buttons side by side.
-   Text size and "Sign out" are inside the menu. */
+   "Sign out" is inside the menu. */
 @media (max-width: 640px) {
   .container { padding-left: 1rem; padding-right: 1rem; }
   .header-top { padding-top: .65rem; padding-bottom: .75rem; gap: .65rem .75rem; }
@@ -230,10 +192,9 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
   .brand-full { display: none; }
   .brand-mark { width: 2.6rem; height: 2.6rem; }
   .brand-name { font-size: 1.45rem; }
-  .header-actions > .text-size, .header-actions .header-signout { display: none; }
+  .header-actions .header-signout { display: none; }
   .account-actions { flex: 1 1 100%; }
   .account-actions > .btn { flex: 1 1 0; white-space: nowrap; }
-  .site-nav .menu-text-size { display: flex; padding: .9rem 0 .8rem; border-bottom: 1px solid var(--line); }
   .site-nav .menu-signout:not([hidden]) { display: inline-flex; margin: 0 0 1.25rem; }
 }
 
@@ -383,28 +344,13 @@ input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="
   .table-stack td { display: block; border: 0; padding: .3rem 1rem; }
   .table-stack td[data-label]::before { content: attr(data-label) ': '; font-weight: 700; }
 }
-/* Very wide tables (add .table-stack-wide, e.g. Council > Members) switch earlier, and earlier still with
-   larger text, so nobody has to scroll sideways. On wider screens the cells flow in lines: "Name: … Email: …". */
+/* Very wide tables (add .table-stack-wide, e.g. Council > Members) switch earlier, so nobody has to scroll sideways. On wider screens the cells flow in lines: "Name: … Email: …". */
 @media (min-width: 701px) and (max-width: 1279px) {
   .table-stack-wide thead { display: none; }
   .table-stack-wide tr { display: block; border-bottom: 1px solid var(--line); padding: .6rem 1rem; }
   .table-stack-wide td { display: inline-block; border: 0; padding: .2rem 1.75rem .2rem 0; }
   .table-stack-wide td.cell-actions { display: block; padding-top: .4rem; }
   .table-stack-wide td[data-label]::before { content: attr(data-label) ': '; font-weight: 700; }
-}
-@media (min-width: 1280px) and (max-width: 1440px) {
-  html[data-text-size] .table-stack-wide thead { display: none; }
-  html[data-text-size] .table-stack-wide tr { display: block; border-bottom: 1px solid var(--line); padding: .6rem 1rem; }
-  html[data-text-size] .table-stack-wide td { display: inline-block; border: 0; padding: .2rem 1.75rem .2rem 0; }
-  html[data-text-size] .table-stack-wide td.cell-actions { display: block; padding-top: .4rem; }
-  html[data-text-size] .table-stack-wide td[data-label]::before { content: attr(data-label) ': '; font-weight: 700; }
-}
-@media (min-width: 1441px) and (max-width: 1600px) {
-  html[data-text-size="larger"] .table-stack-wide thead { display: none; }
-  html[data-text-size="larger"] .table-stack-wide tr { display: block; border-bottom: 1px solid var(--line); padding: .6rem 1rem; }
-  html[data-text-size="larger"] .table-stack-wide td { display: inline-block; border: 0; padding: .2rem 1.75rem .2rem 0; }
-  html[data-text-size="larger"] .table-stack-wide td.cell-actions { display: block; padding-top: .4rem; }
-  html[data-text-size="larger"] .table-stack-wide td[data-label]::before { content: attr(data-label) ': '; font-weight: 700; }
 }
 
 /* ---------- Lists ---------- */

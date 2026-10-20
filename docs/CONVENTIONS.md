@@ -93,9 +93,9 @@ Layout uses `.container` (`.container-narrow`, `.container-mid`), `.section`, `.
 Type: headings use Source Serif 4, everything else Atkinson Hyperlegible. Atkinson draws the digit zero with a slash, so `styles.css` borrows only the "0" from Figtree (an extra `@font-face` with `unicode-range: U+0030`); dates read "2026", not "2Ø26". Never set text smaller than `.9rem` (about 16px).
 
 The header and menus (markup in `site/layout.html` and `build.mjs`, styles in the Header section of `styles.css`):
-- Laptop: logo, text size and account buttons on top, the eight menu items in one row below.
-- Narrower screens get the green **Menu** button. Larger text needs it sooner (the menu would otherwise wrap), so there are three identical media-query blocks, one per text size (normal at 1000px, large at 1110px, largest at 1240px). If you add a menu item, measure and move those widths together.
-- Phones (640px and less): logo + Menu on top, then big account buttons side by side. The text-size buttons and Sign out are repeated inside the menu (`.menu-text-size`, `.menu-signout`); `app.js` drives every `.text-size button` and `[data-signout]`, so copies work without extra code. The section links (`.subnav`) fold into one "… : all pages" button (`.subnav-phone`).
+- Laptop: logo and account buttons on top, the eight menu items in one row below.
+- Narrower screens (1000px and less) get the green **Menu** button, so the menu never wraps onto two lines. If you add a menu item, check that it still fits and move that width if needed.
+- Phones (640px and less): logo + Menu on top, then big account buttons side by side. Sign out is repeated inside the menu (`.menu-signout`); `app.js` wires up every `[data-signout]`, so the copy works without extra code. The section links (`.subnav`) fold into one "… : all pages" button (`.subnav-phone`).
 - The preview banner is one line on a laptop; `.preview-banner-more` parts are hidden on phones. The preview-only `.feedback-fab` is a small dark pill (never terracotta or green, so it does not compete with page buttons), and the footer has extra bottom padding while it is shown.
 
 Colors are CSS variables in `:root`, e.g. `var(--primary)`, `var(--accent)`, `var(--sand)`, `var(--ink-soft)`. Don't hard-code new colors. If an area really needs extra CSS, put it in `site/assets/css/<area>.css` and list it in the page's `styles`.

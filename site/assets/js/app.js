@@ -308,12 +308,6 @@
   };
 
   /* ---------- Page chrome ---------- */
-  function setTextSize(size) {
-    if (size) document.documentElement.dataset.textSize = size; else delete document.documentElement.dataset.textSize;
-    try { if (size) localStorage.setItem('nagp-text-size', size); else localStorage.removeItem('nagp-text-size'); } catch { /* ignore */ }
-    NAGP.$$('.text-size button').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.textSize || '') === (size || ''))));
-  }
-
   function feedbackDialog() {
     let dlg = document.getElementById('feedback-dialog');
     if (dlg) return dlg;
@@ -352,12 +346,6 @@
   }
 
   function init() {
-    // Text size buttons
-    let current = '';
-    try { current = localStorage.getItem('nagp-text-size') || ''; } catch { /* ignore */ }
-    setTextSize(current);
-    NAGP.$$('.text-size button').forEach((b) => b.addEventListener('click', () => setTextSize(b.dataset.textSize)));
-
     // Mobile menu
     const toggle = NAGP.$('.menu-toggle');
     const nav = NAGP.$('#site-nav');

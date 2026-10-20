@@ -13,7 +13,6 @@
 <link rel="preload" href="/assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/styles.css?v={{v}}">
 {{styles}}
-<script>try{var t=localStorage.getItem('nagp-text-size');if(t)document.documentElement.dataset.textSize=t}catch(e){}</script>
 </head>
 <body data-access="{{access}}" data-page="{{path}}">
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -26,12 +25,6 @@
     </a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="menu-toggle-icon" aria-hidden="true"></span>Menu</button>
     <div class="header-actions">
-      <div class="text-size" role="group" aria-label="Text size">
-        <span class="text-size-label" aria-hidden="true">Text size</span>
-        <button type="button" data-text-size="" aria-pressed="true" aria-label="Normal text size">A</button>
-        <button type="button" data-text-size="large" aria-pressed="false" aria-label="Large text size">A</button>
-        <button type="button" data-text-size="larger" aria-pressed="false" aria-label="Largest text size">A</button>
-      </div>
       <div class="account-actions">
         <a class="btn btn-secondary btn-small" href="/signin" data-auth="signed-out">Sign in</a>
         <a class="btn btn-accent btn-small" href="/join" data-auth="not-member">Join NAGP</a>
@@ -43,12 +36,6 @@
   </div>
   <div id="site-nav" class="site-nav">
     <div class="container">
-      <div class="text-size menu-text-size" role="group" aria-label="Text size">
-        <span class="text-size-label" aria-hidden="true">Text size</span>
-        <button type="button" data-text-size="" aria-pressed="true" aria-label="Normal text size">A</button>
-        <button type="button" data-text-size="large" aria-pressed="false" aria-label="Large text size">A</button>
-        <button type="button" data-text-size="larger" aria-pressed="false" aria-label="Largest text size">A</button>
-      </div>
       <nav aria-label="Main menu"><ul>{{nav}}</ul></nav>
       <button class="btn btn-secondary menu-signout" type="button" data-auth="signed-in" data-signout hidden>Sign out</button>
     </div>

@@ -13,7 +13,7 @@ It runs entirely on **Cloudflare's free tier**:
 | Members | Edit their profile and choose whether to appear in the public directory, browse the members-only directory by state, post announcements (the Council approves them), use the community board, read minutes and documents, see their payments and receipts |
 | Council | Approve or decline announcements, moderate the board, manage members (including people who pay by check, and password resets), events, documents, messages, mailing-list sign-ups and payments, and read website feedback |
 
-The site is designed for readers of every age. It has large text (Atkinson Hyperlegible, a typeface made for low-vision readers), text-size buttons in the header, high contrast, big buttons and plain language. There are no hover menus or pop-ups.
+The site is designed for readers of every age. It has large text (Atkinson Hyperlegible, a typeface made for low-vision readers), high contrast, big buttons and plain language. There are no hover menus or pop-ups.
 
 ## Preview mode
 
