@@ -1,6 +1,6 @@
 <form class="inline-form" data-subscribe-form data-interest="{{interest}}" novalidate>
-  <div class="field"><label for="{{id}}-first">First name</label><input id="{{id}}-first" name="first_name" type="text" autocomplete="given-name"></div>
-  <div class="field"><label for="{{id}}-last">Last name</label><input id="{{id}}-last" name="last_name" type="text" autocomplete="family-name"></div>
+  <div class="field"><label for="{{id}}-first">First name <span class="optional">(optional)</span></label><input id="{{id}}-first" name="first_name" type="text" autocomplete="given-name"></div>
+  <div class="field"><label for="{{id}}-last">Last name <span class="optional">(optional)</span></label><input id="{{id}}-last" name="last_name" type="text" autocomplete="family-name"></div>
   <div class="field"><label for="{{id}}-email">Email address</label><input id="{{id}}-email" name="email" type="email" autocomplete="email" required></div>
   <div class="hp-field" aria-hidden="true"><label>Leave this empty <input name="hp" tabindex="-1" autocomplete="off"></label></div>
   <input type="hidden" name="source" value="{{id}}">

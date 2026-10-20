@@ -3,10 +3,7 @@
   const { $, $$, api, html } = NAGP;
 
   // Only allow redirects back to our own pages.
-  const next = (() => {
-    const n = NAGP.qs('next') || '';
-    return n.startsWith('/') && !n.startsWith('//') ? n : '/members/';
-  })();
+  const next = NAGP.localUrl(NAGP.qs('next'), '/members/');
   const goNext = (user) => {
     location.href = next === '/members/' && user && user.isCouncil ? '/council/' : next;
   };

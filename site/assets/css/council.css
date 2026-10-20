@@ -3,10 +3,10 @@
 /* ---------- Dashboard: "Needs your attention" ---------- */
 .attention-list { list-style: none; padding: 0; margin: 0 0 1rem; display: grid; gap: 1rem; }
 .attention-list li { margin: 0; }
-.attention-card { display: flex; align-items: center; gap: 1.25rem; padding: 1.25rem 1.5rem; border-left: 6px solid var(--accent); }
+.attention-card { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.25rem; padding: 1.25rem 1.5rem; border-left: 6px solid var(--accent); }
 .attention-count { flex: none; min-width: 3.6rem; height: 3.6rem; padding: 0 .6rem; border-radius: 999px; display: grid; place-items: center;
   background: var(--accent); color: #fff; font: 700 1.7rem/1 var(--font-head); }
-.attention-text { flex: 1; min-width: 0; }
+.attention-text { flex: 1 1 11rem; min-width: 0; }
 .attention-text strong { display: block; font-size: 1.2rem; line-height: 1.35; }
 .attention-text .card-cta { display: inline-block; margin-top: .35rem; }
 .all-clear { display: flex; align-items: center; gap: 1rem; }
@@ -44,7 +44,7 @@
 
 /* ---------- Item cards (announcements, messages, reports, events) ---------- */
 .item-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.25rem; }
-.item-list > li { margin: 0; }
+.item-list > li { margin: 0; min-width: 0; }
 .item-card h3 { margin: 0 0 .4rem; font-size: 1.35rem; overflow-wrap: anywhere; }
 .item-card.is-new { border-left: 6px solid var(--accent); }
 .item-card.is-done { background: var(--bg); box-shadow: none; }
@@ -58,7 +58,8 @@
 .badges { display: inline-flex; flex-wrap: wrap; gap: .35rem; vertical-align: middle; }
 
 /* ---------- Events list ---------- */
-.event-admin .event-item { grid-template-columns: auto 1fr; }
+.event-admin .event-item { grid-template-columns: auto minmax(0, 1fr); }
+@media (max-width: 480px) { .event-admin .event-item { grid-template-columns: minmax(0, 1fr); } }
 .event-admin h3 { margin-bottom: .25rem; }
 .reg-count { font-weight: 700; }
 

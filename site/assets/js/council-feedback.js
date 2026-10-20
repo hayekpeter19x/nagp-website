@@ -14,7 +14,7 @@
     return q ? `${name} (${q})` : name;
   }
   // Only link to pages on this site.
-  const safePath = (path) => (/^\/(?!\/)/.test(path || '') ? path : '/');
+  const safePath = (path) => NAGP.localUrl(path, '/');
 
   function render() {
     const open = items.filter((f) => !f.resolved).length;

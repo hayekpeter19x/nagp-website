@@ -105,10 +105,12 @@ async function build() {
 
   const version = hashDir([join(SITE, 'assets')]);
   const layout = readFileSync(join(SITE, 'layout.html'), 'utf8');
-  const previewBanner = ORG.preview ? `<div class="preview-banner" role="note"><div class="container">
-  <span><strong>Preview site.</strong> This is a draft of the new NAGP website for the Council to review. It is not the live site. Made-up examples are marked &ldquo;Sample&rdquo;.</span>
-  <span><a href="/preview-guide">How to review</a> &middot; <button type="button" class="link-button" data-feedback-open>Comment on this page</button></span>
-</div></div>` : '';
+  // One line on a laptop, two short lines on a phone (the long part is hidden there, and the
+  // floating "Comment" button takes the place of the banner's comment link).
+  const previewBanner = ORG.preview ? `<section class="preview-banner" aria-label="About this preview"><div class="container">
+  <p><strong>Preview site:</strong> a draft for the Council to review, not the live site.<span class="preview-banner-more"> Examples marked &ldquo;Sample&rdquo; are made up.</span></p>
+  <p class="preview-banner-links"><a href="/preview-guide">How to review</a><span class="preview-banner-more" aria-hidden="true"> &middot; </span><button type="button" class="link-button preview-banner-more" data-feedback-open>Comment on this page</button></p>
+</div></section>` : '';
 
   const pages = walk(join(SITE, 'pages')).filter((f) => f.endsWith('.html'));
   const built = new Set();
@@ -129,9 +131,12 @@ async function build() {
     let subnav = '';
     const section = SECTIONS[meta.section];
     if (section) {
-      subnav = `<nav class="subnav" aria-label="${esc(section.label)} pages"><div class="container"><span class="subnav-label">${esc(section.label)}:</span><ul>`
-        + section.links.map(([label, href]) => `<li><a href="${href}"${href === path ? ' aria-current="page"' : ''}>${esc(label)}</a></li>`).join('')
-        + `</ul></div></nav>`;
+      // Laptops and tablets see a row of buttons; phones see one "<Section>: all pages" button that opens the same list.
+      const links = section.links.map(([label, href]) => `<li><a href="${href}"${href === path ? ' aria-current="page"' : ''}>${esc(label)}</a></li>`).join('');
+      subnav = `<nav class="subnav" aria-label="${esc(section.label)} pages"><div class="container">`
+        + `<span class="subnav-label">${esc(section.label)}:</span><ul class="subnav-list">${links}</ul>`
+        + `<details class="subnav-phone"><summary>${esc(section.label)}: all pages</summary><ul>${links}</ul></details>`
+        + `</div></nav>`;
     }
     const scripts = (meta.scripts || []).map((s) => `<script src="/assets/js/${s}?v=${version}"></script>`).join('\n');
     const styles = (meta.styles || []).map((s) => `<link rel="stylesheet" href="/assets/css/${s}?v=${version}">`).join('\n');

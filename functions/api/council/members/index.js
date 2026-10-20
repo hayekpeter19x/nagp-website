@@ -1,7 +1,7 @@
 // GET  /api/council/members?q=&status=&role=&format=csv   everyone with an account
 // POST /api/council/members                              add a member by hand (for example someone who paid by check)
 import { json, readJson, validate, requireUser, HttpError, nowIso } from '../../../../lib/http.js';
-import { all, first, run } from '../../../../lib/db.js';
+import { all, first, run, likeContains } from '../../../../lib/db.js';
 import { hashPassword, checkPasswordStrength } from '../../../../lib/auth.js';
 import { MEMBERSHIP_TIERS, REGIONS, regionName, tierByKey } from '../../../../lib/config.js';
 import {
@@ -18,7 +18,7 @@ export async function onRequestGet(context) {
   const args = [];
   const q = (params.get('q') || '').trim().slice(0, 100);
   if (q) {
-    const like = '%' + q.toLowerCase().replace(/[\\%_]/g, (c) => '\\' + c) + '%';
+    const like = likeContains(q.toLowerCase());
     where.push(`(LOWER(name) LIKE ? ESCAPE '\\' OR LOWER(email) LIKE ? ESCAPE '\\' OR LOWER(city) LIKE ? ESCAPE '\\')`);
     args.push(like, like, like);
   }

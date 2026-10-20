@@ -21,5 +21,6 @@
     <p>${t.who}</p>
     <h4>What is included</h4>
     <ul class="list-check">${(t.benefits || []).map((b) => html`<li>${b}</li>`)}</ul>
+    <a class="btn btn-secondary btn-block" href="/join?tier=${t.key}">Join as ${/^[AEIOU]/i.test(t.name) ? 'an' : 'a'} ${t.name}</a>
   </article>`)}</div>`;
 })();

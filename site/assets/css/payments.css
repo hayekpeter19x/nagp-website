@@ -13,7 +13,7 @@
 .choice-card .choice-price { display: block; font-family: var(--font-head); font-size: 1.7rem; font-weight: 700; color: var(--primary-strong); line-height: 1.2; margin: .35rem 0 .1rem; }
 .choice-card .choice-price small { font-family: var(--font-body); font-size: .95rem; font-weight: 400; color: var(--ink-soft); }
 .choice-card .choice-who { display: block; color: var(--ink-soft); font-size: .95rem; margin-top: .4rem; }
-.sample-price { display: block; font-size: .85rem; font-style: italic; color: var(--warning); }
+.choice-card .sample-price { margin: .35rem 0 .5rem; }
 
 /* Review list (join step 3) */
 .review-list { margin: 0; }

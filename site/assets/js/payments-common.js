@@ -72,8 +72,6 @@
   // Safe local redirects only (for ?next= style links coming back from the server).
   Pay.go = (url) => {
     const u = String(url || '');
-    if (u.startsWith('/') && !u.startsWith('//')) location.href = u;
-    else if (/^https:\/\/checkout\.stripe\.com\//.test(u)) location.href = u;
-    else location.href = '/';
+    location.href = /^https:\/\/checkout\.stripe\.com\//.test(u) ? u : NAGP.localUrl(u, '/');
   };
 })();

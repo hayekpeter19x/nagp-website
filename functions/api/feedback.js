@@ -7,7 +7,8 @@ export async function onRequestPost({ request, env }) {
   const body = await readJson(request);
   if (body.hp) return json({ ok: true }); // spam trap
   const check = validate(body);
-  const page = check.text('page', { label: 'Page', max: 300 }) || '/';
+  // The page address is filled in by the browser, so a very long one is shortened, not refused.
+  const page = check.text('page', { label: 'Page', max: Infinity }).slice(0, 300) || '/';
   const name = check.text('name', { label: 'Your name', max: 100 });
   const comment = check.text('comment', { label: 'Your comment', required: true, max: 4000, multiline: true });
   check.done();

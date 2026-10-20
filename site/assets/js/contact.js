@@ -7,10 +7,14 @@
   const topic = $('#contact-topic');
   const tip = $('#signin-help-tip');
 
-  // Pre-select the topic from the address (matching is not case-sensitive).
+  // Pre-select the topic from the address (matching is not case-sensitive). Links elsewhere on the
+  // site use short names, e.g. ?topic=Events for "Events and trainings" or ?topic=Website%20help.
   const wanted = String(NAGP.qs('topic') || '').trim().toLowerCase();
   if (wanted) {
-    const match = [...topic.options].find((o) => o.value.toLowerCase() === wanted);
+    const options = [...topic.options];
+    const word = wanted.split(/\s+/)[0];
+    const match = options.find((o) => o.value.toLowerCase() === wanted)
+      || options.find((o) => o.value.toLowerCase().split(/\s+/).includes(word));
     if (match) topic.value = match.value;
   }
 

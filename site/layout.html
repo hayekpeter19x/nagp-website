@@ -20,11 +20,11 @@
 {{previewBanner}}
 <header class="site-header">
   <div class="container header-top">
-    <a class="brand" href="/" aria-label="NAGP home page">
+    <a class="brand" href="/">
       {{> logo-mark}}
-      <span class="brand-text"><span class="brand-name">NAGP</span><span class="brand-full">North American Gestalt Professionals</span></span>
+      <span class="brand-text"><span class="brand-name">NAGP</span><span class="brand-full">North American Gestalt Professionals</span></span><span class="visually-hidden">, home page</span>
     </a>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="menu-toggle-icon" aria-hidden="true"></span> Menu</button>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="menu-toggle-icon" aria-hidden="true"></span>Menu</button>
     <div class="header-actions">
       <div class="text-size" role="group" aria-label="Text size">
         <span class="text-size-label" aria-hidden="true">Text size</span>
@@ -32,16 +32,27 @@
         <button type="button" data-text-size="large" aria-pressed="false" aria-label="Large text size">A</button>
         <button type="button" data-text-size="larger" aria-pressed="false" aria-label="Largest text size">A</button>
       </div>
-      <a class="btn btn-secondary btn-small" href="/signin" data-auth="signed-out">Sign in</a>
-      <a class="btn btn-accent btn-small" href="/join" data-auth="not-member">Join NAGP</a>
-      <a class="btn btn-secondary btn-small" href="/members/" data-auth="signed-in" hidden>Members' Area</a>
-      <a class="btn btn-secondary btn-small" href="/council/" data-auth="council" hidden>Council Area</a>
-      <button class="btn btn-quiet btn-small" type="button" data-auth="signed-in" data-signout hidden>Sign out</button>
+      <div class="account-actions">
+        <a class="btn btn-secondary btn-small" href="/signin" data-auth="signed-out">Sign in</a>
+        <a class="btn btn-accent btn-small" href="/join" data-auth="not-member">Join NAGP</a>
+        <a class="btn btn-secondary btn-small" href="/members/" data-auth="signed-in" hidden>Members' Area</a>
+        <a class="btn btn-secondary btn-small" href="/council/" data-auth="council" hidden>Council Area</a>
+        <button class="btn btn-quiet btn-small header-signout" type="button" data-auth="signed-in" data-signout hidden>Sign out</button>
+      </div>
     </div>
   </div>
-  <nav id="site-nav" class="site-nav" aria-label="Main menu">
-    <div class="container"><ul>{{nav}}</ul></div>
-  </nav>
+  <div id="site-nav" class="site-nav">
+    <div class="container">
+      <div class="text-size menu-text-size" role="group" aria-label="Text size">
+        <span class="text-size-label" aria-hidden="true">Text size</span>
+        <button type="button" data-text-size="" aria-pressed="true" aria-label="Normal text size">A</button>
+        <button type="button" data-text-size="large" aria-pressed="false" aria-label="Large text size">A</button>
+        <button type="button" data-text-size="larger" aria-pressed="false" aria-label="Largest text size">A</button>
+      </div>
+      <nav aria-label="Main menu"><ul>{{nav}}</ul></nav>
+      <button class="btn btn-secondary menu-signout" type="button" data-auth="signed-in" data-signout hidden>Sign out</button>
+    </div>
+  </div>
 </header>
 {{subnav}}
 <main id="main" tabindex="-1">

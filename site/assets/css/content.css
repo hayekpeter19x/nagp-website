@@ -31,9 +31,10 @@
 .home-list .meta { margin-bottom: .25rem; }
 .home-empty { text-align: left; padding: 1.5rem; }
 
-/* ---------- Avatars in a row (Council teaser) ---------- */
-.avatar-row { display: flex; flex-wrap: wrap; gap: .6rem; list-style: none; padding: 0; margin: 0 0 1.25rem; }
-.avatar-row li { margin: 0; }
+/* ---------- Home: the five Council members, initials + name ---------- */
+.council-teaser { list-style: none; padding: 0; margin: 0 0 .5rem; display: grid; gap: .75rem 1.5rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr)); }
+.council-teaser li { margin: 0; display: flex; align-items: center; gap: .75rem; font-weight: 700; font-size: 1.05rem; }
+.council-teaser .avatar { width: 3.25rem; height: 3.25rem; font-size: 1.1rem; background: var(--surface); }
 
 /* ---------- Founding Council cards ---------- */
 .council-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap); }
@@ -100,7 +101,6 @@
 /* ---------- Membership ---------- */
 .price-card h3 { margin-bottom: .25rem; }
 .price-card .price { margin-top: .75rem; }
-.sample-price { display: block; margin: .4rem 0 1rem; padding: .35rem .7rem; border: 1px dashed #c99a2e; background: #fff7e0; color: #6b4a00; border-radius: 8px; font-size: .9rem; font-weight: 700; }
 .join-box { text-align: center; }
 .join-box .actions { justify-content: center; }
 
@@ -112,7 +112,7 @@
 .big-links .big-link-title { display: block; font-family: var(--font-head); font-size: 1.4rem; font-weight: 600; color: var(--primary-strong); margin-bottom: .25rem; }
 
 /* ---------- Draft label ---------- */
-.draft-label { display: inline-block; font-size: .85rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #6b4a00; background: #fff7e0; border: 1px dashed #c99a2e; border-radius: 999px; padding: .15rem .8rem; margin-bottom: .75rem; }
+.draft-label { display: inline-block; font-size: .9rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #6b4a00; background: #fff7e0; border: 1px dashed #c99a2e; border-radius: 999px; padding: .15rem .8rem; margin-bottom: .75rem; }
 
 /* ---------- Small helpers ---------- */
 .prose .lede { font-size: 1.2rem; }
@@ -120,10 +120,6 @@
 .aside-card + .aside-card { margin-top: 1.25rem; }
 .kbd, kbd { font-family: var(--font-body); font-size: .9em; font-weight: 700; background: var(--surface); border: 1px solid var(--line-strong); border-bottom-width: 3px; border-radius: 6px; padding: .05rem .45rem; white-space: nowrap; }
 
-/* Overlapping avatars (home page Council teaser) */
-.avatar-stack { gap: 0; }
-.avatar-stack li + li { margin-left: -.55rem; }
-.avatar-stack .avatar { border: 3px solid var(--sand); }
 
 /* Give the green sign-up band a little more room on phones */
 .list-more { margin: 1rem 0 0; font-weight: 700; }

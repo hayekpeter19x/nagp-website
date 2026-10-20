@@ -42,7 +42,7 @@
     if (mode === 'demo') {
       return html`<div class="card pay-card">
         <h2>Pay by card</h2>
-        ${NAGP.notice('warning', 'Preview: no real money is charged. This is how the payment step will look.', 'This is a preview')}
+        ${NAGP.notice('warning', 'No real money is charged. This is how the payment step will look.', 'This is a preview')}
         <div class="sim-card" role="group" aria-label="Card details (simulated)">
           <div class="field"><label for="sim-name">Name on the card</label><input id="sim-name" type="text" value="${order.name}" readonly></div>
           <div class="field"><label for="sim-number">Card number</label><input id="sim-number" type="text" value="4242 4242 4242 4242" readonly></div>

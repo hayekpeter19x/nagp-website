@@ -23,7 +23,8 @@ export async function onRequestPut(context) {
   if (has('name')) changes.name = check.text('name', { label: 'Your name', required: true, max: 120 });
   if (has('city')) changes.city = check.text('city', { label: 'City or town', max: 80 });
   if (has('state')) changes.state = check.oneOf('state', REGION_CODES, { label: 'a state or province from the list', required: false });
-  if (has('training')) changes.training = check.text('training', { label: 'Gestalt training', max: 300 });
+  // Same limit as the join form, so what someone wrote when joining can always be saved again.
+  if (has('training')) changes.training = check.text('training', { label: 'Gestalt training', max: 1000, multiline: true });
   if (has('bio')) changes.bio = check.text('bio', { label: 'About you', max: 1500, multiline: true });
   if (has('website')) changes.website = check.url('website', { label: 'Website' });
   if (has('public_email')) changes.public_email = check.email('public_email', { label: 'Email shown in directories', required: false });

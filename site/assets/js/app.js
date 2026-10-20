@@ -32,6 +32,16 @@
 
   /* ---------- Small helpers ---------- */
   NAGP.qs = (name) => new URLSearchParams(location.search).get(name);
+  // A path on this website ("/members/?x=1"), or the fallback. Never another website, even for
+  // tricks like "//evil.example", "/\evil.example" or "/<tab>/evil.example" that browsers treat as one.
+  NAGP.localUrl = (url, fallback = '/') => {
+    const s = String(url || '');
+    try {
+      const u = new URL(s, location.origin);
+      if (s.startsWith('/') && u.origin === location.origin) return u.pathname + u.search + u.hash;
+    } catch { /* not a valid address */ }
+    return fallback;
+  };
   NAGP.$ = (sel, root = document) => root.querySelector(sel);
   NAGP.$$ = (sel, root = document) => [...root.querySelectorAll(sel)];
   NAGP.initials = (name) => String(name || '?').replace(/\(.*?\)/g, '').trim().split(/\s+/).filter(Boolean)
@@ -365,9 +375,11 @@
     if (CONFIG.ORG && CONFIG.ORG.preview) {
       const fab = document.createElement('button');
       fab.type = 'button';
-      fab.className = 'btn btn-accent feedback-fab';
+      fab.className = 'feedback-fab';
       fab.setAttribute('data-feedback-open', '');
-      fab.textContent = 'Comment on this page';
+      fab.setAttribute('aria-label', 'Comment on this page');
+      // A small dark pill, so it never competes with the page's own buttons (styles.css, .feedback-fab).
+      fab.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span>Comment<span class="feedback-fab-more"> on this page</span></span>';
       document.body.appendChild(fab);
       NAGP.$$('[data-feedback-open]').forEach((b) => b.addEventListener('click', () => {
         const dlg = feedbackDialog();

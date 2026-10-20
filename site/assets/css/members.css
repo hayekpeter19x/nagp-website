@@ -119,7 +119,7 @@
 .specialty-checks .check { border: 2px solid var(--line-strong); border-radius: var(--radius); padding: .7rem .9rem; margin: 0; background: #fff; font-weight: 700; align-items: center; }
 .specialty-checks .check:has(input:checked) { border-color: var(--primary); background: var(--primary-soft); }
 .specialty-checks .check input { margin: 0; }
-.char-count { display: block; text-align: right; color: var(--ink-soft); font-size: .88rem; margin-top: .25rem; }
+.char-count { display: block; text-align: right; color: var(--ink-soft); font-size: .9rem; margin-top: .25rem; }
 .password-card { max-width: 40rem; }
 
 /* ---------- Documents ---------- */
