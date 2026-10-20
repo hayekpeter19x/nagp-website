@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{fullTitle}}</title>
+<meta name="description" content="{{description}}">
+{{robots}}
+<meta property="og:title" content="{{fullTitle}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:type" content="website">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/styles.css?v={{v}}">
+{{styles}}
+<script>try{var t=localStorage.getItem('nagp-text-size');if(t)document.documentElement.dataset.textSize=t}catch(e){}</script>
+</head>
+<body data-access="{{access}}" data-page="{{path}}">
+<a class="skip-link" href="#main">Skip to main content</a>
+{{previewBanner}}
+<header class="site-header">
+  <div class="container header-top">
+    <a class="brand" href="/" aria-label="NAGP home page">
+      {{> logo-mark}}
+      <span class="brand-text"><span class="brand-name">NAGP</span><span class="brand-full">North American Gestalt Professionals</span></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="menu-toggle-icon" aria-hidden="true"></span> Menu</button>
+    <div class="header-actions">
+      <div class="text-size" role="group" aria-label="Text size">
+        <span class="text-size-label" aria-hidden="true">Text size</span>
+        <button type="button" data-text-size="" aria-pressed="true" aria-label="Normal text size">A</button>
+        <button type="button" data-text-size="large" aria-pressed="false" aria-label="Large text size">A</button>
+        <button type="button" data-text-size="larger" aria-pressed="false" aria-label="Largest text size">A</button>
+      </div>
+      <a class="btn btn-secondary btn-small" href="/signin" data-auth="signed-out">Sign in</a>
+      <a class="btn btn-accent btn-small" href="/join" data-auth="not-member">Join NAGP</a>
+      <a class="btn btn-secondary btn-small" href="/members/" data-auth="signed-in" hidden>Members' Area</a>
+      <a class="btn btn-secondary btn-small" href="/council/" data-auth="council" hidden>Council Area</a>
+      <button class="btn btn-quiet btn-small" type="button" data-auth="signed-in" data-signout hidden>Sign out</button>
+    </div>
+  </div>
+  <nav id="site-nav" class="site-nav" aria-label="Main menu">
+    <div class="container"><ul>{{nav}}</ul></div>
+  </nav>
+</header>
+{{subnav}}
+<main id="main" tabindex="-1">
+  <div id="access-gate"></div>
+  <div id="page-content">
+{{content}}
+  </div>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">{{> logo-mark}}<strong>North American Gestalt Professionals</strong></div>
+        <p>A national community of Gestalt therapists, practitioners and educators building a professional home for Gestalt therapy.</p>
+        <p>Email: <a href="mailto:{{org.email}}">{{org.email}}</a></p>
+      </div>
+      <div>
+        <h2>About</h2>
+        <ul>
+          <li><a href="/about">About NAGP</a></li>
+          <li><a href="/founding-council">Founding Council</a></li>
+          <li><a href="/history">History &amp; Lineage</a></li>
+          <li><a href="/governance">Governance</a></li>
+          <li><a href="/faq">Questions &amp; Answers</a></li>
+          <li><a href="/resources">Resources</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Get involved</h2>
+        <ul>
+          <li><a href="/membership">Membership</a></li>
+          <li><a href="/join">Join NAGP</a></li>
+          <li><a href="/events">Events &amp; Trainings</a></li>
+          <li><a href="/announcements">Announcements</a></li>
+          <li><a href="/newsletter">Mailing list</a></li>
+          <li><a href="/donate">Donate</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Members</h2>
+        <ul>
+          <li><a href="/signin">Sign in</a></li>
+          <li><a href="/members/">Members' Area</a></li>
+          <li><a href="/directory">Find a Practitioner</a></li>
+          <li><a href="/community-guidelines">Community Guidelines</a></li>
+          <li><a href="/contact">Contact us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; {{year}} North American Gestalt Professionals (NAGP)</span>
+      <span><a href="/privacy">Privacy</a> &middot; <a href="/accessibility">Accessibility</a></span>
+    </div>
+  </div>
+</footer>
+<script src="/assets/js/config.js?v={{v}}"></script>
+<script src="/assets/js/app.js?v={{v}}"></script>
+{{scripts}}
+</body>
+</html>

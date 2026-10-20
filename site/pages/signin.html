@@ -1,0 +1,48 @@
+<!--meta { "title": "Sign in", "description": "Sign in to the NAGP Members' Area.", "scripts": ["signin.js"] } -->
+<section class="page-header">
+  <div class="container container-narrow">
+    <h1>Sign in</h1>
+    <p class="lede">Members and Council members can sign in here with their email address and password.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container-narrow">
+    <div id="already-signed-in" hidden></div>
+
+    <div id="demo-box" class="card card-highlight mb-2" hidden>
+      <h2>Preview: try the site without a password</h2>
+      <p>Choose one of these demo accounts to see what each kind of visitor sees. Nothing you do here affects real people.</p>
+      <div class="actions mt-0">
+        <button class="btn" type="button" data-demo="member">Try it as an Associate Member</button>
+        <button class="btn" type="button" data-demo="professional">Try it as a Professional Member</button>
+        <button class="btn btn-accent" type="button" data-demo="council">Try it as a Council member</button>
+      </div>
+      <div id="demo-status" class="form-status" role="status" aria-live="polite"></div>
+    </div>
+
+    <div class="card">
+      <h2>Sign in with your email</h2>
+      <form id="signin-form" class="form" novalidate>
+        <div class="field">
+          <label for="signin-email">Email address</label>
+          <input id="signin-email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="signin-password">Password</label>
+          <input id="signin-password" name="password" type="password" autocomplete="current-password" required>
+          <label class="check mt-1"><input type="checkbox" id="show-password"> Show my password</label>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-large" type="submit">Sign in</button>
+        </div>
+        <div class="form-status" role="status" aria-live="polite"></div>
+      </form>
+      <hr>
+      <h3>Forgot your password?</h3>
+      <p>No problem. <a href="/contact?topic=Sign-in%20help">Send the Council a message</a> and someone will help you set a new one.</p>
+      <h3>Not a member yet?</h3>
+      <p><a href="/membership">Read about membership</a> or <a href="/join">join NAGP online</a>.</p>
+    </div>
+  </div>
+</section>

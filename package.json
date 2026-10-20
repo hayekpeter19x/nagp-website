@@ -1,0 +1,21 @@
+{
+  "name": "nagp-website",
+  "version": "1.0.0",
+  "description": "NAGP website (preview) - Cloudflare Pages + Functions + D1",
+  "scripts": {
+    "build": "node build.mjs",
+    "build:watch": "node build.mjs --watch",
+    "dev": "node build.mjs && wrangler pages dev dist --d1 DB=nagp-local --binding DEMO_MODE=true --port 8788 --persist-to .wrangler/state --compatibility-date=2025-09-01",
+    "db:reset": "rm -rf .wrangler/state",
+    "test": "playwright test",
+    "deploy": "node build.mjs --strict && wrangler pages deploy dist --project-name nagp-preview"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "wrangler": "^4.151.3"
+  },
+  "private": true,
+  "type": "module"
+}

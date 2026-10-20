@@ -1,0 +1,45 @@
+
+ken notes:
+
+The priorities we need to have for an initial website:
+
+- Ability to pay for memberships and trainings
+- A members only membership directory by location (maybe by state) (There may be members that are not professionals)
+- Announcements by NAGP and members
+- Membership directory by specialty available to the public (Clinical, Coaching, Organizational Development, Academic/Training) where people can list their credentials and training. 
+- Community Board or ways to communicate with each other internally. 
+- A section blocked off from public access except by Council members. 
+
+
+From James:
+
+
+
+Launch (must have)
+
+About NAGP: mission, the Covenant of Community, and the Gestalt framework.
+Founding Council: members with bios.
+Membership: tiers, benefits, and the application.
+Online payments for memberships and trainings (yours). This is core, since it's how NAGP gets funded and how people join.
+Announcements from NAGP and members (yours). Members should submit and the Council should approve before anything posts.
+Contact.
+
+Phase 2 (soon after)
+
+
+7. Public directory by specialty (yours): Clinical, Coaching, Organizational Development, and Academic/Training, each listing credentials and training. Make it opt-in so members choose whether to appear publicly. It should show professionals only.
+8. Members-only directory by state (yours). This one can include non-professional members, which works well alongside the public directory above.
+9. Events and trainings calendar with registration. This ties into the payment feature in item 4.
+10. Minutes and governance: minutes, bylaws, and incorporation documents, moved over from Notion.
+11. Council-only section (yours). Notion may already cover this, so decide whether you need it in both places.
+
+Phase 3 (as you grow)
+
+
+12. Community board or internal messaging (yours). This is valuable but needs moderation and someone to look after it. Given the past divisiveness, write clear community guidelines first.
+13. FAQ: why NAGP exists and what members get.
+14. Resources: institutes, training programs, and partner organizations.
+15. History and lineage.
+16. Newsletter sign-up.
+
+the main technical question is that payments, two directories, and access levels for the public, members, and Council will probably need a membership platform. Wild Apricot or a WordPress membership plugin are common choices for groups like this, rather than a basic site.

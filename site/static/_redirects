@@ -1,0 +1,13 @@
+# Old WordPress addresses from usgestalt.org -> new pages (for when this site replaces it)
+/index.php                 /               301
+/index.php/about*          /about          301
+/index.php/contact*        /contact        301
+/index.php/mailing-list*   /newsletter     301
+/index.php/attend-stay*    /events         301
+/index.php/2025-chicago*   /history        301
+/index.php/contribute*     /donate         301
+/index.php/ideas*          /contact        301
+/index.php/blog*           /announcements  301
+/index.php/updates*        /announcements  301
+/index.php/2025/*          /announcements  301
+/index.php/2026/*          /announcements  301
