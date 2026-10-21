@@ -1,11 +1,13 @@
 // GET /api/events?when=upcoming|past&limit=&category=
 // Published events. Upcoming: soonest first (an event stays "upcoming" until it ends).
 // Past: newest first.
-import { json } from '../../../lib/http.js';
+import { json, requireUser } from '../../../lib/http.js';
 import { all } from '../../../lib/db.js';
 import { toEvent, takenCounts, myRegistrations, eventIsPast } from '../../../lib/events.js';
 
-export async function onRequestGet({ request, env, data }) {
+export async function onRequestGet(context) {
+  requireUser(context, 'member'); // Events are for members only
+  const { request, env, data } = context;
   const url = new URL(request.url);
   const when = url.searchParams.get('when') === 'past' ? 'past' : 'upcoming';
   const category = (url.searchParams.get('category') || '').slice(0, 60);

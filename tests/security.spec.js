@@ -63,7 +63,13 @@ test('script in names, bios, announcements, board posts and events is shown as t
   expect((await call(council, 'POST', `/api/council/announcements/${ann.body.id}`, { action: 'approve' })).status).toBe(200);
   await context.close();
   await page.context().clearCookies();
-  for (const path of ['/announcements', '/', `/directory?q=${id}`, '/events', `/event?id=${ev.id}`]) {
+  for (const path of ['/announcements', `/directory?q=${id}`]) {
+    await page.goto(path);
+    await expectShownAsText(page, path);
+  }
+  // Events and the Members Directory are members-only
+  await signInAs(page, 'member');
+  for (const path of ['/events', `/event?id=${ev.id}`, `/members/directory?q=${id}`]) {
     await page.goto(path);
     await expectShownAsText(page, path);
   }

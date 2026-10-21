@@ -1,9 +1,11 @@
 // GET /api/events/:id  -> { event }
 // Unpublished events are only visible to the Council (so they can preview them).
-import { json, HttpError, isCouncil } from '../../../lib/http.js';
+import { json, HttpError, isCouncil, requireUser } from '../../../lib/http.js';
 import { toEvent, takenCounts, myRegistrations, getEventRow, toId } from '../../../lib/events.js';
 
-export async function onRequestGet({ params, env, data }) {
+export async function onRequestGet(context) {
+  requireUser(context, 'member'); // Events are for members only
+  const { params, env, data } = context;
   const id = toId(params.id);
   const row = id && (await getEventRow(env, id));
   if (!row || (!row.published && !isCouncil(data.user))) {

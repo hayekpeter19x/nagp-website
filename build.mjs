@@ -25,15 +25,19 @@ const SITE = join(ROOT, 'site');
 // NAGP_DIST lets several people (or agents) build into separate folders at once.
 const DIST = join(ROOT, process.env.NAGP_DIST || 'dist');
 
-// Kept short on purpose: six plain words. Membership is the "Join us" button in the header,
-// and the Founding Council, History, FAQ... live under "About us".
+// The main menu. Public pages first; pages that need a member sign-in are grouped
+// together under a small "Members only" label (group: 'members'). Membership is the
+// "Join us" button in the header, and Donate sits at the right end of the menu row.
 export const NAV = [
   { key: 'home', label: 'Home', href: '/' },
   { key: 'about', label: 'About us', href: '/about' },
-  { key: 'events', label: 'Events', href: '/events' },
   { key: 'announcements', label: 'News', href: '/announcements' },
-  { key: 'directory', label: 'Find a Practitioner', href: '/directory' },
+  { key: 'resources', label: 'Resources', href: '/resources' },
+  { key: 'faq', label: 'FAQ', href: '/faq' },
   { key: 'contact', label: 'Contact', href: '/contact' },
+  { key: 'members-directory', label: 'Members Directory', href: '/members/directory', group: 'members' },
+  { key: 'board', label: 'Community Board', href: '/members/board', group: 'members', paths: ['/members/topic'] },
+  { key: 'events', label: 'Events', href: '/events', group: 'members' },
 ];
 // Pages whose own menu item was folded into another one.
 const NAV_ALIAS = { council: 'about' };
@@ -41,10 +45,9 @@ const NAV_ALIAS = { council: 'about' };
 export const SECTIONS = {
   about: { label: 'About us', links: [
     ['Our story', '/about'], ['Founding Council', '/founding-council'], ['History & Lineage', '/history'],
-    ['Membership', '/membership'], ['Governance', '/governance'], ['Questions & Answers', '/faq'], ['Resources', '/resources'],
   ] },
   members: { label: "Members' Area", links: [
-    ['Members\u2019 Home', '/members/'], ['My Profile', '/members/profile'], ['Member Directory', '/members/directory'],
+    ['Members\u2019 Home', '/members/'], ['My Profile', '/members/profile'], ['Members Directory', '/members/directory'],
     ['Community Board', '/members/board'], ['Post an Announcement', '/members/announce'],
     ['Documents', '/members/documents'], ['My Payments', '/members/payments'],
   ] },
@@ -130,7 +133,13 @@ async function build() {
     const title = meta.title || 'NAGP';
     const fullTitle = path === '/' ? `${ORG.name} (${ORG.short})` : `${title} | ${ORG.short}`;
     const navKey = NAV_ALIAS[meta.nav] || meta.nav;
-    const nav = NAV.map((n) => `<li><a href="${n.href}"${navKey === n.key ? ' aria-current="page"' : ''}>${esc(n.label)}</a></li>`).join('');
+    const navLink = (n) => {
+      const current = navKey === n.key || path === n.href || (n.paths || []).includes(path);
+      return `<li><a href="${n.href}"${current ? ' aria-current="page"' : ''}>${esc(n.label)}</a></li>`;
+    };
+    const nav = NAV.filter((n) => !n.group).map(navLink).join('')
+      + `<li class="nav-group"><span class="nav-group-label" id="nav-members-label">Members only</span>`
+      + `<ul aria-labelledby="nav-members-label">${NAV.filter((n) => n.group === 'members').map(navLink).join('')}</ul></li>`;
     let subnav = '';
     const section = SECTIONS[meta.section];
     if (section) {

@@ -151,7 +151,7 @@
           <div><dt>Credentials</dt><dd>${v('credentials')}</dd></div>
           <div><dt>Gestalt training</dt><dd>${v('training')}</dd></div>
           <div><dt>Areas of practice</dt><dd>${specs}</dd></div>
-          <div><dt>Public directory</dt><dd>${f('show_public').checked ? 'Yes, list me in "Find a Practitioner"' : 'No, do not list me publicly'}</dd></div>` : ''}
+          <div><dt>Public directory</dt><dd>${f('show_public').checked ? 'Yes, list me in the public directory' : 'No, do not list me publicly'}</dd></div>` : ''}
       </dl>
       <p class="review-edit">
         <button type="button" class="link-button" data-edit="1">Change membership type</button>

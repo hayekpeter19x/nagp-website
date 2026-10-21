@@ -8,7 +8,7 @@ test('every main menu link opens its page and is marked as the current page @pho
   const hrefs = await mainMenu(page).getByRole('link', { includeHidden: true })
     .evaluateAll((links) => links.map((a) => a.getAttribute('href')));
   expect(hrefs.length).toBeGreaterThanOrEqual(6);
-  expect(hrefs).toEqual(expect.arrayContaining(['/', '/about', '/events', '/announcements', '/directory', '/contact']));
+  expect(hrefs).toEqual(expect.arrayContaining(['/', '/about', '/announcements', '/resources', '/faq', '/contact', '/members/directory', '/members/board', '/events']));
 
   for (const href of [...hrefs.slice(1), hrefs[0]]) {
     await openMainMenu(page);

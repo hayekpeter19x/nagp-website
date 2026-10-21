@@ -71,7 +71,7 @@ Every page in `site/pages/` starts with a settings comment:
 - `section`: shows a row of section links under the menu. One of `about`, `members` or `council` (the links are listed in `build.mjs`).
 - `access`: `member` or `council` pages are hidden until `app.js` confirms the visitor may see them. Otherwise a friendly "Please sign in" box is shown. **This is only cosmetic. The API must always check access itself with `requireUser()`.**
 - No inline `<script>` and no `onclick=` attributes. The Content-Security-Policy blocks them. Put code in `site/assets/js/<name>.js` and list it in `scripts`.
-- Use `<span class="placeholder-note">...</span>` (it shows a dashed "For the Council:" box) for anything the Council still has to supply or confirm, such as bios, photos, prices or wording.
+- Use `<span class="placeholder-note missing">Info missing - to be provided by the Council</span>` (a dashed box) for anything the Council still has to supply or confirm, such as bios, photos, prices or wording.
 
 ## Design system (site/assets/css/styles.css)
 
@@ -93,9 +93,9 @@ Layout uses `.container` (`.container-narrow`, `.container-mid`), `.section`, `.
 Type: headings use Source Serif 4, everything else Atkinson Hyperlegible. Atkinson draws the digit zero with a slash, so `styles.css` borrows only the "0" from Figtree (an extra `@font-face` with `unicode-range: U+0030`); dates read "2026", not "2Ø26". Never set text smaller than `.9rem` (about 16px).
 
 The header and menus (markup in `site/layout.html` and `build.mjs`, styles in the Header section of `styles.css`):
-- The main menu has six plain items (Home, About us, Events, News, Find a Practitioner, Contact), set in `NAV` in `build.mjs`. Membership is the "Join us" button in the header; Founding Council, History, FAQ and the rest sit under About us. Keep it this short.
-- Laptop: logo and account buttons on top, the six menu items as soft pills in one row below.
-- Narrower screens (820px and less) get the green **Menu** button, so the menu never wraps onto two lines. If you add a menu item, check that it still fits and move that width if needed.
+- The main menu is set in `NAV` in `build.mjs`: public tabs (Home, About us, News, Resources, FAQ, Contact), then a soft rounded **"Members only"** box holding the tabs that need a member sign-in (Members Directory, Community Board, Events; `group: 'members'`), then a **Donate** pill at the right, under the "Join us" button. Membership is the "Join us" button; Founding Council and History sit under About us. Pages in the Members only box must also use `"access": "member"` and `requireUser(context, 'member')` on their API.
+- Laptop: logo and account buttons on top, the menu in one row below (all tabs line up with the tabs inside the Members only box).
+- Narrower screens (1240px and less) get the green **Menu** button, so the menu never wraps onto two lines. If you add a menu item, check that it still fits and move that width if needed.
 - Phones (640px and less): logo + Menu on top, then big account buttons side by side. Sign out is repeated inside the menu (`.menu-signout`); `app.js` wires up every `[data-signout]`, so the copy works without extra code. The section links (`.subnav`) fold into one "… : all pages" button (`.subnav-phone`).
 - The preview banner is one line on a laptop; `.preview-banner-more` parts are hidden on phones. The preview-only `.feedback-fab` is a small dark pill (never terracotta or green, so it does not compete with page buttons), and the footer has extra bottom padding while it is shown.
 

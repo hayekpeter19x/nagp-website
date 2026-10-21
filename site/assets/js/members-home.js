@@ -29,8 +29,8 @@
       <dl class="status-list">
         <div><dt>Membership</dt><dd>${tier ? tier.name : me.isCouncil ? 'Founding Council' : 'Member'}</dd></div>
         <div><dt>Status</dt><dd>${statusText}</dd></div>
-        <div><dt>Member Directory</dt><dd>${listed(me.show_members, 'the members-only directory')}</dd></div>
-        <div><dt>Find a Practitioner</dt><dd>${pro ? listed(me.show_public, 'the public directory')
+        <div><dt>Members Directory</dt><dd>${listed(me.show_members, 'the members-only directory')}</dd></div>
+        <div><dt>Public directory</dt><dd>${pro ? listed(me.show_public, 'the public directory')
           : html`<span class="muted">The public directory is for professional members.</span>`}</dd></div>
       </dl>
       <div class="status-actions">

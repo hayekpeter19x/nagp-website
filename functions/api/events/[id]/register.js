@@ -2,14 +2,16 @@
 // Free event  -> { status: 'confirmed' }
 // Paid event  -> { status: 'pending', checkout_url, order_id }
 // The price is always worked out here: the member price for active members, otherwise the public price.
-import { json, readJson, validate, HttpError, isActiveMember, nowIso } from '../../../../lib/http.js';
+import { json, readJson, validate, HttpError, isActiveMember, nowIso, requireUser } from '../../../../lib/http.js';
 import { first, run } from '../../../../lib/db.js';
 import { createOrder, checkoutUrl } from '../../../../lib/payments.js';
 import {
   getEventRow, toId, takenCounts, registrationState, priceFor, eventDateText, holdCutoff,
 } from '../../../../lib/events.js';
 
-export async function onRequestPost({ request, env, params, data }) {
+export async function onRequestPost(context) {
+  requireUser(context, 'member'); // Events are for members only
+  const { request, env, params, data } = context;
   const id = toId(params.id);
   const ev = id && (await getEventRow(env, id));
   if (!ev || !ev.published) throw new HttpError(404, 'We could not find that event. It may have been removed.');

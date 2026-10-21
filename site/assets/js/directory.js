@@ -1,4 +1,4 @@
-// /directory: the public "Find a Practitioner" directory.
+// /directory: the public directory (professionals who opt in). Not in the menu for now (Phase 2).
 // Filters live in the address (?specialty=coaching&state=NY&q=grief) so a search can be shared.
 (function () {
   const { $, api, html } = NAGP;

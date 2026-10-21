@@ -66,7 +66,7 @@
     const p = current();
     const pro = isPro();
     const shown = pro ? p.show_public : p.show_members;
-    const where = pro ? 'Find a Practitioner (the public directory)' : 'the Member Directory';
+    const where = pro ? 'the public directory' : 'the Members Directory';
     $('#preview-heading').textContent = pro ? 'Preview of your public listing' : 'Preview of your directory listing';
     $('#preview-status').innerHTML = shown
       ? html`<span class="badge badge-success">Shown</span> This is how you appear in ${where}.`
@@ -113,7 +113,7 @@
         return html`<div class="notice notice-success" role="status"><span class="notice-title">Your profile was saved.</span>
           <p>The directories show your changes right away.
           ${pro && u.show_public ? html`<a href="/directory?q=${encodeURIComponent(u.name)}">See your public listing</a>.` : ''}
-          ${u.show_members ? html`<a href="/members/directory?q=${encodeURIComponent(u.name)}">See yourself in the Member Directory</a>.` : ''}</p></div>`;
+          ${u.show_members ? html`<a href="/members/directory?q=${encodeURIComponent(u.name)}">See yourself in the Members Directory</a>.` : ''}</p></div>`;
       },
     });
   });

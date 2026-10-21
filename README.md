@@ -1,6 +1,6 @@
 # NAGP website (preview)
 
-The new website for **NAGP, the North American Gestalt Professionals**. It is built to replace the temporary WordPress site at usgestalt.org once the Council is happy with it.
+The new website for **NAGP, the National Association of Gestalt Practitioners**. It is built to replace the temporary WordPress site at usgestalt.org once the Council is happy with it.
 
 It runs entirely on **Cloudflare's free tier**:
 - **Cloudflare Pages** hosts the pages.

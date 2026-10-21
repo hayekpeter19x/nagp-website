@@ -21,7 +21,7 @@
   <div class="container header-top">
     <a class="brand" href="/">
       {{> logo-mark}}
-      <span class="brand-text"><span class="brand-name">NAGP</span><span class="brand-full">North American Gestalt Professionals</span></span><span class="visually-hidden">, home page</span>
+      <span class="brand-text"><span class="brand-name">NAGP</span><span class="brand-full">National Association of Gestalt Practitioners</span></span><span class="visually-hidden">, home page</span>
     </a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="menu-toggle-icon" aria-hidden="true"></span>Menu</button>
     <div class="header-actions">
@@ -37,6 +37,7 @@
   <div id="site-nav" class="site-nav">
     <div class="container">
       <nav aria-label="Main menu"><ul>{{nav}}</ul></nav>
+      <a class="nav-donate" href="/donate"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg>Donate</a>
       <button class="btn btn-secondary menu-signout" type="button" data-auth="signed-in" data-signout hidden>Sign out</button>
     </div>
   </div>
@@ -51,35 +52,25 @@
 <footer class="site-footer">
   <div class="container">
     <div class="footer-grid">
-      <div class="footer-about">
-        <div class="footer-brand">{{> logo-mark}}<strong>North American Gestalt Professionals</strong></div>
-        <p>A community of Gestalt therapists, practitioners and educators. Everyone who values the Gestalt approach is welcome here.</p>
-        <p>Write to us any time: <a href="mailto:{{org.email}}">{{org.email}}</a></p>
-      </div>
       <div>
         <h2>About us</h2>
         <ul>
           <li><a href="/about">Our story</a></li>
           <li><a href="/founding-council">Founding Council</a></li>
           <li><a href="/history">History &amp; Lineage</a></li>
-          <li><a href="/faq">Questions &amp; Answers</a></li>
           <li><a href="/resources">Resources</a></li>
+          <li><a href="/faq">FAQ</a></li>
         </ul>
       </div>
       <div>
-        <h2>Take part</h2>
+        <h2>Contact</h2>
         <ul>
-          <li><a href="/membership">Become a member</a></li>
-          <li><a href="/events">Events</a></li>
-          <li><a href="/newsletter">Join the mailing list</a></li>
-          <li><a href="/donate">Donate</a></li>
-          <li><a href="/members/">Members' Area</a></li>
+          <li><a href="/contact">Contact us</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>&copy; {{year}} North American Gestalt Professionals (NAGP)</span>
-      <span><a href="/governance">Governance</a> &middot; <a href="/community-guidelines">Community Guidelines</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/accessibility">Accessibility</a></span>
+      <span>&copy; {{year}} National Association of Gestalt Practitioners (NAGP)</span>
     </div>
   </div>
 </footer>

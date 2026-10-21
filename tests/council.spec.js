@@ -26,11 +26,10 @@ test('the Council adds an event, and it appears on the Events page with the righ
   await page.getByRole('button', { name: 'Save event' }).click();
   await expect(page.getByText(`"${title}" was added and is now on the Events page.`)).toBeVisible();
 
-  const ev = (await call(request, 'GET', '/api/events')).body.events.find((e) => e.title === title);
+  const ev = (await call(page, 'GET', '/api/events')).body.events.find((e) => e.title === title);
   expect(ev).toMatchObject({ starts_at: `${date}T19:00:00-07:00`, ends_at: `${date}T20:30:00-07:00`, timezone: 'America/Los_Angeles', price_member_cents: 1000, price_public_cents: 2500 });
 
-  await page.context().clearCookies();
-  await page.goto('/events');
+  await page.goto('/events'); // events are members-only; the Council can see them too
   const card = page.getByRole('article').filter({ has: page.getByRole('heading', { name: title }) });
   await expect(card).toContainText(day);
   await expect(card).toContainText('7:00');
@@ -171,6 +170,7 @@ test('the Council edits an event and sees who registered', async ({ page, reques
   await signInAs(page, 'council');
   const ev = await createEvent(page, { capacity: '10' });
   const email = `reg.${uid()}@example.com`;
+  await signInAs(request, 'member'); // events are members-only
   expect((await call(request, 'POST', `/api/events/${ev.id}/register`, { name: 'Registered Person', email })).body.status).toBe('confirmed');
 
   await page.goto('/council/events');

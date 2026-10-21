@@ -157,13 +157,39 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
 .account-actions { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
 
 .site-nav { background: var(--surface); padding-bottom: .55rem; }
-.site-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .25rem; }
+.site-nav > .container { display: flex; align-items: flex-end; gap: .75rem; }
+.site-nav nav { flex: 1 1 auto; min-width: 0; }
+.site-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: flex-end; gap: .15rem; }
 .site-nav li { margin: 0; }
-.site-nav a { display: flex; align-items: center; min-height: var(--tap); padding: .35rem 1rem; color: var(--ink); text-decoration: none; font-weight: 700; border-radius: 999px; }
-.site-nav li:first-child a { margin-left: -1rem; } /* line "Home" up with the logo */
+.site-nav a { display: flex; align-items: center; min-height: var(--tap); padding: .35rem .75rem; color: var(--ink); text-decoration: none; font-weight: 700; border-radius: 999px; white-space: nowrap; }
+.site-nav li:first-child a { margin-left: -.75rem; } /* line "Home" up with the logo */
 .site-nav a:hover { color: var(--primary-strong); background: var(--sage-tint); }
 .site-nav a[aria-current="page"] { color: var(--primary-strong); background: var(--primary-soft); box-shadow: inset 0 0 0 2px #c8dacb; }
 .site-nav .menu-signout { display: none; }
+
+/* "Members only": the pages that need a member sign-in, grouped in a soft rounded box
+   with a small label on top. */
+.site-nav .nav-group { display: flex; flex-direction: column; align-items: center; margin-left: .5rem; padding: .2rem .35rem .3rem;
+  background: var(--sage-tint); border: 1px solid #d5e3d6; border-radius: 20px; }
+.nav-group-label { font-size: .9rem; font-weight: 700; line-height: 1.2; color: var(--primary-strong); letter-spacing: .02em; padding: .15rem .5rem .1rem; }
+.site-nav .nav-group ul { flex-wrap: nowrap; gap: .1rem; }
+.site-nav .nav-group a { min-height: 2.6rem; }
+/* Line every tab up with the tabs inside the "Members only" box (same height, same baseline). */
+@media (min-width: 1241px) {
+  .site-nav a { min-height: 2.6rem; }
+  .site-nav nav > ul > li:not(.nav-group) > a, .nav-donate { margin-bottom: calc(.3rem + 1px); }
+  .nav-donate { align-self: flex-end; }
+}
+.site-nav .nav-group li:first-child a { margin-left: 0; }
+.site-nav .nav-group a:hover { background: var(--surface); }
+.site-nav .nav-group a[aria-current="page"] { background: var(--surface); }
+
+/* Donate: at the right end of the menu row, under "Join us". A soft clay outline so it stands out a little. */
+.nav-donate { flex: none; margin-left: auto; display: inline-flex; align-items: center; gap: .4rem; min-height: 2.6rem; padding: .3rem 1.05rem .3rem .9rem;
+  border: 2px solid #dcb39c; border-radius: 999px; background: var(--peach-tint); color: var(--accent-strong); font-weight: 700; font-size: .95rem; text-decoration: none; white-space: nowrap; }
+.nav-donate svg { width: 1.05rem; height: 1.05rem; fill: var(--accent); }
+.nav-donate:hover { border-color: var(--accent); background: #f8e2d4; color: var(--accent-strong); }
+.nav-donate[aria-current="page"] { border-color: var(--accent); }
 
 /* Menu button: solid green so it is easy to spot; it turns into an outlined "X Menu" while open. */
 .menu-toggle { display: none; align-items: center; gap: .6rem; min-height: var(--tap); padding: .45rem 1.25rem; border: 2px solid var(--primary); background: var(--primary); color: #fff; border-radius: 999px; font: 700 1.05rem/1.2 var(--font-body); cursor: pointer; flex: none; }
@@ -176,15 +202,20 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
 .menu-toggle[aria-expanded="true"] .menu-toggle-icon::before { opacity: 1; transform: translateY(-50%) rotate(45deg); }
 .menu-toggle[aria-expanded="true"] .menu-toggle-icon::after { transform: translateY(-50%) rotate(-45deg); }
 
-/* When the main menu becomes a Menu button (the six menu items would otherwise wrap). */
-@media (max-width: 820px) {
+/* When the main menu becomes a Menu button (the menu items would otherwise wrap). */
+@media (max-width: 1240px) {
   .header-top { flex-wrap: wrap; }
   .menu-toggle { display: inline-flex; }
   .header-actions { order: 3; flex: 1 1 100%; justify-content: space-between; }
   .site-nav { display: none; }
   .site-nav.open { display: block; }
-  .site-nav ul { flex-direction: column; padding: .25rem 0 1rem; gap: .2rem; }
+  .site-nav > .container { display: block; }
+  .site-nav ul { flex-direction: column; align-items: stretch; padding: .25rem 0 .75rem; gap: .2rem; }
   .site-nav a, .site-nav li:first-child a { margin: 0; padding: .6rem 1.1rem; font-size: 1.1rem; }
+  .site-nav .nav-group { align-items: stretch; margin: .5rem 0 0; padding: .6rem .5rem .5rem; }
+  .site-nav .nav-group ul { flex-direction: column; padding: .2rem 0 0; }
+  .nav-group-label { padding-left: 1.1rem; }
+  .nav-donate { margin: 0 0 1rem; }
 }
 /* Phones: logo + Menu on top, then big "Sign in" and "Join NAGP" buttons side by side.
    "Sign out" is inside the menu. */
@@ -299,7 +330,10 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
 .notice-warning { border-color: #e6cd94; border-left-color: #b67b00; background: var(--warning-soft); }
 .notice-error { border-color: #e2b0b0; border-left-color: var(--danger); background: var(--danger-soft); }
 .placeholder-note { display: block; border: 2px dashed #c99a2e; background: #fff9e8; color: #5c4100; border-radius: var(--radius); padding: .75rem 1rem; font-size: .95rem; margin: 0 0 1rem; }
-.placeholder-note::before { content: 'For the Council: '; font-weight: 700; }
+.placeholder-note::before { content: 'Info missing - to be provided by the Council: '; font-weight: 700; }
+/* A note that is only the phrase itself, written in the page: no extra label. */
+.placeholder-note.missing { font-weight: 700; }
+.placeholder-note.missing::before { content: none; }
 
 /* ---------- Forms ---------- */
 .form { max-width: 40rem; }
@@ -444,9 +478,8 @@ input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="
 .site-footer { background: var(--sage-tint); color: var(--ink); padding: 3rem 0 1.5rem; font-size: .97rem; border-top: 1px solid #dde7dc; }
 .site-footer a { color: var(--primary-strong); }
 .site-footer h2 { color: var(--ink); font-size: 1.15rem; font-family: var(--font-body); font-weight: 700; margin: 0 0 .75rem; }
-.footer-grid { display: grid; gap: 2rem 3rem; grid-template-columns: 1.6fr 1fr 1fr; }
-@media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer-about { grid-column: 1 / -1; } }
-@media (max-width: 520px) { .footer-grid { grid-template-columns: 1fr; } }
+.footer-grid { display: grid; gap: 2rem 4rem; grid-template-columns: repeat(2, max-content); }
+@media (max-width: 420px) { .footer-grid { grid-template-columns: 1fr; } }
 .footer-grid ul { list-style: none; padding: 0; margin: 0; }
 .footer-grid li { margin-bottom: .55rem; }
 .footer-bottom { border-top: 1px solid #d5e0d3; margin-top: 2.5rem; padding-top: 1.25rem; display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; justify-content: space-between; color: var(--ink-soft); font-size: .9rem; }

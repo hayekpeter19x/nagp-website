@@ -1,8 +1,8 @@
-// My Profile and the two directories: the public "Find a Practitioner" (professionals who opt in)
-// and the members-only Member Directory.
+// My Profile and the two directories: the public directory (professionals who opt in)
+// and the members-only Members Directory.
 import { test, expect, call, uid, joinMember, expectAccessOk, signInAs } from './helpers.js';
 
-const publicCheckbox = (page) => page.getByRole('checkbox', { name: /Find a Practitioner/ });
+const publicCheckbox = (page) => page.getByRole('checkbox', { name: /public directory/ });
 
 async function inPublicDirectory(page, id) {
   await page.goto(`/directory?q=${encodeURIComponent(id)}`);
@@ -19,7 +19,7 @@ test('a professional turns the public listing off and on again', async ({ page }
   await expectAccessOk(page);
   await expect(publicCheckbox(page)).toBeChecked();
   await publicCheckbox(page).uncheck();
-  await expect(page.getByText(/You do not appear in Find a Practitioner/)).toBeVisible(); // the live preview
+  await expect(page.getByText(/You do not appear in the public directory/)).toBeVisible(); // the live preview
   await page.getByRole('button', { name: 'Save my profile' }).click();
   await expect(page.getByText('Your profile was saved.')).toBeVisible();
   expect(await inPublicDirectory(page, id)).toBe(0);
@@ -35,7 +35,7 @@ test('a professional turns the public listing off and on again', async ({ page }
   await expect(page.getByRole('heading', { name: new RegExp(name) })).toBeVisible();
 });
 
-test('an associate member cannot be listed publicly, but is in the Member Directory', async ({ page }) => {
+test('an associate member cannot be listed publicly, but is in the Members Directory', async ({ page }) => {
   const id = uid();
   await joinMember(page, { tier: 'associate', name: `Sam Associate ${id}` });
   await page.goto('/members/profile');

@@ -1,6 +1,6 @@
 # Notes for AI assistants (Grok, Claude, Copilot, ...) working on this site
 
-This is the website for NAGP (North American Gestalt Professionals). Its users are Gestalt therapists, many of them older and not comfortable with technology. **Simple, calm and obvious beats clever.**
+This is the website for NAGP (National Association of Gestalt Practitioners). Its users are Gestalt therapists, many of them older and not comfortable with technology. **Simple, calm and obvious beats clever.**
 
 ## Read before changing anything
 1. `README.md` covers what the site does, how to run it, and how to deploy it.

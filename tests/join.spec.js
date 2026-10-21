@@ -28,7 +28,7 @@ test('a new Professional member joins, pays, uses the Members\' Area and is list
   await page.getByRole('textbox', { name: /credentials/i }).fill('LPC');
   await page.getByRole('textbox', { name: /Gestalt training/i }).fill('Three-year Gestalt therapy training, Cleveland');
   await page.getByRole('checkbox', { name: 'Clinical' }).check();
-  await page.getByRole('checkbox', { name: /Find a Practitioner/ }).check();
+  await page.getByRole('checkbox', { name: /public directory/ }).check();
   await page.getByRole('button', { name: 'Continue' }).click();
 
   // Step 3: review and agree
@@ -77,7 +77,7 @@ test('an Associate member does not get the professional questions and is not lis
   await expect(page.getByRole('radio', { name: /Associate Member/ })).toBeChecked();
   await page.getByRole('button', { name: 'Continue' }).click();
   await expect(page.getByRole('textbox', { name: /credentials/i })).toHaveCount(0);
-  await expect(page.getByRole('checkbox', { name: /Find a Practitioner/ })).toHaveCount(0);
+  await expect(page.getByRole('checkbox', { name: /public directory/ })).toHaveCount(0);
 });
 
 test('the join form explains problems: a short password, different passwords, an email that is taken', async ({ page }) => {
