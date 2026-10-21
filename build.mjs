@@ -25,21 +25,23 @@ const SITE = join(ROOT, 'site');
 // NAGP_DIST lets several people (or agents) build into separate folders at once.
 const DIST = join(ROOT, process.env.NAGP_DIST || 'dist');
 
+// Kept short on purpose: six plain words. Membership is the "Join us" button in the header,
+// and the Founding Council, History, FAQ... live under "About us".
 export const NAV = [
   { key: 'home', label: 'Home', href: '/' },
-  { key: 'about', label: 'About', href: '/about' },
-  { key: 'council', label: 'Founding Council', href: '/founding-council' },
-  { key: 'membership', label: 'Membership', href: '/membership' },
+  { key: 'about', label: 'About us', href: '/about' },
   { key: 'events', label: 'Events', href: '/events' },
-  { key: 'announcements', label: 'Announcements', href: '/announcements' },
+  { key: 'announcements', label: 'News', href: '/announcements' },
   { key: 'directory', label: 'Find a Practitioner', href: '/directory' },
   { key: 'contact', label: 'Contact', href: '/contact' },
 ];
+// Pages whose own menu item was folded into another one.
+const NAV_ALIAS = { council: 'about' };
 
 export const SECTIONS = {
-  about: { label: 'About NAGP', links: [
-    ['About NAGP', '/about'], ['Founding Council', '/founding-council'], ['History & Lineage', '/history'],
-    ['Governance', '/governance'], ['Questions & Answers', '/faq'], ['Resources', '/resources'],
+  about: { label: 'About us', links: [
+    ['Our story', '/about'], ['Founding Council', '/founding-council'], ['History & Lineage', '/history'],
+    ['Membership', '/membership'], ['Governance', '/governance'], ['Questions & Answers', '/faq'], ['Resources', '/resources'],
   ] },
   members: { label: "Members' Area", links: [
     ['Members\u2019 Home', '/members/'], ['My Profile', '/members/profile'], ['Member Directory', '/members/directory'],
@@ -127,7 +129,8 @@ async function build() {
     const path = urlPathFor(file);
     const title = meta.title || 'NAGP';
     const fullTitle = path === '/' ? `${ORG.name} (${ORG.short})` : `${title} | ${ORG.short}`;
-    const nav = NAV.map((n) => `<li><a href="${n.href}"${meta.nav === n.key ? ' aria-current="page"' : ''}>${esc(n.label)}</a></li>`).join('');
+    const navKey = NAV_ALIAS[meta.nav] || meta.nav;
+    const nav = NAV.map((n) => `<li><a href="${n.href}"${navKey === n.key ? ' aria-current="page"' : ''}>${esc(n.label)}</a></li>`).join('');
     let subnav = '';
     const section = SECTIONS[meta.section];
     if (section) {

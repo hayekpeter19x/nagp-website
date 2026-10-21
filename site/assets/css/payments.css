@@ -71,7 +71,7 @@
 .spots-low { color: var(--warning); font-weight: 700; }
 .past-events .event-item { padding: 1rem 0; }
 .past-events .date-block { border-color: var(--line-strong); }
-.past-events .date-block .month { background: var(--ink-soft); }
+.past-events .date-block .month { background: var(--sand); color: var(--ink-soft); }
 .past-events h3 { margin: 0 0 .25rem; font-size: 1.15rem; }
 
 /* Event page */

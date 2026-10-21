@@ -257,7 +257,7 @@
     NAGP.$$('[data-auth]').forEach((el) => { el.hidden = !show[el.dataset.auth]; });
     // No "Join NAGP" button in the header while someone is already joining or paying.
     if (/^\/(join|checkout|payment-complete)/.test(location.pathname)) {
-      NAGP.$$('.header-actions a[href="/join"], .site-header a[href="/join"][data-auth]').forEach((el) => { el.hidden = true; });
+      NAGP.$$('.site-header [data-auth="not-member"]').forEach((el) => { el.hidden = true; });
     }
     NAGP.$$('[data-user-name]').forEach((el) => { el.textContent = u ? u.name : ''; });
     gate(session);

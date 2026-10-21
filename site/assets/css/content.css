@@ -8,13 +8,13 @@
 .hero p { font-size: 1.1rem; max-width: 38rem; }
 .hero .lede { font-size: 1.25rem; }
 .hero .actions { margin-top: 1.75rem; }
-.hero-art .art-disc { fill: var(--surface); opacity: .7; }
-.hero-art .art-ring-outer { fill: none; stroke: var(--line-strong); stroke-width: 5; stroke-linecap: round; }
-.hero-art .art-ring { fill: none; stroke: var(--primary); stroke-width: 20; stroke-linecap: round; }
-.hero-art .art-ring-inner { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; opacity: .55; }
-.hero-art .art-center { fill: var(--accent); }
-.hero-art .art-dot { fill: var(--primary); }
-.hero-art .art-dot-accent { fill: var(--accent); }
+.hero-art circle { mix-blend-mode: multiply; }
+.hero-art .art-sage { fill: #cfe0d2; }
+.hero-art .art-peach { fill: #f6d6c3; }
+.hero-art .art-butter { fill: #f5e6b3; }
+.hero-art .art-sky { fill: #d3e3ea; }
+.hero-art .art-ring { fill: none; stroke: var(--primary); stroke-width: 3; stroke-linecap: round; opacity: .55; mix-blend-mode: normal; }
+.hero-art .art-center { fill: var(--accent); opacity: .85; }
 @media (max-width: 860px) { .hero-art { max-width: 10rem; } .hero { padding-top: 2rem; } }
 
 /* ---------- Section heading with a link on the right ---------- */
@@ -128,3 +128,12 @@
 .notice.mt-2, .placeholder-note.mt-2 { margin-top: 2rem; }
 .resource-name + p { margin-top: .4rem; }
 .aside-card h2 { font-size: 1.35rem; }
+
+/* ---------- Home: soft tinted tiles instead of boxed cards ---------- */
+.home-tiles .card { border-color: transparent; box-shadow: none; }
+.home-tiles .card:nth-child(1) { background: var(--sage-tint); }
+.home-tiles .card:nth-child(2) { background: var(--peach-tint); }
+.home-tiles .card:nth-child(3) { background: var(--sky-tint); }
+.home-tiles .card:nth-child(4) { background: var(--butter-tint); }
+.home-tiles .card-link:hover { border-color: transparent; box-shadow: var(--shadow); }
+.home-tiles .card-icon { background: rgba(255, 255, 255, .8); }

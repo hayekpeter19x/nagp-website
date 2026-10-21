@@ -79,7 +79,7 @@ Layout uses `.container` (`.container-narrow`, `.container-mid`), `.section`, `.
 
 | Component | Classes |
 |---|---|
-| Buttons | `.btn` (primary green), `.btn-accent` (terracotta, for "Join" / "Pay"), `.btn-secondary` (outline), `.btn-quiet`, `.btn-danger`, `.btn-light`. Sizes: `.btn-small`, `.btn-large`, `.btn-block`. Group them in `.actions`. Use `.link-button` for a link-styled button. |
+| Buttons | `.btn` (sage green pill), `.btn-accent` (soft clay, for "Join us" / "Pay"), `.btn-secondary` (outline), `.btn-quiet`, `.btn-danger`, `.btn-light`. Sizes: `.btn-small`, `.btn-large`, `.btn-block`. Group them in `.actions`. Use `.link-button` for a link-styled button. |
 | Cards | `.card`, `.card-link` (whole card clickable, add `.card-cta` text), `.card-highlight`, `.card-flat`, `.card-icon` |
 | Badges | `.badge` plus `-primary -accent -success -warning -danger -sample`. `NAGP.sampleBadge(row)` renders the "Sample" tag. |
 | Notices | `.notice` plus `-info -success -warning -error`, with an optional `.notice-title`. `NAGP.notice(type, msg, title)` builds one. |
@@ -93,10 +93,13 @@ Layout uses `.container` (`.container-narrow`, `.container-mid`), `.section`, `.
 Type: headings use Source Serif 4, everything else Atkinson Hyperlegible. Atkinson draws the digit zero with a slash, so `styles.css` borrows only the "0" from Figtree (an extra `@font-face` with `unicode-range: U+0030`); dates read "2026", not "2Ø26". Never set text smaller than `.9rem` (about 16px).
 
 The header and menus (markup in `site/layout.html` and `build.mjs`, styles in the Header section of `styles.css`):
-- Laptop: logo and account buttons on top, the eight menu items in one row below.
-- Narrower screens (1000px and less) get the green **Menu** button, so the menu never wraps onto two lines. If you add a menu item, check that it still fits and move that width if needed.
+- The main menu has six plain items (Home, About us, Events, News, Find a Practitioner, Contact), set in `NAV` in `build.mjs`. Membership is the "Join us" button in the header; Founding Council, History, FAQ and the rest sit under About us. Keep it this short.
+- Laptop: logo and account buttons on top, the six menu items as soft pills in one row below.
+- Narrower screens (820px and less) get the green **Menu** button, so the menu never wraps onto two lines. If you add a menu item, check that it still fits and move that width if needed.
 - Phones (640px and less): logo + Menu on top, then big account buttons side by side. Sign out is repeated inside the menu (`.menu-signout`); `app.js` wires up every `[data-signout]`, so the copy works without extra code. The section links (`.subnav`) fold into one "… : all pages" button (`.subnav-phone`).
 - The preview banner is one line on a laptop; `.preview-banner-more` parts are hidden on phones. The preview-only `.feedback-fab` is a small dark pill (never terracotta or green, so it does not compete with page buttons), and the footer has extra bottom padding while it is shown.
+
+**Look and feel:** a community site, not a corporate one. Soft sage, warm clay, oat and cream, rounded pill buttons, light footer, tinted blocks (`--sage-tint`, `--peach-tint`, `--butter-tint`, `--sky-tint`) instead of heavy borders or dark bands. Every text color still passes WCAG AA contrast; check new colors before using them.
 
 Colors are CSS variables in `:root`, e.g. `var(--primary)`, `var(--accent)`, `var(--sand)`, `var(--ink-soft)`. Don't hard-code new colors. If an area really needs extra CSS, put it in `site/assets/css/<area>.css` and list it in the page's `styles`.
 

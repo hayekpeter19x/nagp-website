@@ -8,7 +8,7 @@ test('every main menu link opens its page and is marked as the current page @pho
   const hrefs = await mainMenu(page).getByRole('link', { includeHidden: true })
     .evaluateAll((links) => links.map((a) => a.getAttribute('href')));
   expect(hrefs.length).toBeGreaterThanOrEqual(6);
-  expect(hrefs).toEqual(expect.arrayContaining(['/', '/about', '/membership', '/events', '/announcements', '/directory', '/contact']));
+  expect(hrefs).toEqual(expect.arrayContaining(['/', '/about', '/events', '/announcements', '/directory', '/contact']));
 
   for (const href of [...hrefs.slice(1), hrefs[0]]) {
     await openMainMenu(page);
@@ -23,7 +23,7 @@ test('every main menu link opens its page and is marked as the current page @pho
 test('the phone "Menu" button opens and closes the menu @phone', async ({ page, isMobile }) => {
   await page.goto('/');
   const toggle = page.getByRole('button', { name: 'Menu' });
-  const about = mainMenu(page).getByRole('link', { name: 'About', exact: true, includeHidden: true });
+  const about = mainMenu(page).getByRole('link', { name: 'About us', exact: true, includeHidden: true });
   if (!isMobile) {
     // Wide screens show the menu all the time.
     await expect(toggle).toBeHidden();
