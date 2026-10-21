@@ -25,28 +25,24 @@ const SITE = join(ROOT, 'site');
 // NAGP_DIST lets several people (or agents) build into separate folders at once.
 const DIST = join(ROOT, process.env.NAGP_DIST || 'dist');
 
-// The main menu. Public pages first, then one green "Members" button that opens the
-// member pages (group: 'members'; they all need a member sign-in). Membership is the
-// "Join us" button in the header, and Donate sits at the right end of the menu row.
+// The main menu. Public pages first, then one green "Members" button that opens My Profile;
+// the member pages (SECTIONS.members) show as tabs under the menu on every member page.
+// Membership is the "Join us" button in the header, and Donate sits at the right end of the menu row.
 export const NAV = [
   { key: 'home', label: 'Home', href: '/' },
-  { key: 'about', label: 'About us', href: '/about' },
+  { key: 'about', label: 'About us', href: '/founding-council' },
   { key: 'directory', label: 'Public Directory', href: '/directory' },
   { key: 'resources', label: 'Resources', href: '/resources' },
   { key: 'faq', label: 'FAQ', href: '/faq' },
   { key: 'contact', label: 'Contact', href: '/contact' },
-  { key: 'profile', label: 'My Profile', href: '/members/profile', group: 'members' },
-  { key: 'events', label: 'Events', href: '/events', group: 'members', paths: ['/event'] },
-  { key: 'members-directory', label: 'Members Directory', href: '/members/directory', group: 'members' },
-  { key: 'board', label: 'Community Board', href: '/members/board', group: 'members', paths: ['/members/topic'] },
-  { key: 'my-membership', label: 'My Membership', href: '/members/payments', group: 'members' },
+  { key: 'members', label: 'Members', href: '/members/profile', section: 'members' },
 ];
 // Pages whose own menu item was folded into another one.
 const NAV_ALIAS = { council: 'about' };
 
 export const SECTIONS = {
   about: { label: 'About us', links: [
-    ['Our story', '/about'], ['Founding Council', '/founding-council'], ['History & Lineage', '/history'],
+    ['Founding Council', '/founding-council'], ['Our story', '/about'], ['History & Lineage', '/history'],
   ] },
   members: { label: 'Members', links: [
     ['My Profile', '/members/profile'], ['Events', '/events'], ['Members Directory', '/members/directory'],
@@ -115,7 +111,7 @@ async function build() {
   // floating "Comment" button takes the place of the banner's comment link).
   const previewBanner = ORG.preview ? `<section class="preview-banner" aria-label="About this preview"><div class="container">
   <p><strong>Preview site:</strong> a draft for the Council to review, not the live site.<span class="preview-banner-more"> Examples marked &ldquo;Sample&rdquo; are made up.</span></p>
-  <p class="preview-banner-links"><a href="/preview-guide">How to review</a><span class="preview-banner-more" aria-hidden="true"> &middot; </span><button type="button" class="link-button preview-banner-more" data-feedback-open>Comment on this page</button></p>
+  <p class="preview-banner-links preview-banner-more"><button type="button" class="link-button" data-feedback-open>Comment on this page</button></p>
 </div></section>` : '';
 
   const pages = walk(join(SITE, 'pages')).filter((f) => f.endsWith('.html'));
@@ -134,16 +130,12 @@ async function build() {
     const title = meta.title || 'NAGP';
     const fullTitle = path === '/' ? `${ORG.name} (${ORG.short})` : `${title} | ${ORG.short}`;
     const navKey = NAV_ALIAS[meta.nav] || meta.nav;
-    const navLink = (n) => {
-      const current = navKey === n.key || path === n.href || (n.paths || []).includes(path);
-      return `<li><a href="${n.href}"${current ? ' aria-current="page"' : ''}>${esc(n.label)}</a></li>`;
-    };
-    const memberItems = NAV.filter((n) => n.group === 'members');
-    const inMembers = memberItems.some((n) => navKey === n.key || path === n.href || (n.paths || []).includes(path));
-    const nav = NAV.filter((n) => !n.group).map(navLink).join('')
-      + `<li class="nav-members${inMembers ? ' is-current' : ''}">`
-      + `<button type="button" class="nav-members-toggle" aria-expanded="false" aria-controls="members-menu">Members<span class="nav-chevron" aria-hidden="true"></span></button>`
-      + `<ul id="members-menu" class="nav-members-menu" hidden>${memberItems.map(navLink).join('')}</ul></li>`;
+    const nav = NAV.map((n) => {
+      // A menu item is "current" for its own page, or for every page in its section (Members).
+      const current = navKey === n.key || path === n.href || (n.section && meta.section === n.section);
+      const cls = n.section === 'members' ? ' class="nav-members"' : '';
+      return `<li${cls}><a href="${n.href}"${current ? ' aria-current="page"' : ''}>${esc(n.label)}</a></li>`;
+    }).join('');
     let subnav = '';
     const section = SECTIONS[meta.section];
     if (section) {

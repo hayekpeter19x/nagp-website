@@ -167,18 +167,11 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
 .site-nav a[aria-current="page"] { color: var(--primary-strong); background: var(--primary-soft); box-shadow: inset 0 0 0 2px #c8dacb; }
 .site-nav .menu-signout { display: none; }
 
-/* "Members": one green button that opens a short list of the member pages (they need a sign-in).
-   Click or tap to open; Escape or a click elsewhere closes it (see app.js). */
-.site-nav .nav-members { position: relative; margin-left: .35rem; }
-.nav-members-toggle { display: inline-flex; align-items: center; gap: .55rem; min-height: 2.75rem; padding: .35rem 1.15rem; border: 2px solid var(--primary);
-  border-radius: 999px; background: var(--primary); color: #fff; font: 700 1rem/1.2 var(--font-body); cursor: pointer; white-space: nowrap; }
-.nav-members-toggle:hover { background: var(--primary-strong); border-color: var(--primary-strong); }
-.nav-members.is-current .nav-members-toggle { box-shadow: 0 0 0 3px #c8dacb; }
-.nav-chevron { width: .55rem; height: .55rem; border: solid currentColor; border-width: 0 2.5px 2.5px 0; transform: translateY(-.15rem) rotate(45deg); transition: transform .15s; }
-.nav-members-toggle[aria-expanded="true"] .nav-chevron { transform: translateY(.1rem) rotate(-135deg); }
-.site-nav .nav-members-menu { position: absolute; left: 0; top: calc(100% + .45rem); z-index: 40; min-width: 15.5rem; flex-direction: column; align-items: stretch; gap: .15rem;
-  padding: .5rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); }
-.site-nav .nav-members-menu a, .site-nav .nav-members-menu li:first-child a { margin: 0; padding: .55rem 1rem; }
+/* "Members": a green button in the menu. It opens My Profile, and the member pages show as tabs below. */
+.site-nav .nav-members { margin-left: .35rem; }
+.site-nav .nav-members a { background: var(--primary); color: #fff; padding: .35rem 1.2rem; }
+.site-nav .nav-members a:hover { background: var(--primary-strong); color: #fff; }
+.site-nav .nav-members a[aria-current="page"] { background: var(--primary-strong); color: #fff; box-shadow: 0 0 0 3px #c8dacb; }
 
 /* Donate: at the right end of the menu row, under "Join us". A soft clay outline so it stands out a little. */
 .nav-donate { flex: none; margin-left: auto; align-self: center; display: inline-flex; align-items: center; gap: .4rem; min-height: 2.6rem; padding: .3rem 1.05rem .3rem .9rem;
@@ -209,8 +202,6 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
   .site-nav ul { flex-direction: column; align-items: stretch; padding: .25rem 0 .75rem; gap: .2rem; }
   .site-nav a, .site-nav li:first-child a { margin: 0; padding: .6rem 1.1rem; font-size: 1.1rem; }
   .site-nav .nav-members { margin: .5rem 0 0; }
-  .nav-members-toggle { width: 100%; justify-content: space-between; min-height: var(--tap); font-size: 1.1rem; padding: .5rem 1.1rem; }
-  .site-nav .nav-members-menu { position: static; min-width: 0; margin-top: .4rem; box-shadow: none; background: var(--sage-tint); border-color: #d5e3d6; }
   .nav-donate { margin: .25rem 0 1rem; }
 }
 /* Phones: logo + Menu on top, then big "Sign in" and "Join NAGP" buttons side by side.
@@ -526,3 +517,13 @@ dialog::backdrop { background: rgba(47, 59, 55, .45); }
 /* The first heading or paragraph in a block never adds extra space on top. */
 .prose > :first-child, .section > .container > :first-child, .section > .container > .prose:first-child > :first-child { margin-top: 0; }
 .page-header h1:last-child { margin-bottom: 0; }
+/* A page that starts straight with its content (no title block). */
+.section-first { padding-top: 1.75rem; }
+/* Two sections in a row on the same background share one gap instead of adding both paddings. */
+.hero + .section, .section:not(.section-alt) + .section:not(.section-alt) { padding-top: 0; }
+.hero { padding-bottom: 2.25rem; }
+.section { padding-bottom: 2.75rem; }
+.site-footer { margin-top: 0; }
+.hero { padding-bottom: 1rem; }
+.hero p:last-child { margin-bottom: .5rem; }
+.page-header { padding-bottom: 1.25rem; }

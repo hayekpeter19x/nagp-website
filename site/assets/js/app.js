@@ -361,19 +361,6 @@
       });
     }
 
-    // The green "Members" button in the menu opens the list of member pages.
-    const mToggle = NAGP.$('.nav-members-toggle');
-    const mMenu = NAGP.$('#members-menu');
-    if (mToggle && mMenu) {
-      const setMembers = (open) => { mToggle.setAttribute('aria-expanded', String(open)); mMenu.hidden = !open; };
-      mToggle.addEventListener('click', () => setMembers(mToggle.getAttribute('aria-expanded') !== 'true'));
-      document.addEventListener('click', (e) => { if (!e.target.closest('.nav-members')) setMembers(false); });
-      // Escape closes this list first (before the phone menu around it).
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && mToggle.getAttribute('aria-expanded') === 'true') { e.stopPropagation(); setMembers(false); mToggle.focus(); }
-      }, true);
-    }
-
     NAGP.$$('[data-signout]').forEach((b) => b.addEventListener('click', NAGP.signOut));
 
     // "Stay connected" mailing-list forms anywhere on the page
