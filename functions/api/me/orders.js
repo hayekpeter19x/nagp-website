@@ -63,6 +63,7 @@ export async function onRequestGet(context) {
       expires,
       expired: !!expires && expires < today,
       days_left: expires ? Math.round((Date.parse(expires + 'T00:00:00Z') - Date.parse(today + 'T00:00:00Z')) / 864e5) : null,
+      cancel_requested_at: user.cancel_requested_at || null,
       pending_order: pendingRow ? { ...safeOrder(pendingRow), tier: orderMeta(pendingRow).tier || null } : null,
     },
     orders,

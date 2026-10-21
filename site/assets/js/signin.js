@@ -3,9 +3,9 @@
   const { $, $$, api, html } = NAGP;
 
   // Only allow redirects back to our own pages.
-  const next = NAGP.localUrl(NAGP.qs('next'), '/members/');
+  const next = NAGP.localUrl(NAGP.qs('next'), '/members/profile');
   const goNext = (user) => {
-    location.href = next === '/members/' && user && user.isCouncil ? '/council/' : next;
+    location.href = next === '/members/profile' && user && user.isCouncil ? '/council/' : next;
   };
 
   $('#show-password').addEventListener('change', (e) => {
@@ -26,7 +26,7 @@
       const box = $('#already-signed-in');
       box.hidden = false;
       box.innerHTML = html`<div class="notice notice-info"><p>You are already signed in as <strong>${session.user.name}</strong>.</p>
-        <p><a class="btn" href="${session.user.isCouncil ? '/council/' : '/members/'}">Continue</a>
+        <p><a class="btn" href="${session.user.isCouncil ? '/council/' : '/members/profile'}">Continue</a>
         <button class="btn btn-secondary" type="button" data-signout-here>Sign out</button></p></div>`;
       box.querySelector('[data-signout-here]').addEventListener('click', NAGP.signOut);
     }

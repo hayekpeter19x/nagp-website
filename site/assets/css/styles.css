@@ -157,9 +157,9 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
 .account-actions { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
 
 .site-nav { background: var(--surface); padding-bottom: .55rem; }
-.site-nav > .container { display: flex; align-items: flex-end; gap: .75rem; }
+.site-nav > .container { display: flex; align-items: center; gap: .75rem; }
 .site-nav nav { flex: 1 1 auto; min-width: 0; }
-.site-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: flex-end; gap: .15rem; }
+.site-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: .15rem; }
 .site-nav li { margin: 0; }
 .site-nav a { display: flex; align-items: center; min-height: var(--tap); padding: .35rem .75rem; color: var(--ink); text-decoration: none; font-weight: 700; border-radius: 999px; white-space: nowrap; }
 .site-nav li:first-child a { margin-left: -.75rem; } /* line "Home" up with the logo */
@@ -167,25 +167,21 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
 .site-nav a[aria-current="page"] { color: var(--primary-strong); background: var(--primary-soft); box-shadow: inset 0 0 0 2px #c8dacb; }
 .site-nav .menu-signout { display: none; }
 
-/* "Members only": the pages that need a member sign-in, grouped in a soft rounded box
-   with a small label on top. */
-.site-nav .nav-group { display: flex; flex-direction: column; align-items: center; margin-left: .5rem; padding: .2rem .35rem .3rem;
-  background: var(--sage-tint); border: 1px solid #d5e3d6; border-radius: 20px; }
-.nav-group-label { font-size: .9rem; font-weight: 700; line-height: 1.2; color: var(--primary-strong); letter-spacing: .02em; padding: .15rem .5rem .1rem; }
-.site-nav .nav-group ul { flex-wrap: nowrap; gap: .1rem; }
-.site-nav .nav-group a { min-height: 2.6rem; }
-/* Line every tab up with the tabs inside the "Members only" box (same height, same baseline). */
-@media (min-width: 1241px) {
-  .site-nav a { min-height: 2.6rem; }
-  .site-nav nav > ul > li:not(.nav-group) > a, .nav-donate { margin-bottom: calc(.3rem + 1px); }
-  .nav-donate { align-self: flex-end; }
-}
-.site-nav .nav-group li:first-child a { margin-left: 0; }
-.site-nav .nav-group a:hover { background: var(--surface); }
-.site-nav .nav-group a[aria-current="page"] { background: var(--surface); }
+/* "Members": one green button that opens a short list of the member pages (they need a sign-in).
+   Click or tap to open; Escape or a click elsewhere closes it (see app.js). */
+.site-nav .nav-members { position: relative; margin-left: .35rem; }
+.nav-members-toggle { display: inline-flex; align-items: center; gap: .55rem; min-height: 2.75rem; padding: .35rem 1.15rem; border: 2px solid var(--primary);
+  border-radius: 999px; background: var(--primary); color: #fff; font: 700 1rem/1.2 var(--font-body); cursor: pointer; white-space: nowrap; }
+.nav-members-toggle:hover { background: var(--primary-strong); border-color: var(--primary-strong); }
+.nav-members.is-current .nav-members-toggle { box-shadow: 0 0 0 3px #c8dacb; }
+.nav-chevron { width: .55rem; height: .55rem; border: solid currentColor; border-width: 0 2.5px 2.5px 0; transform: translateY(-.15rem) rotate(45deg); transition: transform .15s; }
+.nav-members-toggle[aria-expanded="true"] .nav-chevron { transform: translateY(.1rem) rotate(-135deg); }
+.site-nav .nav-members-menu { position: absolute; left: 0; top: calc(100% + .45rem); z-index: 40; min-width: 15.5rem; flex-direction: column; align-items: stretch; gap: .15rem;
+  padding: .5rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); }
+.site-nav .nav-members-menu a, .site-nav .nav-members-menu li:first-child a { margin: 0; padding: .55rem 1rem; }
 
 /* Donate: at the right end of the menu row, under "Join us". A soft clay outline so it stands out a little. */
-.nav-donate { flex: none; margin-left: auto; display: inline-flex; align-items: center; gap: .4rem; min-height: 2.6rem; padding: .3rem 1.05rem .3rem .9rem;
+.nav-donate { flex: none; margin-left: auto; align-self: center; display: inline-flex; align-items: center; gap: .4rem; min-height: 2.6rem; padding: .3rem 1.05rem .3rem .9rem;
   border: 2px solid #dcb39c; border-radius: 999px; background: var(--peach-tint); color: var(--accent-strong); font-weight: 700; font-size: .95rem; text-decoration: none; white-space: nowrap; }
 .nav-donate svg { width: 1.05rem; height: 1.05rem; fill: var(--accent); }
 .nav-donate:hover { border-color: var(--accent); background: #f8e2d4; color: var(--accent-strong); }
@@ -203,7 +199,7 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
 .menu-toggle[aria-expanded="true"] .menu-toggle-icon::after { transform: translateY(-50%) rotate(-45deg); }
 
 /* When the main menu becomes a Menu button (the menu items would otherwise wrap). */
-@media (max-width: 1240px) {
+@media (max-width: 1080px) {
   .header-top { flex-wrap: wrap; }
   .menu-toggle { display: inline-flex; }
   .header-actions { order: 3; flex: 1 1 100%; justify-content: space-between; }
@@ -212,10 +208,10 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
   .site-nav > .container { display: block; }
   .site-nav ul { flex-direction: column; align-items: stretch; padding: .25rem 0 .75rem; gap: .2rem; }
   .site-nav a, .site-nav li:first-child a { margin: 0; padding: .6rem 1.1rem; font-size: 1.1rem; }
-  .site-nav .nav-group { align-items: stretch; margin: .5rem 0 0; padding: .6rem .5rem .5rem; }
-  .site-nav .nav-group ul { flex-direction: column; padding: .2rem 0 0; }
-  .nav-group-label { padding-left: 1.1rem; }
-  .nav-donate { margin: 0 0 1rem; }
+  .site-nav .nav-members { margin: .5rem 0 0; }
+  .nav-members-toggle { width: 100%; justify-content: space-between; min-height: var(--tap); font-size: 1.1rem; padding: .5rem 1.1rem; }
+  .site-nav .nav-members-menu { position: static; min-width: 0; margin-top: .4rem; box-shadow: none; background: var(--sage-tint); border-color: #d5e3d6; }
+  .nav-donate { margin: .25rem 0 1rem; }
 }
 /* Phones: logo + Menu on top, then big "Sign in" and "Join NAGP" buttons side by side.
    "Sign out" is inside the menu. */
@@ -234,6 +230,7 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
 
 /* ---------- Page header + section navigation ---------- */
 .page-header { background: linear-gradient(180deg, var(--sand) 0%, var(--bg) 100%); padding: 2.75rem 0 1.75rem; }
+.page-header + .section { padding-top: 1.25rem; }
 .page-header h1 { margin-bottom: .35em; }
 .page-header .lede { font-size: 1.2rem; color: var(--ink-soft); max-width: 44rem; margin-bottom: 0; }
 .eyebrow { display: inline-block; font-size: .95rem; font-weight: 700; color: var(--accent-strong); margin-bottom: .5rem; }
@@ -525,3 +522,7 @@ dialog::backdrop { background: rgba(47, 59, 55, .45); }
 /* ---------- Spacing utilities (last, so they win over components) ---------- */
 .mt-0 { margin-top: 0 !important; } .mb-0 { margin-bottom: 0 !important; }
 .mt-1 { margin-top: 1rem !important; } .mt-2 { margin-top: 2rem !important; } .mb-1 { margin-bottom: 1rem !important; } .mb-2 { margin-bottom: 2rem !important; }
+
+/* The first heading or paragraph in a block never adds extra space on top. */
+.prose > :first-child, .section > .container > :first-child, .section > .container > .prose:first-child > :first-child { margin-top: 0; }
+.page-header h1:last-child { margin-bottom: 0; }

@@ -9,6 +9,14 @@
 <section class="section">
   <div class="container">
     <div id="profile-loading"><p class="loading">Loading your profile…</p></div>
+    <div id="account-summary" class="card card-flat account-summary mb-2" hidden>
+      <h2>Your account</h2>
+      <ul class="meta-list">
+        <li><b>Name:</b> <span id="acc-name"></span></li>
+        <li><b>Sign-in email:</b> <span id="acc-email"></span></li>
+        <li><b>Membership:</b> <span id="acc-tier"></span> &middot; <a href="/members/payments">My Membership</a></li>
+      </ul>
+    </div>
     <form id="profile-form" class="form form-wide" hidden>
       <div class="profile-layout">
         <div>

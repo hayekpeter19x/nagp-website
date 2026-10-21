@@ -14,8 +14,9 @@ test('sign in with email and password, then sign out', async ({ page, playwright
 
   await page.getByLabel('Password', { exact: true }).fill(PASSWORD);
   await page.getByRole('button', { name: 'Sign in', exact: true }).click();
-  await expect(page).toHaveURL(/\/members\/$/);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText(`Welcome, ${name}`);
+  await expect(page).toHaveURL(/\/members\/profile$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('My Profile');
+  await expect(page.locator('#acc-name')).toHaveText(name);
 
   // Sign out (on phones the button is inside the menu)
   let signOut = page.getByRole('button', { name: 'Sign out' });
@@ -26,7 +27,7 @@ test('sign in with email and password, then sign out', async ({ page, playwright
   await signOut.first().click();
   await expect(page).toHaveURL((url) => url.pathname === '/');
   expect((await call(page, 'GET', '/api/session')).body.user).toBeNull();
-  await page.goto('/members/');
+  await page.goto('/members/profile');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Please sign in');
 });
 

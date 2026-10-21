@@ -3,7 +3,7 @@ import { test, expect, call, signInAs, joinMember, expectAccessOk } from './help
 
 test.describe('pages', () => {
   test('signed out, the Members\' Area and the Council Area ask you to sign in', async ({ page }) => {
-    for (const path of ['/members/', '/members/board', '/council/', '/council/members']) {
+    for (const path of ['/members/profile', '/members/board', '/council/', '/council/members']) {
       await page.goto(path);
       await expect(page.getByRole('heading', { level: 1 })).toHaveText('Please sign in');
       const signIn = page.getByRole('main').getByRole('link', { name: 'Sign in' });
@@ -12,10 +12,10 @@ test.describe('pages', () => {
   });
 
   test('a member can use the Members\' Area but not the Council Area', async ({ page }) => {
-    const user = await signInAs(page, 'member');
-    await page.goto('/members/');
+    await signInAs(page, 'member');
+    await page.goto('/members/profile');
     await expectAccessOk(page);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(`Welcome, ${user.name}`);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('My Profile');
 
     await page.goto('/council/');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Council members only');
@@ -25,7 +25,7 @@ test.describe('pages', () => {
 
   test('a Council member can see everything', async ({ page }) => {
     const user = await signInAs(page, 'council');
-    for (const path of ['/members/', '/members/directory', '/council/', '/council/approvals', '/council/members']) {
+    for (const path of ['/members/profile', '/members/directory', '/council/', '/council/approvals', '/council/members']) {
       await page.goto(path);
       await expectAccessOk(page);
       await expect(page.getByRole('heading', { level: 1 })).not.toHaveText(/Please sign in|Council members only/);
@@ -54,7 +54,7 @@ test.describe('pages', () => {
     for (const next of ['//example.com/', '/\\example.com/', '/\t/example.com/', 'https://example.com/']) {
       await page.goto(`/signin?next=${encodeURIComponent(next)}`);
       await page.getByRole('button', { name: /Associate Member/ }).click();
-      await page.waitForURL((url) => url.pathname === '/members/' || url.hostname !== 'localhost');
+      await page.waitForURL((url) => url.pathname === '/members/profile' || url.hostname !== 'localhost');
       expect(new URL(page.url()).hostname, `next=${next}`).toBe('localhost');
       await page.context().clearCookies();
     }

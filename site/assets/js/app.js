@@ -281,7 +281,7 @@
     } else if (need === 'council' && !u.isCouncil) {
       html = NAGP.html`<div class="card access-gate"><h1>Council members only</h1>
         <p class="lede">This area is only for members of the NAGP Council. You are signed in as ${u.name}.</p>
-        <div class="actions"><a class="btn" href="/members/">Go to the Members' Area</a></div></div>`;
+        <div class="actions"><a class="btn" href="/members/profile">Go to My Profile</a></div></div>`;
     } else if (need === 'member' && !u.isMember && !location.pathname.startsWith('/members/payments')) {
       const ended = u.status === 'lapsed' || (u.status === 'active' && u.membership_expires);
       html = ended
@@ -359,6 +359,19 @@
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') { setMenu(false); toggle.focus(); }
       });
+    }
+
+    // The green "Members" button in the menu opens the list of member pages.
+    const mToggle = NAGP.$('.nav-members-toggle');
+    const mMenu = NAGP.$('#members-menu');
+    if (mToggle && mMenu) {
+      const setMembers = (open) => { mToggle.setAttribute('aria-expanded', String(open)); mMenu.hidden = !open; };
+      mToggle.addEventListener('click', () => setMembers(mToggle.getAttribute('aria-expanded') !== 'true'));
+      document.addEventListener('click', (e) => { if (!e.target.closest('.nav-members')) setMembers(false); });
+      // Escape closes this list first (before the phone menu around it).
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mToggle.getAttribute('aria-expanded') === 'true') { e.stopPropagation(); setMembers(false); mToggle.focus(); }
+      }, true);
     }
 
     NAGP.$$('[data-signout]').forEach((b) => b.addEventListener('click', NAGP.signOut));

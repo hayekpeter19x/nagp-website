@@ -1,4 +1,4 @@
-// My Payments (/members/payments): finish joining, membership status and renewal,
+// My Membership (/members/payments): finish joining, membership status, renew or change type, cancel,
 // event registrations and payment history. Signed-in people who have not paid yet can see this page.
 (function () {
   const { $, html, api } = NAGP;
@@ -9,7 +9,7 @@
   const tierOptions = (selected) => html`${tiers.map((t) => html`<option value="${t.key}"${t.key === selected ? NAGP.raw(' selected') : ''}>${t.name}, ${NAGP.money(t.price_cents)}</option>`)}`;
 
   // A small form: membership type + "Renew for one year: $75" (also used to finish joining).
-  const renewForm = (selected, verb) => html`<form class="renew-form" id="renew-form" novalidate data-verb="${verb}">
+  const renewForm = (selected, verb, current = '') => html`<form class="renew-form" id="renew-form" novalidate data-verb="${verb}" data-current="${current}">
       <div class="field">
         <label for="renew-tier">Membership type</label>
         <select id="renew-tier" name="tier">${tierOptions(selected)}</select>
@@ -83,11 +83,10 @@
     const badge = m.is_member && !m.expired ? html`<span class="badge badge-success">Active</span>`
       : m.status === 'lapsed' || m.expired ? html`<span class="badge badge-warning">Ended</span>`
         : html`<span class="badge">Not active</span>`;
-    let text;
-    if (!m.is_member || m.expired) text = 'Renew to restore your member benefits. Your new year starts on the day you pay.';
-    else if (m.days_left !== null && m.days_left <= 60) text = 'Your membership ends soon. Renew now to keep your member benefits. Renewing adds one year to your current end date.';
-    else text = 'You can renew early at any time. Renewing adds one year to your current end date, so you do not lose any time.';
+    const soon = m.days_left !== null && m.days_left <= 60;
     const o = m.pending_order;
+    const cancelled = m.cancel_requested_at;
+    const canCancel = !cancelled && m.is_member && !m.is_council && m.expires;
     return html`<section class="mp-section card">
       <h2>Your membership</h2>
       <ul class="meta-list">
@@ -95,11 +94,25 @@
         <li class="status-line"><b>Status:</b> ${badge}</li>
         ${m.expires ? html`<li><b>${m.expired ? 'Ended on' : 'Active until'}:</b> ${NAGP.formatDate(m.expires)}</li>` : ''}
       </ul>
+      ${cancelled ? html`<div class="mt-1">${NAGP.notice('info', html`<p>You asked to cancel on ${NAGP.formatShortDate(cancelled)}. Your membership stays active until ${NAGP.formatDate(m.expires)}, and it will not be renewed.</p>
+          <p><button class="btn btn-secondary" type="button" id="undo-cancel">Keep my membership</button></p>`, 'Cancellation requested')}</div>` : ''}
       ${o ? html`<div class="mt-1">${NAGP.notice('warning', html`<p>You started a renewal (${o.description}) but have not paid yet.</p>
           <p><a class="btn btn-accent" href="${o.links.checkout}">Pay ${NAGP.money(o.amount_cents)}</a></p>`, 'Renewal not finished')}</div>` : ''}
-      <h3 class="mp-sub">Renew your membership</h3>
-      <p>${text}</p>
-      ${renewForm(m.tier || 'associate', 'Renew for one year')}
+
+      <h3 class="mp-sub">Renew or change your membership</h3>
+      <p>${soon ? 'Your membership ends soon. ' : ''}Keep the same type to renew, or choose a different type to change it, for example to upgrade to Professional Member. You pay for one year of the type you choose. It starts right away, and one year is added to your membership.</p>
+      ${renewForm(m.tier || 'associate', 'Renew for one year', m.tier)}
+
+      ${canCancel ? html`<h3 class="mp-sub">Cancel your membership</h3>
+      <p>If you cancel, your membership stays active until ${NAGP.formatDate(m.expires)} and will not be renewed. The Council will be told, and will contact you if you would like a refund.</p>
+      <p><button class="btn btn-danger" type="button" id="cancel-membership">Cancel my membership</button></p>
+      <div id="cancel-confirm" class="notice notice-warning" hidden>
+        <span class="notice-title">Are you sure you want to cancel?</span>
+        <p>You can change your mind later on this page.</p>
+        <p><button class="btn btn-danger" type="button" id="cancel-yes">Yes, cancel my membership</button>
+          <button class="btn btn-secondary" type="button" id="cancel-no">No, keep it</button></p>
+      </div>` : ''}
+      <div class="form-status" id="cancel-status" role="status" aria-live="polite"></div>
     </section>`;
   }
 
@@ -146,7 +159,9 @@
     const btn = form.querySelector('[type="submit"]');
     const label = () => {
       const t = NAGP.tier(select.value);
-      btn.textContent = t ? `${form.dataset.verb}: ${NAGP.money(t.price_cents)}` : form.dataset.verb;
+      const changing = form.dataset.current && select.value !== form.dataset.current;
+      const verb = changing ? `Switch to ${t.name}` : form.dataset.verb;
+      btn.textContent = t ? `${verb}: ${NAGP.money(t.price_cents)}` : form.dataset.verb;
     };
     select.addEventListener('change', label);
     label();
@@ -177,6 +192,32 @@
       ${registrationsSection(data.registrations)}
       ${historySection(data.orders)}`;
     wireRenew();
+    wireCancel(session);
+  }
+
+  // "Cancel my membership" asks once more before sending; "Keep my membership" undoes it.
+  function wireCancel(session) {
+    const status = $('#cancel-status');
+    const send = async (undo) => {
+      try {
+        await api('/api/membership/cancel', { method: 'POST', body: { undo } });
+        await load(session);
+        const msg = undo ? 'Thank you. Your membership will continue as before.'
+          : 'Your cancellation was sent to the Council. Your membership stays active until its end date.';
+        $('#cancel-status').innerHTML = NAGP.notice('success', msg);
+      } catch (err) {
+        status.innerHTML = NAGP.notice('error', err.message);
+      }
+    };
+    const start = $('#cancel-membership');
+    const confirmBox = $('#cancel-confirm');
+    if (start && confirmBox) {
+      start.addEventListener('click', () => { confirmBox.hidden = false; start.hidden = true; $('#cancel-yes').focus(); });
+      $('#cancel-no').addEventListener('click', () => { confirmBox.hidden = true; start.hidden = false; start.focus(); });
+      $('#cancel-yes').addEventListener('click', () => send(false));
+    }
+    const undo = $('#undo-cancel');
+    if (undo) undo.addEventListener('click', () => send(true));
   }
 
   NAGP.whenAllowed().then(load);

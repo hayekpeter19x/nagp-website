@@ -64,7 +64,7 @@
         </ol>
         <div class="actions">
           <a class="btn btn-large" href="/members/profile">Complete your profile</a>
-          <a class="btn btn-secondary btn-large" href="/members/">Go to the Members' Area</a>
+          <a class="btn btn-secondary btn-large" href="/members/profile">Go to My Profile</a>
         </div>
         ${u ? '' : html`<p class="hint mt-1">You will be asked to sign in with your email address and password.</p>`}
       </div>`;
@@ -109,7 +109,7 @@
     }[order.kind] || ['Payment received', 'Your payment was received.'];
     const u = session && session.user;
     const keep = u
-      ? html`<p>A copy of this receipt is kept in <a href="/members/payments">My Payments</a>.</p>`
+      ? html`<p>A copy of this receipt is kept in <a href="/members/payments">My Membership</a>.</p>`
       : html`<p>Please print this receipt or bookmark this page for your records.</p>`;
     box.innerHTML = html`${Pay.steps(labels, labels.length)}
       ${NAGP.notice('success', html`<p>${headline}</p>${keep}`, noticeTitle)}
@@ -122,7 +122,7 @@
     if (!session) session = await NAGP.ready;
     if (!id || !token) {
       setHeader('We could not find your payment', 'The link to this page is not complete.');
-      box.innerHTML = html`${NAGP.notice('error', 'Please use the whole link, or look for your receipts in My Payments in the Members’ Area.')}${help}`;
+      box.innerHTML = html`${NAGP.notice('error', 'Please use the whole link, or look for your receipts in My Membership in the Members’ Area.')}${help}`;
       return;
     }
     let data;
@@ -145,7 +145,7 @@
     }
     if (order.status === 'pending' && sessionId) {
       setHeader('Your payment is being confirmed', 'This is taking a little longer than usual.');
-      box.innerHTML = html`${NAGP.notice('info', html`<p>If you finished paying on the Stripe page, you do not need to do anything else. Your payment will show as paid in My Payments within a few minutes, and you can come back to this page for your receipt.</p>
+      box.innerHTML = html`${NAGP.notice('info', html`<p>If you finished paying on the Stripe page, you do not need to do anything else. Your payment will show as paid in My Membership within a few minutes, and you can come back to this page for your receipt.</p>
         <p>Your order number is <span class="order-number">${order.id}</span>.</p>`, 'Still confirming')}
         <div class="actions"><button type="button" class="btn" id="pc-retry">Check again</button></div>${help}`;
       $('#pc-retry').addEventListener('click', () => { NAGP.loading(box, 'Checking your payment…'); load(0); });

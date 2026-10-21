@@ -207,7 +207,7 @@
         <p class="lede">You are signed in as ${u.name}${tier ? `, ${tier.name}` : ''}.
           ${u.membership_expires ? `Your membership is active until ${NAGP.formatDate(u.membership_expires)}.` : ''}</p>
         <div class="actions">
-          <a class="btn btn-large" href="/members/">Go to the Members' Area</a>
+          <a class="btn btn-large" href="/members/profile">Go to My Profile</a>
           <a class="btn btn-secondary btn-large" href="/members/payments">Renew your membership</a>
         </div></div>`;
       return;
@@ -227,8 +227,8 @@
     } else {
       box.innerHTML = html`<div class="card card-highlight">
         <h2>Welcome back, ${u.name}</h2>
-        <p class="lede">${u.status === 'pending' ? 'You already have an account. To finish joining, choose your membership and pay on your My Payments page.'
-          : 'Your membership is not active at the moment. You can renew it on your My Payments page.'}</p>
+        <p class="lede">${u.status === 'pending' ? 'You already have an account. To finish joining, choose your membership and pay on your My Membership page.'
+          : 'Your membership is not active at the moment. You can renew it on your My Membership page.'}</p>
         <div class="actions"><a class="btn btn-accent btn-large" href="/members/payments">${u.status === 'pending' ? 'Finish joining' : 'Renew my membership'}</a></div>
         ${signOut}
       </div>`;

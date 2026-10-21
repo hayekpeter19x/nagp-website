@@ -49,11 +49,12 @@ test('a new Professional member joins, pays, uses the Members\' Area and is list
   await expect(page.getByText(/Your membership is active until/)).toBeVisible();
   const order = orderFromUrl(page.url());
 
-  // The Members' Area works for them now
-  await page.getByRole('link', { name: /Go to the Members.? Area/ }).click();
-  await expect(page).toHaveURL(/\/members\/$/);
+  // The members' pages work for them now
+  await page.getByRole('link', { name: 'Go to My Profile' }).click();
+  await expect(page).toHaveURL(/\/members\/profile$/);
   await expectAccessOk(page);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText(`Welcome, ${name}`);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('My Profile');
+  await expect(page.locator('#acc-name')).toHaveText(name);
   const me = (await call(page, 'GET', '/api/me')).body.user;
   expect(me).toMatchObject({ status: 'active', tier: 'professional', member_type: 'professional', show_public: true, isMember: true });
   expect(me.membership_expires).toBe(oneYearFromToday());

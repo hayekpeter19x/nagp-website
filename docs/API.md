@@ -22,7 +22,8 @@ Money is in cents. Dates are ISO strings. Booleans in rows are 0/1 from SQLite. 
 | GET | /api/events/:id | public | `{ event: Event }` |
 | POST | /api/events/:id/register | public | `{ name, email }`. Free → `{ status: 'confirmed' }`. Paid → `{ status: 'pending', checkout_url }`. Member price if signed in as an active member. Members-only events need a member. |
 | POST | /api/membership/join | public | application (tier, name, email, password, city, state, professional fields, agree) → creates the user (status pending) + order, signs them in → `{ checkout_url }` |
-| POST | /api/membership/renew | signed-in | `{ tier? }` → `{ checkout_url }` |
+| POST | /api/membership/renew | signed-in | `{ tier? }` → `{ checkout_url }`. A different tier changes the membership type (one year of the new type, added to the membership). |
+| POST | /api/membership/cancel | signed-in | `{ undo? }`. Records a cancellation (the membership stays active until its end date and is not renewed) and messages the Council; `undo: true` keeps the membership. |
 | POST | /api/donate | public | `{ amount_cents, name, email, note }` → `{ checkout_url }` |
 | GET | /api/orders/:id | public with `?token=` | `{ order }` (safe fields). With Stripe, also confirms a pending order via `session_id`. |
 | POST | /api/checkout/demo-complete | public (only when DEMO_MODE is on AND no Stripe key is set) | `{ id, token }` → `{ order, receipt_url }` |

@@ -22,6 +22,11 @@
     field('public_phone').value = u.public_phone;
     field('website').value = u.website;
     $('#pf-login-email').textContent = u.email;
+    // "Your account" summary at the top of the page
+    $('#acc-name').textContent = u.name;
+    $('#acc-email').textContent = u.email;
+    $('#acc-tier').textContent = (NAGP.tier(u.tier) || {}).name || 'Not chosen yet';
+    $('#account-summary').hidden = false;
   }
 
   function setUpForType() {

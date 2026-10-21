@@ -144,5 +144,6 @@
 @media (max-width: 560px) { .signup-email { grid-template-columns: 1fr; } }
 
 /* ---------- Founding Council: "Bio:" above the missing-info note ---------- */
-.council-card .bio-line { margin: 1rem 0 .4rem; align-self: flex-start; }
+.council-card .bio-line { margin: .75rem 0 .35rem; align-self: flex-start; }
 .council-card .bio-line + .placeholder-note { margin-top: 0; }
+.council-card .avatar-lg { width: 6.5rem; height: 6.5rem; font-size: 2rem; }
