@@ -88,6 +88,8 @@ h2 { font-size: clamp(1.55rem, 1.3rem + 1vw, 2rem); margin-top: 1.6em; }
 h3 { font-size: 1.3rem; margin-top: 1.4em; }
 h4 { font-size: 1.1rem; font-family: var(--font-body); font-weight: 700; margin-top: 1.2em; }
 h2:first-child, h3:first-child, h4:first-child { margin-top: 0; }
+/* A heading right after a hidden page title is the first thing you see. */
+.visually-hidden:first-child + h2, .visually-hidden:first-child + h3 { margin-top: 0; }
 p, ul, ol, dl, blockquote, table, figure { margin: 0 0 1.1em; }
 ul, ol { padding-left: 1.4em; }
 li { margin-bottom: .35em; }
@@ -220,8 +222,8 @@ blockquote { margin-left: 0; padding: 1rem 1.25rem; border-left: 4px solid var(-
 }
 
 /* ---------- Page header + section navigation ---------- */
-.page-header { background: linear-gradient(180deg, var(--sand) 0%, var(--bg) 100%); padding: 2.75rem 0 1.75rem; }
-.page-header + .section { padding-top: 1.25rem; }
+.page-header { background: linear-gradient(180deg, var(--sand) 0%, var(--bg) 100%); padding: 1.75rem 0 1rem; }
+.page-header + .section { padding-top: 1rem; }
 .page-header h1 { margin-bottom: .35em; }
 .page-header .lede { font-size: 1.2rem; color: var(--ink-soft); max-width: 44rem; margin-bottom: 0; }
 .eyebrow { display: inline-block; font-size: .95rem; font-weight: 700; color: var(--accent-strong); margin-bottom: .5rem; }

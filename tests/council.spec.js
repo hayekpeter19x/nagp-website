@@ -127,7 +127,8 @@ test('the Council dashboard counts what needs attention', async ({ page, request
   await expect(page.getByRole('heading', { name: 'Needs your attention' })).toBeVisible();
   await expect(page.locator('#attention .loading')).toHaveCount(0);
   await expect(page.getByRole('link', { name: /messages? from the contact form (has|have) not been answered yet/ })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Before launch' })).toBeVisible();
+  // The dashboard is only "Needs your attention" and "At a glance"
+  for (const gone of ['Quick actions', 'How this area works', 'Before launch']) await expect(page.getByRole('heading', { name: gone })).toHaveCount(0);
   // The Approvals and Documents pages were removed
   for (const name of ['Approvals', 'Documents']) await expect(page.getByRole('link', { name, exact: true })).toHaveCount(0);
 });

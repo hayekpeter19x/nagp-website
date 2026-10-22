@@ -18,11 +18,7 @@
 .stat dt { color: var(--ink-soft); font-weight: 700; font-size: .95rem; }
 .stat dd { margin: 0; font: 700 2.1rem/1.15 var(--font-head); color: var(--primary-strong); }
 .stat .stat-note { display: block; font: 400 .9rem/1.4 var(--font-body); color: var(--ink-soft); margin-top: .2rem; }
-.quick-buttons { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); }
-.quick-buttons .btn { justify-content: flex-start; text-align: left; }
 
-.launch-box { margin-top: 3rem; border: 2px dashed var(--line-strong); background: var(--sand); border-radius: var(--radius-lg); padding: 1.5rem; }
-.launch-box h2 { margin-top: 0; font-size: 1.5rem; }
 
 /* ---------- Buttons ---------- */
 .btn-danger-solid { background: var(--danger); border-color: var(--danger); color: #fff; }

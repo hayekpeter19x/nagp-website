@@ -1,5 +1,4 @@
-// /council/ — the Council dashboard: what needs attention, numbers at a glance, and the
-// "Before launch" box for deleting the sample data.
+// /council/ — the Council dashboard: what needs attention, and numbers at a glance.
 (function () {
   const { $, api, html } = NAGP;
   const { plural } = Council;
@@ -39,83 +38,20 @@
       ${stat('New members', g.new_members_30d, 'in the last 30 days')}
       ${stat('Mailing list sign-ups', g.subscribers, 'from the website forms')}
       ${stat('Upcoming events', g.upcoming_events, 'published on the Events page')}
-      ${stat('Payments received', NAGP.money(g.payments_30d_cents, { free: '$0' }), `${plural(g.payments_30d_count, 'payment')} in the last 30 days`)}
+      ${stat('Payments received', Council.dollars(g.payments_30d_cents), `${plural(g.payments_30d_count, 'payment')} in the last 30 days`)}
     </dl>`;
   }
 
-  function launchBox(sample, user) {
-    const box = $('#launch-box');
-    if (!sample.total) { box.hidden = true; return; }
-    box.hidden = false;
-    const noRealCouncil = !sample.real_council_accounts;
-    $('#launch-text').innerHTML = html`
-      <p>So you can see how the site will look, the preview contains made-up <strong>sample data</strong>:
-        ${plural(sample.accounts, 'sample account')} (including the demo accounts used by the one-click sign-in)
-        and ${plural(sample.other, 'other sample item')} (announcements, events, documents and community board posts).
-        Each one is marked with a "Sample" tag.</p>
-      <p>When the Council is ready to go live, delete all of it here. Real members, messages and mailing-list sign-ups are kept.</p>
-      ${noRealCouncil ? NAGP.notice('warning', html`<p>First, make sure each Council member has their own account with a password.
-        On the <a href="/council/members">Members page</a>, choose "Add a member by hand", then "Edit" and set their role to Council.
-        Otherwise nobody could sign in to the Council Area afterwards, because the demo accounts are removed too.</p>`, 'One step first') : ''}`;
-    const btn = $('#delete-sample');
-    btn.disabled = noRealCouncil;
-    btn.onclick = async () => {
-      const choice = await Council.ask({
-        title: 'Delete all sample data?',
-        message: html`<p>This permanently deletes:</p>
-          <ul>
-            <li>all ${plural(sample.accounts, 'sample account')}, <strong>including the demo accounts</strong>. The one-click "Try it as…" sign-in on the sign-in page will stop working;</li>
-            <li>the sample announcements, events, documents and community board posts;</li>
-            <li>any registrations, payments and sign-ins that belong to them.</li>
-          </ul>
-          <p>Real members, messages, mailing-list sign-ups and website comments are kept. So is anything you posted yourselves while
-            trying the demo accounts.</p>
-          ${user.sample ? html`<p><strong>You are using the demo Council account, so you will be signed out.</strong> Sign in again with your own account afterwards.</p>` : ''}
-          <p><strong>Are you sure? This cannot be undone.</strong></p>`,
-        confirm: 'Yes, delete the sample data',
-        cancel: 'No, keep it',
-        danger: true,
-      });
-      if (!choice.ok) return;
-      const status = $('#launch-status');
-      const res = await Council.run(btn, status, () => api('/api/council/sample-data/delete', { method: 'POST', body: { confirm: true } }), 'Deleting…');
-      if (!res) return;
-      const d = res.deleted;
-      const parts = [
-        d.users && plural(d.users, 'account'), d.announcements && plural(d.announcements, 'announcement'),
-        d.events && plural(d.events, 'event'), d.documents && plural(d.documents, 'document'),
-        d.board_posts && plural(d.board_posts, 'community board post'), d.registrations && plural(d.registrations, 'registration'),
-        d.orders && plural(d.orders, 'payment record'),
-      ].filter(Boolean);
-      const done = html`<p>${res.message}</p>${parts.length ? html`<p>Deleted: ${parts.join(', ')}.</p>` : ''}`;
-      if (res.signed_out) {
-        status.innerHTML = NAGP.notice('success', html`${done}<p>You were signed out because the demo account is gone.</p>
-          <p><a class="btn" href="/signin?next=/council/">Sign in with your own account</a></p>`, 'Done');
-        btn.hidden = true;
-        $('#launch-text').innerHTML = '';
-      } else {
-        status.innerHTML = NAGP.notice('success', done, 'Done');
-        btn.hidden = true;
-        $('#launch-text').innerHTML = '';
-        load(user, { keepLaunch: true });
-      }
-    };
-  }
-
-  async function load(user, { keepLaunch = false } = {}) {
+  async function load() {
     try {
       const s = await api('/api/council/summary');
       $('#attention').innerHTML = attentionList(s.attention);
       $('#glance').innerHTML = glance(s.glance);
-      if (!keepLaunch) launchBox(s.sample, user);
     } catch (err) {
       NAGP.showError($('#attention'), err);
       $('#glance').innerHTML = '';
     }
   }
 
-  NAGP.whenAllowed().then(({ user }) => {
-    $('#welcome').textContent = `Welcome, ${user.name}`;
-    load(user);
-  });
+  NAGP.whenAllowed().then(load);
 })();

@@ -11,6 +11,9 @@ Money is in cents. Dates are ISO strings. Booleans in rows are 0/1 from SQLite. 
 | POST | /api/auth/signin | public | `{ email, password }` |
 | POST | /api/auth/signout | public | |
 | POST | /api/auth/demo | public (preview) | `{ as: 'member'|'professional'|'council' }` |
+| POST | /api/auth/forgot | public | `{ email }` → `{ message }`, the same answer whether or not the account exists. Emails a one-hour reset link (lib/email.js, Resend); if email is not set up or fails, the Council gets a "Sign-in help" message instead. Rate-limited per email. |
+| GET | /api/auth/reset | public | `?token=` → `{ valid }` |
+| POST | /api/auth/reset | public | `{ token, password, password_confirm }` → saves the password, signs the person out everywhere else and signs them in here → `{ user, message }`. The link works once. |
 | POST | /api/contact | public | `{ name, email, topic, message }` → saved in `messages` |
 | POST | /api/subscribe | public | `{ first_name, last_name, email, source, interest }` → `subscribers` |
 | POST | /api/feedback | public | `{ page, name, comment }` → `feedback` |

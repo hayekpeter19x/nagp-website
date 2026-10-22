@@ -68,10 +68,22 @@ npm run deploy
    - `DEMO_MODE` = `false` turns off the one-click demo sign-in and the simulated payments.
    - `STRIPE_SECRET_KEY` = your Stripe secret key (from dashboard.stripe.com → Developers → API keys).
    - `STRIPE_WEBHOOK_SECRET` = the signing secret of a Stripe webhook pointing to `https://<your-domain>/api/stripe/webhook` with the event `checkout.session.completed`.
-4. Create real accounts for the Council: sign in as the demo Council member, go to **Council Area → Members → Add a member by hand**, and give each person the **council** role. Then go to **Council Area → Dashboard → Delete all sample data**. This also removes the demo accounts.
-5. Under **Custom domains**, add `usgestalt.org`. Its DNS needs to point at Cloudflare. Old WordPress addresses (`/index.php/about/` and so on) already redirect to the new pages (see `site/static/_redirects`).
+4. Create real accounts for the Council: sign in as the demo Council member, go to **Council Area → Members → Add a member by hand** (below the list), and give each person the **council** role. Then delete the sample data, which also removes the demo accounts. The dashboard no longer has a button for this, so a developer does it: sign in with a real Council account, open the browser's developer console on the site and run
+   `fetch('/api/council/sample-data/delete', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ confirm: true }) }).then((r) => r.json()).then(console.log)`
+5. Set up email for "Forgot your password?" (see below).
+6. Under **Custom domains**, add `usgestalt.org`. Its DNS needs to point at Cloudflare. Old WordPress addresses (`/index.php/about/` and so on) already redirect to the new pages (see `site/static/_redirects`).
+
+## Email ("Forgot your password?")
+
+The sign-in page has a **Forgot your password?** link. People type their email address and get an email with a link to choose a new password (it works once, for one hour). Emails are sent with **Resend** (resend.com, free for up to 3,000 emails a month):
+
+1. Create a Resend account, add the domain the emails should come from (for example `usgestalt.org`) and add the DNS records Resend shows you at the domain's DNS host.
+2. In Resend, create an API key.
+3. In Cloudflare → Pages project → **Settings → Variables and Secrets** (Production), add `RESEND_API_KEY` (as a secret) and `EMAIL_FROM`, for example `NAGP <no-reply@usgestalt.org>`. Optionally add `SITE_URL`, for example `https://usgestalt.org`, for the links in emails. Then redeploy.
+
+Until this is set up, or if an email cannot be sent, the person sees "the Council has been told", and the Council gets a "Sign-in help" message under **Messages & Sign-ups**. A Council member then sets a new password for them on the Members page (**Edit**).
 
 ## Not built yet (suggested next steps)
-- **Email sending** (receipts, "your announcement was approved", password-reset links, renewal reminders). This needs an email service such as Cloudflare Email Service, Resend or Postmark. Until then, receipts are shown on screen and printable, and password resets are done by the Council.
+- **More emails** (receipts, renewal reminders). Only the "Forgot your password?" email is built so far. Receipts are shown on screen and are printable.
 - Automatic yearly renewal (Stripe subscriptions). For now, membership is a one-year payment with a renew button.
 - Photo uploads for profiles and the Founding Council (Cloudflare R2), and newsletter sending.

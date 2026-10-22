@@ -9,7 +9,7 @@
 
   $('#amount-cards').innerHTML = html`${amounts.map((c) => html`<label class="choice-card">
       <input type="radio" name="amount_choice" value="${c}" required${c === preset ? NAGP.raw(' checked') : ''}>
-      <span class="choice-title">${NAGP.money(c, { exact: true })}</span></label>`)}
+      <span class="choice-title">${NAGP.money(c)}</span></label>`)}
     <label class="choice-card"><input type="radio" name="amount_choice" value="other" required>
       <span class="choice-title">Another amount</span></label>`;
 
@@ -32,7 +32,7 @@
     const other = !!(r && r.value === 'other');
     $('#other-field').hidden = !other;
     const cents = chosenCents();
-    submit.textContent = cents && cents >= 500 ? `Continue to payment: ${NAGP.money(cents, { exact: true })}` : 'Continue to payment';
+    submit.textContent = cents && cents >= 500 ? `Continue to payment: ${NAGP.money(cents)}` : 'Continue to payment';
     return other;
   }
   form.addEventListener('change', (e) => {

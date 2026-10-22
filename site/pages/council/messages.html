@@ -1,13 +1,7 @@
 <!--meta { "title": "Messages & Sign-ups", "description": "Messages sent with the contact form, and mailing-list sign-ups.", "section": "council", "access": "council", "scripts": ["council-common.js", "council-messages.js"], "styles": ["council.css"], "noindex": true } -->
-<section class="page-header">
-  <div class="container">
-    <h1>Messages &amp; Sign-ups</h1>
-    <p class="lede">Messages people sent with the contact form, and the people who signed up for the mailing list.</p>
-  </div>
-</section>
-
-<section class="section">
+<section class="section section-first">
   <div class="container container-mid">
+    <h1 class="visually-hidden">Messages &amp; Sign-ups</h1>
     <h2>Messages from the contact form</h2>
     <p>Newest first. Messages nobody has answered yet have an orange edge. Choose "Reply by email" to answer from your own email, then "Mark as handled" so the other Council members know it is done.</p>
     <div class="toolbar">
@@ -22,19 +16,6 @@
       <h2>Mailing list sign-ups</h2>
     </div>
     <p id="sub-count" class="results-count"></p>
-    <div class="help-box mb-2">
-      <h3>How to add them to the Google Group</h3>
-      <ol class="steps">
-        <li>Choose <strong>"Copy all email addresses"</strong> below.</li>
-        <li>Open <strong>Google Groups</strong> (groups.google.com) and choose the NAGP group (<span id="listserv"></span>).</li>
-        <li>Choose <strong>Members</strong>, then <strong>Add members</strong>.</li>
-        <li>Paste the email addresses into the box and choose <strong>Add members</strong>. Google skips anyone who is already in the group.</li>
-      </ol>
-    </div>
-    <div class="actions mb-1">
-      <button class="btn btn-large" type="button" id="copy-emails">Copy all email addresses</button>
-      <a class="btn btn-secondary btn-large" href="/api/council/subscribers?format=csv">Download as spreadsheet (CSV)</a>
-    </div>
     <div id="sub-status" class="form-status" role="status" aria-live="polite"></div>
     <div id="sub-list"><p class="loading">Loading sign-ups…</p></div>
   </div>
