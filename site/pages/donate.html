@@ -2,68 +2,48 @@
 <section class="page-header">
   <div class="container">
     <h1>Support NAGP</h1>
-    <p class="lede">NAGP is being built by volunteers. A gift of any size helps a new professional home for Gestalt practitioners take root.</p>
   </div>
 </section>
 
 <section class="section">
-  <div class="container">
-    <div class="split">
-      <div>
-        <form id="donate-form" class="form" novalidate>
-          <fieldset>
-            <legend>Choose an amount</legend>
-            <div class="choice-cards amount-cards" id="amount-cards"></div>
-            <div class="field mt-1" id="other-field" hidden>
-              <label for="donate-other">Your amount in US dollars</label>
-              <span class="hint" id="donate-other-hint">For example 40 or 37.50. The smallest gift we can accept online is $5.</span>
-              <div class="money-input"><span aria-hidden="true">$</span><input id="donate-other" name="other_amount" type="text" inputmode="decimal" autocomplete="off" aria-describedby="donate-other-hint"></div>
-            </div>
-            <input type="hidden" name="amount_cents">
-          </fieldset>
-
-          <fieldset>
-            <legend>Your details</legend>
-            <div class="field">
-              <label for="donate-name">Your name</label>
-              <input id="donate-name" name="name" type="text" autocomplete="name" required maxlength="120">
-            </div>
-            <div class="field">
-              <label for="donate-email">Email address</label>
-              <span class="hint" id="donate-email-hint">So we can thank you. We will not share it.</span>
-              <input id="donate-email" name="email" type="email" autocomplete="email" required aria-describedby="donate-email-hint">
-            </div>
-            <div class="field">
-              <label for="donate-note">A note to the Council <span class="optional">(optional)</span></label>
-              <textarea id="donate-note" name="note" rows="3" maxlength="1000"></textarea>
-            </div>
-          </fieldset>
-
-          <span class="placeholder-note">Please confirm whether gifts to NAGP are tax-deductible. Until then, this page makes no promise about tax deductions.</span>
-
-          <div class="hp-field" aria-hidden="true"><label>Leave this empty <input name="hp" tabindex="-1" autocomplete="off"></label></div>
-          <div class="form-actions">
-            <button class="btn btn-accent btn-large" type="submit" id="donate-submit">Continue to payment</button>
-          </div>
-          <p class="hint mt-1">Next you will see a summary and can pay by card or by check.</p>
-          <div class="form-status" role="status" aria-live="polite"></div>
-        </form>
-      </div>
-
-      <aside>
-        <div class="card">
-          <h2>Why give?</h2>
-          <p>NAGP has no staff. Everything so far has been built by Gestalt practitioners giving their time. Gifts help with the practical costs of a new organization, such as:</p>
-          <ul class="list-check">
-            <li>Running this website and our online meetings</li>
-            <li>National and regional gatherings</li>
-            <li>Setting up NAGP's governance and programs</li>
-          </ul>
-          <span class="placeholder-note">Please confirm or change this list of how gifts will be used.</span>
-          <h3>Prefer to give by check?</h3>
-          <p>You can choose to pay by check on the next page. You will see your order number there to write on the check.</p>
+  <div class="container container-mid">
+    <form id="donate-form" class="form" novalidate>
+      <fieldset>
+        <legend>Choose an amount</legend>
+        <div class="choice-cards amount-cards" id="amount-cards"></div>
+        <div class="field mt-1" id="other-field" hidden>
+          <label for="donate-other">Your amount in US dollars</label>
+          <span class="hint" id="donate-other-hint">For example 40 or 37.50.</span>
+          <div class="money-input"><span aria-hidden="true">$</span><input id="donate-other" name="other_amount" type="text" inputmode="decimal" autocomplete="off" aria-describedby="donate-other-hint"></div>
         </div>
-      </aside>
-    </div>
+        <input type="hidden" name="amount_cents">
+      </fieldset>
+
+      <fieldset>
+        <legend>Your details</legend>
+        <div class="field">
+          <label for="donate-name">Your name</label>
+          <input id="donate-name" name="name" type="text" autocomplete="name" required maxlength="120">
+        </div>
+        <div class="field">
+          <label for="donate-email">Email address</label>
+          <span class="hint" id="donate-email-hint">So we can thank you. We will not share it.</span>
+          <input id="donate-email" name="email" type="email" autocomplete="email" required aria-describedby="donate-email-hint">
+        </div>
+        <div class="field">
+          <label for="donate-note">A note to the Council <span class="optional">(optional)</span></label>
+          <textarea id="donate-note" name="note" rows="3" maxlength="1000"></textarea>
+        </div>
+      </fieldset>
+
+      <span class="placeholder-note">Please confirm whether gifts to NAGP are tax-deductible. Until then, this page makes no promise about tax deductions.</span>
+
+      <div class="hp-field" aria-hidden="true"><label>Leave this empty <input name="hp" tabindex="-1" autocomplete="off"></label></div>
+      <div class="form-actions">
+        <button class="btn btn-accent btn-large" type="submit" id="donate-submit">Continue to payment</button>
+      </div>
+      <p class="hint mt-1">Next you will see a summary and can pay by card or by check.</p>
+      <div class="form-status" role="status" aria-live="polite"></div>
+    </form>
   </div>
 </section>

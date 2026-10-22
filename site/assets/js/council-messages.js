@@ -69,7 +69,6 @@
   /* ---------- Sign-ups ---------- */
   function renderSubscribers() {
     $('#sub-count').textContent = subscribers.length === 1 ? '1 person has signed up.' : `${subscribers.length} people have signed up.`;
-    $('#copy-emails').disabled = !subscribers.length;
     const FORMS = { home: 'Home page', newsletter: 'Mailing list page', membership: 'Membership page', footer: 'Footer' };
     $('#sub-list').innerHTML = subscribers.length
       ? html`<div class="table-wrap"><table class="table table-stack">
@@ -81,7 +80,7 @@
             <td data-label="Where">${FORMS[s.source] || s.source || 'Website'}${s.interest ? html`<span class="cell-sub">Interested in ${s.interest}</span>` : ''}</td>
             <td class="cell-actions"><button class="btn btn-small btn-quiet" type="button" data-remove aria-label="Remove ${s.email}">Remove…</button></td>
           </tr>`)}</tbody></table></div>`
-      : html`<div class="empty"><p>No one has signed up yet. Sign-ups from the "Stay connected" forms on the website appear here.</p></div>`;
+      : '';
   }
 
   async function loadSubscribers() {
@@ -111,16 +110,9 @@
   }
 
   NAGP.whenAllowed().then(() => {
-    $('#listserv').textContent = (NAGP.config.ORG && NAGP.config.ORG.listserv) || 'the NAGP group';
     C.pills($('#msg-pills'), (v) => { show = v; renderMessages(); });
     $('#msg-list').addEventListener('click', (e) => { const b = e.target.closest('button[data-handled]'); if (b) toggle(b); });
     $('#sub-list').addEventListener('click', (e) => { const b = e.target.closest('button[data-remove]'); if (b) removeSubscriber(b); });
-    $('#copy-emails').addEventListener('click', async () => {
-      const ok = await C.copy(subscribers.map((s) => s.email).join(', '));
-      C.say($('#sub-status'), ok ? 'success' : 'error', ok
-        ? `${C.plural(subscribers.length, 'email address', 'email addresses')} copied. Now paste them into Google Groups (step 4 above).`
-        : 'Your browser did not allow copying. Please use "Download as spreadsheet" instead.');
-    });
     loadMessages();
     loadSubscribers().then(() => { if (location.hash === '#signups') $('#signups').scrollIntoView(); });
   });

@@ -31,7 +31,8 @@ test.describe('pages', () => {
       await expect(page.getByRole('heading', { level: 1 })).not.toHaveText(/Please sign in|Council members only/);
     }
     await page.goto('/council/');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(`Welcome, ${user.name}`);
+    await expect(page.getByRole('heading', { name: 'Needs your attention' })).toBeVisible();
+    expect((await call(page, 'GET', '/api/me')).body.user.name).toBe(user.name);
   });
 
   test('someone who joined but has not paid sees "Finish joining" instead of the members\' pages', async ({ page }) => {

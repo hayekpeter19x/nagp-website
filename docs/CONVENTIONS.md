@@ -28,7 +28,8 @@ lib/config.js      org name, the membership and its price, member types, special
 lib/schema.js      database tables
 lib/seed.js        sample data for the preview (every row has sample = 1): three demo accounts, two events, two board topics
 lib/http.js        json(), HttpError, validate(), requireUser()
-lib/auth.js        passwords, sessions, cookies
+lib/auth.js        passwords, sessions, cookies, "forgot your password" links
+lib/email.js       sending email through Resend (RESEND_API_KEY, EMAIL_FROM)
 lib/db.js          all(), first(), run(), randomId()
 functions/api/     the API. The file path is the URL, e.g. functions/api/events/[id].js -> /api/events/123
 ```
