@@ -25,7 +25,7 @@ test.describe('pages', () => {
 
   test('a Council member can see everything', async ({ page }) => {
     const user = await signInAs(page, 'council');
-    for (const path of ['/members/profile', '/members/directory', '/council/', '/council/approvals', '/council/members']) {
+    for (const path of ['/members/profile', '/members/directory', '/council/', '/council/members', '/council/feedback']) {
       await page.goto(path);
       await expectAccessOk(page);
       await expect(page.getByRole('heading', { level: 1 })).not.toHaveText(/Please sign in|Council members only/);
@@ -46,14 +46,14 @@ test.describe('pages', () => {
 
   test('after signing in, you go back to the page you asked for, but never to another website', async ({ page }) => {
     await page.goto('/signin?next=/members/directory');
-    await page.getByRole('button', { name: /Associate Member/ }).click();
+    await page.getByRole('button', { name: 'Try it as a member' }).click();
     await expect(page).toHaveURL(/\/members\/directory$/);
     await page.waitForLoadState('networkidle');
 
     await page.context().clearCookies();
     for (const next of ['//example.com/', '/\\example.com/', '/\t/example.com/', 'https://example.com/']) {
       await page.goto(`/signin?next=${encodeURIComponent(next)}`);
-      await page.getByRole('button', { name: /Associate Member/ }).click();
+      await page.getByRole('button', { name: 'Try it as a member' }).click();
       await page.waitForURL((url) => url.pathname === '/members/profile' || url.hostname !== 'localhost');
       expect(new URL(page.url()).hostname, `next=${next}`).toBe('localhost');
       await page.context().clearCookies();
@@ -73,7 +73,7 @@ const COUNCIL_GETS = [
 // Changes use ids that do not exist (or harmless bodies), in case a check is ever missing.
 const COUNCIL_CHANGES = [
   ['POST', '/api/council/announcements/999999', { action: 'approve' }],
-  ['POST', '/api/council/members', { name: 'Should Not Exist', email: 'nobody@example.com', tier: 'associate', password: 'long-enough-1' }],
+  ['POST', '/api/council/members', { name: 'Should Not Exist', email: 'nobody@example.com', member_type: 'associate', password: 'long-enough-1' }],
   ['PATCH', '/api/council/members/999999', { status: 'active' }],
   ['POST', '/api/council/members/999999/password', { password: 'long-enough-1' }],
   ['POST', '/api/council/events', { title: 'Should not exist' }],

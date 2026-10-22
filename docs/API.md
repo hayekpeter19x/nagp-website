@@ -18,11 +18,11 @@ Money is in cents. Dates are ISO strings. Booleans in rows are 0/1 from SQLite. 
 ## Events, payments, membership (payments agent)
 | Method | Path | Access | Notes |
 |---|---|---|---|
-| GET | /api/events | public | `?when=upcoming|past` (default upcoming), `&limit=`, `&category=` → `{ events: [Event] }` (published only, upcoming sorted soonest first, past sorted newest first) |
-| GET | /api/events/:id | public | `{ event: Event }` |
-| POST | /api/events/:id/register | public | `{ name, email }`. Free → `{ status: 'confirmed' }`. Paid → `{ status: 'pending', checkout_url }`. Member price if signed in as an active member. Members-only events need a member. |
-| POST | /api/membership/join | public | application (tier, name, email, password, city, state, professional fields, agree) → creates the user (status pending) + order, signs them in → `{ checkout_url }` |
-| POST | /api/membership/renew | signed-in | `{ tier? }` → `{ checkout_url }`. A different tier changes the membership type (one year of the new type, added to the membership). |
+| GET | /api/events | member | `?when=upcoming|past` (default upcoming), `&limit=`, `&category=` → `{ events: [Event] }` (published only, upcoming sorted soonest first, past sorted newest first) |
+| GET | /api/events/:id | member | `{ event: Event }` |
+| POST | /api/events/:id/register | member | `{ name, email }`. Free → `{ status: 'confirmed' }`. Paid → `{ status: 'pending', checkout_url }`. Member price if signed in as an active member. Members-only events need a member. |
+| POST | /api/membership/join | public | application (member_type: 'professional'|'student'|'associate' (shown as "Other"), name, email, password, city, state, professional fields, agree) → creates the user (status pending, tier 'member') + order, signs them in → `{ checkout_url }`. There is one membership for everyone; professional fields are only read for practicing professionals. |
+| POST | /api/membership/renew | signed-in | `{}` → `{ checkout_url }` for one more year of the single membership. |
 | POST | /api/membership/cancel | signed-in | `{ undo? }`. Records a cancellation (the membership stays active until its end date and is not renewed) and messages the Council; `undo: true` keeps the membership. |
 | POST | /api/donate | public | `{ amount_cents, name, email, note }` → `{ checkout_url }` |
 | GET | /api/orders/:id | public with `?token=` | `{ order }` (safe fields). With Stripe, also confirms a pending order via `session_id`. |
@@ -38,7 +38,7 @@ Money is in cents. Dates are ISO strings. Booleans in rows are 0/1 from SQLite. 
 createOrder(env, { kind, ref_id, description, amount_cents, user_id, name, email, meta })  // -> order row (id like 'ord_7K3M9QX2PD', token)
 startCheckout(env, request, order)        // -> { url }   demo: /checkout?order=ID&token=T   stripe: hosted Checkout URL
 markOrderPaid(env, orderId, { provider = 'demo', provider_ref = null })   // -> order. Idempotent; runs fulfilment once:
-   //  membership: user active, tier/member_type from order meta, membership_expires = max(today, current) + 1 year
+   //  membership: user active, tier 'member', membership_expires = max(today, current) + 1 year; member_type is kept
    //  event:      registrations with this order_id -> confirmed
    //  donation:   nothing else
 orderLinks(order)                         // -> { checkout: '/checkout?…', receipt: '/payment-complete?…' }
@@ -61,23 +61,23 @@ orderLinks(order)                         // -> { checkout: '/checkout?…', rec
 | POST | /api/board | member | `{ title, body, agree }` → `{ id }` |
 | GET | /api/board/:id | member | `{ topic, replies }`. Hidden posts show as "hidden by the Council" (Council sees the text too). |
 | POST | /api/board/:id/replies | member | `{ body }` |
-| POST | /api/board/:id/report | member | `{ reason }` (topic or reply id) |
+| POST | /api/board/:id/report | member | `{ reason }` (topic or reply id). No longer used by the pages (the Report button was removed). |
 | GET | /api/documents | public | `{ documents }` filtered by the viewer: public for all, members for members, council for the Council |
 
 ## Council area (Council agent). Every endpoint needs council access.
 | Method | Path | Notes |
 |---|---|---|
 | GET | /api/council/summary | counts for the dashboard |
-| GET | /api/council/announcements | `?status=pending|approved|declined` |
+| GET | /api/council/announcements | `?status=pending|approved|declined`. No longer used by the pages (the Approvals page was removed). |
 | POST | /api/council/announcements/:id | `{ action: 'approve'|'decline'|'unpublish'|'delete', reason }` |
 | GET | /api/council/members | `?q=&status=&role=&format=csv` |
 | POST | /api/council/members | add a member by hand (for example someone who paid by check) |
-| PATCH | /api/council/members/:id | status, role, tier, membership_expires, show_public… |
+| PATCH | /api/council/members/:id | status, role, member_type, membership_expires, show_public… |
 | POST | /api/council/members/:id/password | set a new password for someone who forgot theirs |
 | GET/POST | /api/council/events | list all (including unpublished) / create |
 | PUT/DELETE | /api/council/events/:id | |
 | GET | /api/council/events/:id/registrations | `?format=csv` |
-| GET/POST | /api/council/documents | |
+| GET/POST | /api/council/documents | no longer used by the pages (the Documents page was removed) |
 | PUT/DELETE | /api/council/documents/:id | |
 | GET | /api/council/messages | contact form messages |
 | POST | /api/council/messages/:id | `{ handled }` |
@@ -85,8 +85,8 @@ orderLinks(order)                         // -> { checkout: '/checkout?…', rec
 | GET | /api/council/orders | all payments |
 | POST | /api/council/orders | record a payment received by check or cash (uses markOrderPaid with provider 'manual') |
 | DELETE | /api/council/subscribers/:id | remove someone from the mailing-list sign-ups |
-| GET | /api/council/reports | community board reports |
-| POST | /api/council/board/:id | `{ action: 'hide'|'unhide'|'delete', reason }` |
+| GET | /api/council/reports | community board reports (no longer used by the pages) |
+| POST | /api/council/board/:id | `{ action: 'hide'|'unhide'|'delete', reason }`. Used by the "Hide this post" / "Show this post again" buttons that Council members see on /members/topic. |
 | POST | /api/council/reports/:id/resolve | |
 | GET | /api/council/feedback | preview comments |
 | POST | /api/council/feedback/:id | `{ resolved }` |

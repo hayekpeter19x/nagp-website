@@ -1,4 +1,4 @@
-<!--meta { "title": "Community Board topic", "description": "A conversation on the NAGP Community Board.", "section": "members", "access": "member", "scripts": ["members-topic.js"], "styles": ["members.css"] } -->
+<!--meta { "title": "Community Board topic", "description": "A conversation on the NAGP Community Board.", "section": "members", "access": "member", "scripts": ["council-common.js", "members-topic.js"], "styles": ["members.css"] } -->
 <section class="page-header">
   <div class="container container-mid">
     <p class="breadcrumbs"><a href="/members/board">&larr; Back to the Community Board</a></p>
@@ -9,6 +9,7 @@
 
 <section class="section">
   <div class="container container-mid">
+    <div id="topic-status" role="status" aria-live="polite"></div>
     <div id="thread"><p class="loading">Loading the conversation…</p></div>
 
     <div id="reply-area" hidden>

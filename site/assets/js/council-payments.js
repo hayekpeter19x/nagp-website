@@ -80,7 +80,7 @@
     const f = form();
     const kind = value('kind');
     if (kind === 'membership') {
-      const tier = NAGP.tier(f.tier.value);
+      const tier = (NAGP.config.MEMBERSHIP_TIERS || [])[0]; // one membership for everyone
       f.amount.value = tier ? C.centsToInput(tier.price_cents) : '';
     } else if (kind === 'event') {
       const ev = (events || []).find((e) => String(e.id) === f.event_id.value);
@@ -136,9 +136,8 @@
       f.event_id.innerHTML = html`<option value="">Choose the event</option>
         ${upcoming.length ? html`<optgroup label="Upcoming">${upcoming.map(opt)}</optgroup>` : ''}
         ${past.length ? html`<optgroup label="Past">${past.map(opt)}</optgroup>` : ''}`;
-      f.tier.innerHTML = NAGP.raw((NAGP.config.MEMBERSHIP_TIERS || []).map((t) => `<option value="${NAGP.esc(t.key)}">${NAGP.esc(t.name)}</option>`).join(''));
       const pre = NAGP.qs('member');
-      if (pre && members.some((m) => String(m.id) === pre)) { f.user_id.value = pre; const m = chosenMember(); if (m.tier) f.tier.value = m.tier; }
+      if (pre && members.some((m) => String(m.id) === pre)) f.user_id.value = pre;
       sync();
       suggestAmount();
     } catch (err) {
@@ -152,9 +151,8 @@
     const f = form();
     f.addEventListener('change', (e) => {
       const n = e.target.name;
-      if (n === 'user_id' && value('kind') === 'membership') { const m = chosenMember(); if (m && m.tier) f.tier.value = m.tier; }
       sync();
-      if (['kind', 'tier', 'event_id', 'user_id', 'person'].includes(n)) suggestAmount();
+      if (['kind', 'event_id', 'user_id', 'person'].includes(n)) suggestAmount();
     });
     NAGP.form(f, {
       busyText: 'Recording…',

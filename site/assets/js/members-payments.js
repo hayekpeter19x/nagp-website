@@ -1,4 +1,4 @@
-// My Membership (/members/payments): finish joining, membership status, renew or change type, cancel,
+// My Membership (/members/payments): finish joining, membership status, renew, cancel,
 // event registrations and payment history. Signed-in people who have not paid yet can see this page.
 (function () {
   const { $, html, api } = NAGP;
@@ -9,7 +9,7 @@
   const membership = tiers[0] || { price_cents: 0 };
 
   // A single button: "Renew for one year: X$" (also used to finish joining). One membership for everyone.
-  const renewForm = (_selected, verb) => html`<form class="renew-form" id="renew-form" novalidate>
+  const renewForm = (verb) => html`<form class="renew-form" id="renew-form" novalidate>
       <button class="btn btn-accent btn-large" type="submit">${verb}: ${NAGP.money(membership.price_cents)}</button>
       <div class="form-status" role="status" aria-live="polite"></div>
     </form>
@@ -37,7 +37,7 @@
       <div class="card card-highlight">
         <h2>Finish joining</h2>
         <p class="lede">Welcome, ${user.name}. To become a member, pay for one year of membership.</p>
-        ${renewForm(m.tier || 'professional', 'Continue to payment')}
+        ${renewForm('Continue to payment')}
       </div>
     </section>`;
   }
@@ -66,7 +66,7 @@
           <p><a class="btn btn-accent" href="${o.links.checkout}">Pay ${NAGP.money(o.amount_cents)}</a></p>`, 'Renewal not finished')}</div>` : ''}
       <h3 class="mp-sub">Renew your membership</h3>
       <p>Your new year starts on the day you pay, so it will run until about ${NAGP.formatDate(yearFromToday())}.</p>
-      ${renewForm(m.tier || 'associate', 'Renew now')}
+      ${renewForm('Renew now')}
       <p class="hint mt-1">On the next page you can pay by card, or choose to pay by check.</p>
     </section>`;
   }
@@ -93,7 +93,7 @@
 
       <h3 class="mp-sub">Renew your membership</h3>
       <p>${soon ? 'Your membership ends soon. ' : ''}You can renew at any time. One year is added to your membership, so you do not lose any time.</p>
-      ${renewForm(m.tier || 'associate', 'Renew for one year', m.tier)}
+      ${renewForm('Renew for one year')}
 
       ${canCancel ? html`<h3 class="mp-sub">Cancel your membership</h3>
       <p>If you cancel, your membership stays active until ${NAGP.formatDate(m.expires)} and will not be renewed. The Council will be told, and will contact you if you would like a refund.</p>

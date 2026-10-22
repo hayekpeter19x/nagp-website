@@ -15,7 +15,7 @@ async function expectShownAsText(page, where) {
   expect(injected, where).toEqual({ images: 0, scripts: 0 });
 }
 
-test('script in names, bios, announcements, board posts and events is shown as text everywhere', async ({ page, browser, playwright }) => {
+test('script in names, bios, announcements, board posts and events is shown as text everywhere', async ({ page, browser }) => {
   test.setTimeout(90_000);
   const id = uid();
   const dialogs = failOnDialog(page);
@@ -31,11 +31,6 @@ test('script in names, bios, announcements, board posts and events is shown as t
   const topic = await call(page, 'POST', '/api/board', { title: `Topic ${XSS} ${id}`, body: `Post ${XSS}`, agree: true });
   expect(topic.status).toBe(200);
   expect((await call(page, 'POST', `/api/board/${topic.body.id}/replies`, { body: `Reply ${XSS}` })).status).toBe(200);
-  // Someone reports it, so it shows up in the Council's list of reports
-  const reporter = await newPerson(playwright);
-  await signInAs(reporter, 'member');
-  expect((await call(reporter, 'POST', `/api/board/${topic.body.id}/report`, { reason: `Reason ${XSS}` })).status).toBe(200);
-  await reporter.dispose();
 
   // What the member sees
   for (const path of [`/directory?q=${id}`, `/members/directory?q=${id}`, '/members/', '/members/board',
@@ -50,7 +45,7 @@ test('script in names, bios, announcements, board posts and events is shown as t
   const councilDialogs = failOnDialog(council);
   await signInAs(council, 'council');
   const ev = await createEvent(council, { title: `Event ${XSS} ${id}`, description: `Details ${XSS}`, presenter: XSS });
-  for (const path of ['/council/approvals', `/council/members?q=${id}`, '/council/payments', '/council/events']) {
+  for (const path of [`/council/members?q=${id}`, '/council/payments', '/council/events', `/members/topic?id=${topic.body.id}`]) {
     await council.goto(path);
     await expectShownAsText(council, path);
   }
@@ -137,7 +132,7 @@ test('password hashes never appear in any API response or download', async ({ re
     const r = await call(council, 'GET', path);
     expect(r.status, path).toBe(200);
   }
-  const added = await call(council, 'POST', '/api/council/members', { name: 'Hash Check', email: `hash.${uid()}@example.com`, tier: 'associate', password: 'long-enough-1' });
+  const added = await call(council, 'POST', '/api/council/members', { name: 'Hash Check', email: `hash.${uid()}@example.com`, member_type: 'associate', password: 'long-enough-1' });
   expect(added.status).toBe(201);
   const edited = await call(council, 'PATCH', `/api/council/members/${added.body.member.id}`, { city: 'Boston' });
   expect(edited.status).toBe(200);

@@ -42,7 +42,7 @@
     $('#pf-public-label').classList.toggle('is-disabled', !pro);
     $('#pf-public-explain').innerHTML = pro
       ? html`<p>Anyone on the internet can see this listing: your name, credentials, Gestalt training, specialties, city and state, the few words about you, and the contact details you choose below. You can turn it off at any time.</p>`
-      : html`<p><strong>This is only for professional members.</strong> The public directory helps people find a qualified practitioner, so it lists professional members only.
+      : html`<p><strong>This is only for practicing professionals.</strong> The public directory helps people find a qualified practitioner, so it lists practicing professionals only.
           You told us you are: <strong>${typeLabel(me.member_type)}</strong>.
           If you are a practicing professional, please <a href="/contact?topic=Membership">contact the Council</a> and they will change this for you.</p>`;
   }

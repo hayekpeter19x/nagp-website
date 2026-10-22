@@ -1,7 +1,7 @@
 // GET  /api/council/orders              every payment, newest first, with totals (?format=csv for a spreadsheet)
 // POST /api/council/orders              record a payment received by check or cash
 //   { person: 'member'|'other', user_id, name, email, kind: 'membership'|'event'|'donation',
-//     tier, event_id, amount (dollars), method: 'check'|'cash', note }
+//     event_id, amount (dollars), method: 'check'|'cash', note }   (there is one membership for everyone)
 import { json, readJson, validate, requireUser, HttpError } from '../../../lib/http.js';
 import { all, first } from '../../../lib/db.js';
 import { MEMBERSHIP_TIERS } from '../../../lib/config.js';

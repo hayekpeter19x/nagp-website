@@ -7,8 +7,7 @@
   function topic(t, council) {
     return html`<li class="topic-item${t.hidden ? ' is-hidden' : ''}">
       <h3><a href="/members/topic?id=${t.id}">${t.title}</a> ${NAGP.sampleBadge(t)}
-        ${council && t.hidden ? html`<span class="badge badge-danger">Hidden</span>` : ''}
-        ${council && t.reports ? html`<span class="badge badge-warning">Reported ${t.reports === 1 ? 'once' : `${t.reports} times`}</span>` : ''}</h3>
+        ${council && t.hidden ? html`<span class="badge badge-danger">Hidden</span>` : ''}</h3>
       <p class="meta topic-stats"><span>Started by ${t.author_name || 'a member (name hidden)'}${t.mine ? ' (you)' : ''}</span>
         <span>${t.reply_count === 1 ? '1 reply' : `${t.reply_count} replies`}</span>
         <span>Last activity ${NAGP.timeAgo(t.last_activity)}</span></p>

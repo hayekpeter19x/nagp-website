@@ -1,11 +1,18 @@
 // Announcements: members submit, the Council approves or declines, the public sees approved ones.
-import { test, expect, call, uid, signInAs, joinMember, newPerson, contextOptions } from './helpers.js';
+// The announcement pages are no longer linked from the menus (and the Council's Approvals page was
+// removed), so the Council's decisions are made through the API here.
+import { test, expect, call, uid, signInAs, joinMember, newPerson } from './helpers.js';
 
-async function councilPage(browser) {
-  const context = await browser.newContext(contextOptions());
-  const page = await context.newPage();
-  await signInAs(page, 'council');
-  return page;
+// The Council approves or declines a waiting announcement, found by its title.
+async function decide(playwright, title, action, reason = '') {
+  const council = await newPerson(playwright);
+  await signInAs(council, 'council');
+  const { announcements } = (await call(council, 'GET', '/api/council/announcements')).body;
+  const ann = announcements.find((a) => a.title === title);
+  expect(ann, `waiting announcement "${title}"`).toBeTruthy();
+  const r = await call(council, 'POST', `/api/council/announcements/${ann.id}`, { action, reason });
+  expect(r.status, JSON.stringify(r.body)).toBe(200);
+  await council.dispose();
 }
 
 async function submit(page, title, body = 'We meet once a month.\n\nEveryone is welcome.') {
@@ -17,7 +24,7 @@ async function submit(page, title, body = 'We meet once a month.\n\nEveryone is 
   await expect(page.getByText(/sent to the Council for approval/)).toBeVisible();
 }
 
-test('a member\'s announcement waits for approval, and is public once the Council approves it', async ({ page, browser, request }) => {
+test('a member\'s announcement waits for approval, and is public once the Council approves it', async ({ page, playwright, request }) => {
   const title = `Reading group forming ${uid()}`;
   await joinMember(page, { tier: 'associate' });
   await submit(page, title);
@@ -31,13 +38,7 @@ test('a member\'s announcement waits for approval, and is public once the Counci
   await expect(page.getByRole('heading', { name: title })).toHaveCount(0);
 
   // The Council approves it
-  const council = await councilPage(browser);
-  await council.goto('/council/approvals');
-  const card = council.locator('li[data-id]', { has: council.getByRole('heading', { name: title }) });
-  await expect(card).toBeVisible();
-  await card.getByRole('button', { name: 'Approve' }).click();
-  await expect(council.getByText(`Approved. "${title}" is now on the Announcements page.`)).toBeVisible();
-  await council.context().close();
+  await decide(playwright, title, 'approve');
 
   // Now everyone can read it
   await page.context().clearCookies();
@@ -48,25 +49,13 @@ test('a member\'s announcement waits for approval, and is public once the Counci
   await expect(page.getByText('Everyone is welcome.')).toBeVisible();
 });
 
-test('a declined announcement is not posted, and the member sees the Council\'s reason', async ({ page, browser, request }) => {
+test('a declined announcement is not posted, and the member sees the Council\'s reason', async ({ page, playwright, request }) => {
   const title = `Workshop offer ${uid()}`;
   const reason = `Please add the date and a registration link ${uid()}`;
   await joinMember(page, { tier: 'associate' });
   await submit(page, title);
 
-  const council = await councilPage(browser);
-  await council.goto('/council/approvals');
-  const card = council.locator('li[data-id]', { has: council.getByRole('heading', { name: title }) });
-  await card.getByRole('button', { name: /Decline/ }).click();
-  const dialog = council.getByRole('dialog');
-  await dialog.getByRole('textbox', { name: /Reason/ }).fill(reason);
-  await dialog.getByRole('button', { name: 'Decline', exact: true }).click();
-  await expect(council.getByText(new RegExp(`Not approved\\. "${title}" will not be posted`))).toBeVisible();
-  // It is listed under "Not approved", with the reason
-  await council.getByRole('button', { name: /Not approved/ }).click();
-  await expect(council.getByRole('heading', { name: title })).toBeVisible();
-  await expect(council.getByText(reason)).toBeVisible();
-  await council.context().close();
+  await decide(playwright, title, 'decline', reason);
 
   await page.goto('/members/announce');
   const mine = page.locator('#my-submissions li', { hasText: title });

@@ -24,7 +24,7 @@ site/layout.html   the shared header, menu and footer around every page
 site/assets/css/styles.css   the design system (colors, buttons, cards, forms...)
 site/assets/js/app.js        shared browser helpers (window.NAGP)
 site/assets/js/<page>.js     one script per page that needs one
-lib/config.js      org name, membership tiers and prices, specialties, states  (also sent to the browser)
+lib/config.js      org name, the membership and its price, member types, specialties, states  (also sent to the browser)
 lib/schema.js      database tables
 lib/seed.js        sample data for the preview (every row has sample = 1)
 lib/http.js        json(), HttpError, validate(), requireUser()
@@ -54,11 +54,11 @@ Re-run `NAGP_DIST=dist-me node build.mjs` after changing anything in `site/`. Ch
 Every page in `site/pages/` starts with a settings comment:
 
 ```html
-<!--meta { "title": "Find a Practitioner", "description": "One sentence.", "nav": "directory",
-           "section": "members", "access": "member", "scripts": ["directory.js"] } -->
+<!--meta { "title": "Members Directory", "description": "One sentence.", "nav": "members",
+           "section": "members", "access": "member", "scripts": ["members-directory.js"] } -->
 <section class="page-header">
   <div class="container">
-    <h1>Find a Practitioner</h1>
+    <h1>Members Directory</h1>
     <p class="lede">One or two plain sentences saying what this page is for.</p>
   </div>
 </section>
@@ -67,7 +67,7 @@ Every page in `site/pages/` starts with a settings comment:
 </section>
 ```
 
-- `nav`: which main-menu item is highlighted. One of `home about council membership events announcements directory contact`.
+- `nav`: which main-menu item is highlighted. One of the keys of `NAV` in `build.mjs`: `home about directory resources faq contact members`.
 - `section`: shows a row of section links under the menu. One of `about`, `members` or `council` (the links are listed in `build.mjs`).
 - `access`: `member` or `council` pages are hidden until `app.js` confirms the visitor may see them. Otherwise a friendly "Please sign in" box is shown. **This is only cosmetic. The API must always check access itself with `requireUser()`.**
 - No inline `<script>` and no `onclick=` attributes. The Content-Security-Policy blocks them. Put code in `site/assets/js/<name>.js` and list it in `scripts`.
@@ -119,10 +119,11 @@ NAGP.form(formEl, { onSubmit: (data) => NAGP.api(...), success: 'Thank you! ...'
 // Handles "Sending…", required fields, field errors from the server (err.fields) and the .form-status box.
 
 NAGP.formatDate(iso, tz) / formatShortDate / formatTime / dateParts / eventWhen(event) / timeAgo
-NAGP.money(cents) -> "$150" or "Free";  NAGP.regionName('NY');  NAGP.regionOptions(selected)
-NAGP.specialtyLabel('od'); NAGP.tier('professional'); NAGP.initials(name); NAGP.qs('id')
+NAGP.money(cents) -> "$150" or "Free" (or "X$" while ORG.showPrices is false; { exact: true } always shows the amount)
+NAGP.regionName('NY');  NAGP.regionOptions(selected)
+NAGP.specialtyLabel('od'); NAGP.tier('member'); NAGP.initials(name); NAGP.qs('id')
 NAGP.loading(el); NAGP.showError(el, err); NAGP.notice(type, msg, title)
-NAGP.config  // lib/config.js PUBLIC_CONFIG: ORG, SPECIALTIES, MEMBERSHIP_TIERS, REGIONS, ...
+NAGP.config  // lib/config.js PUBLIC_CONFIG: ORG, SPECIALTIES, MEMBERSHIP_TIERS, MEMBER_TYPES, REGIONS, ...
 ```
 
 Pages with an id in the address use a query string, for example `/event?id=3` and `/members/topic?id=7`.
@@ -154,6 +155,8 @@ export async function onRequestPost(context) {
 - Never send `password_hash` or private fields to the browser. Each endpoint picks the fields it returns.
 - User text is stored as plain text and shown with `NAGP.paragraphs()`. It is never stored as HTML.
 - Money is always in **cents** (integer). Prices come from `lib/config.js` or the events table, **never from the browser**.
+- There is **one membership for everyone** (`MEMBERSHIP_TIERS` has a single entry, key `member`). What a member does is `users.member_type`: `professional`, `student` or `associate` (shown as "Other"), listed in `MEMBER_TYPES`. Only `professional` members get the professional fields and can be in the Public Directory.
+- While the Council has not set the dues, `ORG.showPrices` is `false` and the pages show amounts as **X$** (donation amounts excepted). The test build sets `NAGP_SHOW_PRICES=1` so the tests can check real amounts.
 - Dates are ISO strings. Events store `starts_at` with an offset plus an IANA `timezone`.
 
 ## Preview mode

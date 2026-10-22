@@ -9,9 +9,11 @@ It runs entirely on **Cloudflare's free tier**:
 
 | Who | What they can do |
 |---|---|
-| Everyone | Read about NAGP and the Founding Council, see events and announcements, find a practitioner (public directory by specialty), join and pay online, register for events, donate, contact the Council, sign up for the mailing list |
-| Members | Edit their profile and choose whether to appear in the public directory, browse the members-only directory by state, post announcements (the Council approves them), use the community board, read minutes and documents, see their payments and receipts |
-| Council | Approve or decline announcements, moderate the board, manage members (including people who pay by check, and password resets), events, documents, messages, mailing-list sign-ups and payments, and read website feedback |
+| Everyone | Read about NAGP and the Founding Council, search the Public Directory (practicing professionals who chose to be listed), read Resources and the FAQ, join and pay online, donate, contact the Council, sign up for the mailing list |
+| Members | Edit their profile (practicing professionals can choose to appear in the Public Directory), see and register for events, browse the Members Directory, use the Community Board, and see their membership (renew or cancel), registrations and receipts |
+| Council | Manage members (including people who pay by check, and password resets), events, messages, mailing-list sign-ups and payments, hide Community Board posts that break the guidelines, and read website feedback |
+
+There is **one membership for everyone**. When joining, people say what best describes them: a practicing professional, a student or trainee, or other. Only practicing professionals get the professional questions (credentials, training, areas of practice) and can be listed in the Public Directory. Until the Council sets the dues, prices show as **X$** (see `ORG.showPrices` in `lib/config.js`).
 
 The site is designed for readers of every age. It has large text (Atkinson Hyperlegible, a typeface made for low-vision readers), high contrast, big buttons and plain language. There are no hover menus or pop-ups.
 
@@ -20,7 +22,7 @@ The site is designed for readers of every age. It has large text (Atkinson Hyper
 While the Council reviews the site:
 - A banner on every page says it is a preview.
 - A **Comment on this page** button saves feedback. Read it in Council Area → Site Feedback.
-- The sign-in page has one-click buttons: **Try it as an Associate Member / a Professional Member / a Council member**.
+- The sign-in page has one-click buttons: **Try it as a member** and **Try it as a Council member**.
 - Payments are **simulated**. No real money moves.
 - Made-up examples (members, events, posts) show a **Sample** tag. Demo and sample accounts use the password `nagp-preview`.
 
