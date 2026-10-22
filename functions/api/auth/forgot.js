@@ -2,6 +2,7 @@
 // "Forgot your password?": emails a link to choose a new password (it works once, for one hour).
 // The answer is the same whether or not there is an account for that email address.
 // If email is not set up yet (lib/email.js), the Council gets a message instead and helps by hand.
+// Preview: for the demo accounts (and only those), the link is shown on screen so the Council can try it.
 import { json, readJson, validate, nowIso } from '../../../lib/http.js';
 import { first, run } from '../../../lib/db.js';
 import { checkLoginRate, recordFailedLogin, createResetToken } from '../../../lib/auth.js';
@@ -10,7 +11,7 @@ import { emailConfigured, sendEmail, siteUrl } from '../../../lib/email.js';
 // Only for the automated tests: the link is returned instead of emailed. Never set this on a real site.
 const showLinks = (env) => env.EMAIL_TEST_MODE === 'show-links';
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost({ request, env, data }) {
   const body = await readJson(request);
   const check = validate(body);
   const email = check.email('email');
@@ -22,8 +23,14 @@ export async function onRequestPost({ request, env }) {
   await recordFailedLogin(env, rateKey);
 
   const byEmail = showLinks(env) || emailConfigured(env);
-  const user = await first(env, `SELECT id, name, email FROM users WHERE email = ? AND status != 'suspended'`, email);
+  const user = await first(env, `SELECT id, name, email, sample FROM users WHERE email = ? AND status != 'suspended'`, email);
   const result = { ok: true };
+  if (user && user.sample && data.demo && !emailConfigured(env)) {
+    const token = await createResetToken(env, user.id);
+    result.demo_link = `/reset-password?token=${token}`;
+    result.message = 'Preview: the website does not send emails yet. For the demo accounts, here is the link the email would contain.';
+    return json(result);
+  }
   let tellCouncil = !!user && !byEmail;
   if (user && byEmail) {
     const token = await createResetToken(env, user.id);

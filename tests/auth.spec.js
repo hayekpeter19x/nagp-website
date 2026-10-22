@@ -102,3 +102,20 @@ test('"Forgot your password?" emails a link that sets a new password once, and s
   const again = await call(page, 'POST', '/api/auth/reset', { token: link.searchParams.get('token'), password: 'another password 2', password_confirm: 'another password 2' });
   expect(again.status).toBe(400);
 });
+
+test('preview: for a demo account, "Forgot your password?" shows the link on screen instead of emailing it', async ({ page }) => {
+  await page.goto('/forgot-password');
+  await expect(page.getByText(/use the demo address/)).toBeVisible();
+  await page.getByRole('textbox', { name: 'Email address' }).fill('demo.professional@nagp-preview.org');
+  await page.getByRole('button', { name: 'Email me a link' }).click();
+  await expect(page.getByText(/here is the link the email would contain/)).toBeVisible();
+  await page.getByRole('link', { name: 'Open the link' }).click();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Choose a new password');
+  // Keep the demo password the same, so the other tests can still use it
+  await page.getByLabel('New password').fill(PASSWORD);
+  await page.getByLabel('Type the same password again').fill(PASSWORD);
+  await page.getByRole('button', { name: 'Save my new password' }).click();
+  await expect(page.getByText('Your new password is saved, and you are signed in.')).toBeVisible();
+  await page.getByRole('link', { name: 'Continue' }).click();
+  await expect(page).toHaveURL(/\/members\/profile$/);
+});
