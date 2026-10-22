@@ -49,9 +49,8 @@ export const SECTIONS = {
     ['Community Board', '/members/board'], ['My Membership', '/members/payments'],
   ] },
   council: { label: 'Council Area', links: [
-    ['Dashboard', '/council/'], ['Approvals', '/council/approvals'], ['Members', '/council/members'],
-    ['Events', '/council/events'], ['Documents', '/council/documents'], ['Messages & Sign-ups', '/council/messages'],
-    ['Payments', '/council/payments'], ['Site Feedback', '/council/feedback'],
+    ['Dashboard', '/council/'], ['Members', '/council/members'], ['Events', '/council/events'],
+    ['Messages & Sign-ups', '/council/messages'], ['Payments', '/council/payments'], ['Site Feedback', '/council/feedback'],
   ] },
 };
 
@@ -84,6 +83,8 @@ async function build() {
   const started = Date.now();
   // Fresh import each time so --watch picks up config changes.
   const { PUBLIC_CONFIG, ORG } = await import('./lib/config.js?t=' + started);
+  // The automated tests check real amounts, so their build can show prices.
+  if (process.env.NAGP_SHOW_PRICES === '1') ORG.showPrices = true;
 
   const partials = {};
   for (const f of walk(join(SITE, 'partials'))) {

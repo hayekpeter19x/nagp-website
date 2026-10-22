@@ -1,10 +1,8 @@
-// /members/topic?id=N: one board topic with its replies, a reply form, and "Report" for each post.
+// /members/topic?id=N: one board topic with its replies and a reply form.
 (function () {
   const { $, api, html } = NAGP;
   const id = NAGP.qs('id');
   const thread = $('#thread');
-  const dialog = $('#report-dialog');
-  const reportForm = $('#report-form');
   let council = false;
 
   function when(iso) {
@@ -16,12 +14,6 @@
     return p.mine ? 'Your post' : 'Name hidden';
   }
 
-  function reportControl(p) {
-    if (p.mine || p.hidden) return '';
-    if (p.reported_by_me) return html`<span>You reported this post. Thank you.</span>`;
-    return html`<button type="button" class="link-button" data-report="${p.id}">Report this post</button>`;
-  }
-
   function post(p, first) {
     const concealed = p.hidden && !council;
     return html`<article class="post${first ? ' post-first' : ''}${p.hidden ? ' post-hidden' : ''}" id="post-${p.id}"
@@ -31,13 +23,11 @@
         <div><span class="post-author">${author(p)}</span><span class="post-when">${when(p.created_at)}</span></div>
         <div class="post-badges">${NAGP.sampleBadge(p)}
           ${council && p.hidden ? html`<span class="badge badge-danger">Hidden</span>` : ''}
-          ${council && p.reports ? html`<span class="badge badge-warning">Reported ${p.reports === 1 ? 'once' : `${p.reports} times`}</span>` : ''}</div>
+</div>
       </header>
       ${council && p.hidden ? html`<div class="council-note"><p><strong>For the Council:</strong> this post is hidden. Members see only
         “This post was hidden by the Council…”.${p.hidden_reason ? html` Reason: ${p.hidden_reason}` : ''}</p></div>` : ''}
       <div class="post-body${concealed ? ' post-placeholder' : ''}">${NAGP.paragraphs(p.body)}</div>
-      <footer class="post-footer">${reportControl(p)}
-        ${council && (p.hidden || p.reports) ? html`<a href="/council/approvals#reports">Manage this in the Council Area</a>` : ''}</footer>
     </article>`;
   }
 
@@ -66,35 +56,8 @@
     }
   }
 
-  // ----- Report dialog -----
-  function openReport(postId) {
-    reportForm.reset();
-    NAGP.clearErrors(reportForm);
-    reportForm.elements.namedItem('post_id').value = postId;
-    reportForm.querySelector('[type="submit"]').hidden = false;
-    reportForm.querySelector('[data-close]').textContent = 'Cancel';
-    dialog.showModal();
-    $('#report-reason').focus();
-  }
-  dialog.querySelector('[data-close]').addEventListener('click', () => dialog.close());
-  thread.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-report]');
-    if (btn) openReport(btn.dataset.report);
-  });
-
   NAGP.whenAllowed().then(({ user }) => {
     council = !!user.isCouncil;
-
-    NAGP.form(reportForm, {
-      reset: false,
-      onSubmit: async (data) => {
-        await api(`/api/board/${encodeURIComponent(data.post_id)}/report`, { method: 'POST', body: { reason: data.reason } });
-        reportForm.querySelector('[type="submit"]').hidden = true;
-        reportForm.querySelector('[data-close]').textContent = 'Close';
-        load();
-      },
-      success: 'Thank you. Your report was sent to the Council. They will read the post and decide what to do. You can close this box now.',
-    });
 
     NAGP.form($('#reply-form'), {
       busyText: 'Posting…',

@@ -1,10 +1,10 @@
 // GET   /api/council/members/:id   one member
-// PATCH /api/council/members/:id   change status, role, tier, active-until date, directory listings, name, email...
+// PATCH /api/council/members/:id   change status, role, member_type, active-until date, directory listings, name, email...
 // Only the fields that are sent are changed.
 import { json, readJson, validate, requireUser, HttpError } from '../../../../../lib/http.js';
 import { first, run } from '../../../../../lib/db.js';
-import { MEMBERSHIP_TIERS, REGIONS } from '../../../../../lib/config.js';
-import { idParam, dateField, memberTypeFor, memberRow, theirEmail, MEMBER_COLUMNS } from '../../../../../lib/council.js';
+import { MEMBER_TYPES, REGIONS } from '../../../../../lib/config.js';
+import { idParam, dateField, memberRow, theirEmail, MEMBER_COLUMNS } from '../../../../../lib/council.js';
 
 async function load(env, id) {
   const u = await first(env, `SELECT ${MEMBER_COLUMNS} FROM users WHERE id = ?`, id);
@@ -34,9 +34,8 @@ export async function onRequestPatch(context) {
     const roles = current.role === 'admin' ? ['member', 'council', 'admin'] : ['member', 'council'];
     set.role = check.oneOf('role', roles, { label: 'a role' });
   }
-  if (has('tier')) {
-    set.tier = check.oneOf('tier', MEMBERSHIP_TIERS.map((t) => t.key), { label: 'a membership type' });
-    set.member_type = memberTypeFor(set.tier);
+  if (has('member_type')) {
+    set.member_type = check.oneOf('member_type', MEMBER_TYPES.map((t) => t.key), { label: 'what best describes them' });
   }
   if (has('membership_expires')) set.membership_expires = dateField(check, body, 'membership_expires', { label: 'the date their membership ends' }) || null;
   if (has('city')) set.city = check.text('city', { label: 'City', max: 80 });
@@ -56,7 +55,7 @@ export async function onRequestPatch(context) {
   // The public directory is for professional members only.
   const memberType = set.member_type || current.member_type;
   if (set.show_public === 1 && memberType !== 'professional') {
-    check.fail('show_public', 'Only Professional Members can be listed in the public directory.');
+    check.fail('show_public', 'Only practicing professionals can be listed in the Public Directory.');
   }
   if (set.member_type && set.member_type !== 'professional') set.show_public = 0;
   check.done();

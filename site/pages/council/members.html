@@ -1,4 +1,4 @@
-<!--meta { "title": "Members", "description": "Look after NAGP members: status, membership type, dates, roles and passwords.", "section": "council", "access": "council", "scripts": ["council-common.js", "council-members.js"], "styles": ["council.css"], "noindex": true } -->
+<!--meta { "title": "Members", "description": "Look after NAGP members: status, dates, roles and passwords.", "section": "council", "access": "council", "scripts": ["council-common.js", "council-members.js"], "styles": ["council.css"], "noindex": true } -->
 <section class="page-header">
   <div class="container">
     <h1>Members</h1>
@@ -63,8 +63,8 @@
           </select>
         </div>
         <div class="field">
-          <label for="e-tier">Membership type</label>
-          <select id="e-tier" name="tier"></select>
+          <label for="e-tier">Describes themselves as</label>
+          <select id="e-tier" name="member_type"></select>
         </div>
         <div class="field">
           <label for="e-expires">Active until</label>
@@ -84,7 +84,7 @@
         <legend>Directory listings</legend>
         <label class="check"><input type="checkbox" name="show_members"> Show in the members-only directory</label>
         <label class="check" id="public-check"><input type="checkbox" name="show_public"> Show in the public directory</label>
-        <span class="hint" id="public-hint">The public directory is for Professional Members only.</span>
+        <span class="hint" id="public-hint">The Public Directory is for practicing professionals only.</span>
       </fieldset>
       <div class="form-status" role="status" aria-live="polite"></div>
       <div class="form-actions">
@@ -127,8 +127,8 @@
         <input id="a-email" name="email" type="email" autocomplete="off" required>
       </div>
       <div class="field">
-        <label for="a-tier">Membership type</label>
-        <select id="a-tier" name="tier" required></select>
+        <label for="a-tier">Describes themselves as</label>
+        <select id="a-tier" name="member_type" required></select>
       </div>
       <div class="form-grid">
         <div class="field">
