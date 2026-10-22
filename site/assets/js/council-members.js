@@ -6,9 +6,12 @@
   let members = [];
   let editing = null;
 
-  const TIERS = NAGP.config.MEMBERSHIP_TIERS || [];
-  const tierOptions = (selected = '') => NAGP.raw(TIERS.map((t) =>
-    `<option value="${NAGP.esc(t.key)}"${t.key === selected ? ' selected' : ''}>${NAGP.esc(t.name)} (${NAGP.esc(NAGP.money(t.price_cents))} a year)</option>`).join(''));
+  // One membership for everyone; what differs is what best describes the member.
+  const MEMBERSHIP = (NAGP.config.MEMBERSHIP_TIERS || [])[0] || { price_cents: 0 };
+  const TYPES = NAGP.config.MEMBER_TYPES || [];
+  const typeLabel = (key) => (TYPES.find((t) => t.key === key) || {}).label || 'Member';
+  const typeOptions = (selected = '') => NAGP.raw(TYPES.map((t) =>
+    `<option value="${NAGP.esc(t.key)}"${t.key === selected ? ' selected' : ''}>${NAGP.esc(t.label)}</option>`).join(''));
 
   /* ---------- Easy-to-read passwords ---------- */
   const WORDS = ['quiet', 'river', 'maple', 'cedar', 'harbor', 'meadow', 'garden', 'willow', 'canyon', 'forest', 'sunny', 'gentle',
@@ -35,12 +38,6 @@
     return { q: f.q.value.trim(), status: f.status.value, role: f.role.value };
   }
 
-  function updateCsvLink() {
-    const p = new URLSearchParams({ format: 'csv' });
-    for (const [k, v] of Object.entries(filters())) if (v) p.set(k, v);
-    $('#csv-link').href = '/api/council/members?' + p.toString();
-  }
-
   function untilCell(m) {
     if (!m.membership_expires) return html`<span class="muted">Not set</span>`;
     return m.expired ? html`${NAGP.formatShortDate(m.membership_expires)}<span class="cell-sub">Ended, not renewed</span>` : NAGP.formatShortDate(m.membership_expires);
@@ -52,7 +49,7 @@
       <td data-label="Name"><span class="cell-name">${m.name}</span> ${NAGP.sampleBadge(m)}${m.id === me.id ? html` <span class="badge badge-primary">You</span>` : ''}
         ${m.credentials ? html`<span class="cell-sub">${m.credentials}</span>` : ''}</td>
       <td data-label="Email"><a href="mailto:${m.email}">${m.email}</a></td>
-      <td data-label="Type">${C.tierShort(m.tier) || m.member_type}</td>
+      <td data-label="Type">${typeLabel(m.member_type)}</td>
       <td data-label="Place">${place || html`<span class="muted">Not given</span>`}</td>
       <td data-label="Status">${C.statusBadge(m)}</td>
       <td data-label="Active until" class="nowrap">${untilCell(m)}</td>
@@ -86,7 +83,6 @@
   let timer = null;
   let requestNo = 0;
   async function load() {
-    updateCsvLink();
     const n = ++requestNo;
     try {
       const data = await api('/api/council/members', { query: filters() });
@@ -108,9 +104,9 @@
     $('#password-form').reset();
     $('#edit-title').textContent = `Edit ${m.name}`;
     $('#edit-who').innerHTML = html`${m.email}${m.last_login ? ` · Last signed in ${C.longDate(m.last_login)}` : ' · Has not signed in yet'}`;
-    $('#e-tier').innerHTML = tierOptions(m.tier);
+    $('#e-tier').innerHTML = typeOptions(m.member_type);
     C.fill(form, {
-      status: m.status, tier: m.tier, membership_expires: m.membership_expires, role: m.role === 'admin' ? 'council' : m.role,
+      status: m.status, member_type: m.member_type, membership_expires: m.membership_expires, role: m.role === 'admin' ? 'council' : m.role,
       show_members: m.show_members, show_public: m.show_public,
     });
     const self = m.id === me.id;
@@ -126,13 +122,12 @@
 
   function syncPublic() {
     const form = $('#edit-form');
-    const tier = NAGP.tier(form.tier.value);
-    const pro = tier ? tier.professional : false;
+    const pro = form.member_type.value === 'professional';
     form.show_public.disabled = !pro;
     if (!pro) form.show_public.checked = false;
     $('#public-hint').textContent = pro
       ? 'Only tick this if the member has asked to be listed publicly.'
-      : 'The public directory is for Professional Members only.';
+      : 'The Public Directory is for practicing professionals only.';
   }
 
   /* ---------- Add ---------- */
@@ -145,8 +140,7 @@
   }
   function suggestAmount() {
     const form = $('#add-form');
-    const tier = NAGP.tier(form.tier.value);
-    if (tier) form.amount.value = C.centsToInput(tier.price_cents);
+    form.amount.value = C.centsToInput(MEMBERSHIP.price_cents);
   }
 
   NAGP.whenAllowed().then(({ user }) => {
@@ -166,7 +160,7 @@
 
     // Edit form
     const editForm = $('#edit-form');
-    editForm.tier.addEventListener('change', syncPublic);
+    editForm.member_type.addEventListener('change', syncPublic);
     NAGP.form(editForm, {
       reset: false,
       busyText: 'Saving…',
@@ -196,15 +190,14 @@
 
     // Add form
     const addForm = $('#add-form');
-    addForm.tier.innerHTML = tierOptions('associate');
+    addForm.member_type.innerHTML = typeOptions('associate');
     addForm.state.innerHTML = NAGP.regionOptions('', { placeholder: 'Not given' });
     addForm.record_payment.addEventListener('change', () => { syncPayment(); if (addForm.record_payment.checked && !addForm.amount.value) suggestAmount(); });
-    addForm.tier.addEventListener('change', () => { if (addForm.record_payment.checked) suggestAmount(); });
     syncPayment();
     $('#open-add').addEventListener('click', () => {
       addForm.reset();
       NAGP.clearErrors(addForm);
-      addForm.tier.value = 'associate';
+      addForm.member_type.value = 'associate';
       syncPayment();
       C.openDialog($('#add-dialog'), addForm.name);
     });

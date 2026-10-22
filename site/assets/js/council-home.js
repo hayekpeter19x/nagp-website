@@ -6,16 +6,6 @@
 
   function attentionList(a) {
     const items = [
-      a.pending_announcements && {
-        n: a.pending_announcements, href: '/council/approvals',
-        text: a.pending_announcements === 1 ? '1 announcement is waiting for your approval' : `${a.pending_announcements} announcements are waiting for your approval`,
-        cta: 'Review announcements',
-      },
-      a.open_reports && {
-        n: a.open_reports, href: '/council/approvals#reports',
-        text: a.open_reports === 1 ? '1 community board post was reported by a member' : `${a.open_reports} community board posts were reported by members`,
-        cta: 'Look at the reported posts',
-      },
       a.unread_messages && {
         n: a.unread_messages, href: '/council/messages',
         text: a.unread_messages === 1 ? '1 message from the contact form has not been answered yet' : `${a.unread_messages} messages from the contact form have not been answered yet`,
@@ -79,7 +69,7 @@
             <li>any registrations, payments and sign-ins that belong to them.</li>
           </ul>
           <p>Real members, messages, mailing-list sign-ups and website comments are kept. So is anything you posted yourselves while
-            trying the demo accounts (for example a test announcement); you can delete those on the Approvals page.</p>
+            trying the demo accounts.</p>
           ${user.sample ? html`<p><strong>You are using the demo Council account, so you will be signed out.</strong> Sign in again with your own account afterwards.</p>` : ''}
           <p><strong>Are you sure? This cannot be undone.</strong></p>`,
         confirm: 'Yes, delete the sample data',

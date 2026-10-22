@@ -71,12 +71,14 @@ export async function newPerson(playwright) {
 
 // Joins NAGP through the API (and pays with the simulated card unless pay: false).
 // The request context must be signed out; afterwards it is signed in as the new member.
+// `tier` is what best describes the new member: 'professional' | 'student' | 'associate' (other).
+// There is one membership for everyone.
 export async function joinMember(target, { tier = 'professional', name, email, showPublic = true, pay = true, ...extra } = {}) {
   const id = uid();
   name = name || `Test ${tier} ${id}`;
   email = email || `test.${id}@example.com`;
   const body = {
-    tier, name, email, password: PASSWORD, password_confirm: PASSWORD, city: 'Springfield', state: 'IL', agree: true, ...extra,
+    member_type: tier, name, email, password: PASSWORD, password_confirm: PASSWORD, city: 'Springfield', state: 'IL', agree: true, ...extra,
   };
   if (tier === 'professional') {
     Object.assign(body, { credentials: 'LCSW', training: 'Three-year Gestalt therapy training', specialties: ['clinical'], show_public: showPublic, ...extra });

@@ -1,4 +1,4 @@
-// My Membership (/members/payments): finish joining, membership status, renew or change type, cancel,
+// My Membership (/members/payments): finish joining, membership status, renew, cancel,
 // event registrations and payment history. Signed-in people who have not paid yet can see this page.
 (function () {
   const { $, html, api } = NAGP;
@@ -6,15 +6,11 @@
   const box = $('#mp-content');
   const tiers = (NAGP.config && NAGP.config.MEMBERSHIP_TIERS) || [];
 
-  const tierOptions = (selected) => html`${tiers.map((t) => html`<option value="${t.key}"${t.key === selected ? NAGP.raw(' selected') : ''}>${t.name}, ${NAGP.money(t.price_cents)}</option>`)}`;
+  const membership = tiers[0] || { price_cents: 0 };
 
-  // A small form: membership type + "Renew for one year: $75" (also used to finish joining).
-  const renewForm = (selected, verb, current = '') => html`<form class="renew-form" id="renew-form" novalidate data-verb="${verb}" data-current="${current}">
-      <div class="field">
-        <label for="renew-tier">Membership type</label>
-        <select id="renew-tier" name="tier">${tierOptions(selected)}</select>
-      </div>
-      <button class="btn btn-accent btn-large" type="submit">${verb}</button>
+  // A single button: "Renew for one year: X$" (also used to finish joining). One membership for everyone.
+  const renewForm = (verb) => html`<form class="renew-form" id="renew-form" novalidate>
+      <button class="btn btn-accent btn-large" type="submit">${verb}: ${NAGP.money(membership.price_cents)}</button>
       <div class="form-status" role="status" aria-live="polite"></div>
     </form>
     ${Pay.samplePriceNote()}`;
@@ -34,18 +30,14 @@
           </div>
           <div class="actions"><a class="btn btn-accent btn-large" href="${o.links.checkout}">Pay ${NAGP.money(o.amount_cents)}</a></div>
           <p class="hint mt-1">On the next page you can pay by card, or choose to pay by check.</p>
-          <details class="mt-1">
-            <summary>Choose a different type of membership</summary>
-            ${renewForm(o.tier || m.tier, 'Continue')}
-          </details>
         </div>
       </section>`;
     }
     return html`<section class="mp-section">
       <div class="card card-highlight">
         <h2>Finish joining</h2>
-        <p class="lede">Welcome, ${user.name}. To become a member, choose your type of membership and pay for one year.</p>
-        ${renewForm(m.tier || 'professional', 'Continue to payment')}
+        <p class="lede">Welcome, ${user.name}. To become a member, pay for one year of membership.</p>
+        ${renewForm('Continue to payment')}
       </div>
     </section>`;
   }
@@ -63,18 +55,18 @@
     return html`<section class="mp-section card card-highlight">
       <h2>Your membership has ended</h2>
       <p class="lede">${m.expires
-        ? `Your membership${m.tier_name ? ` (${m.tier_name})` : ''} ended on ${NAGP.formatDate(m.expires)}.`
+        ? `Your membership ended on ${NAGP.formatDate(m.expires)}.`
         : 'Your membership is not active at the moment.'}
         Renew today to get your member benefits back: the member directory, the community board, member prices for events, and more.</p>
       <ul class="meta-list">
-        <li><b>Membership type:</b> ${m.tier_name || 'Not chosen yet'}</li>
+        <li><b>Membership:</b> NAGP membership</li>
         <li class="status-line"><b>Status:</b> <span class="badge badge-warning">Ended</span></li>
       </ul>
       ${o ? html`<div class="mt-1">${NAGP.notice('warning', html`<p>You started a renewal (${o.description}) but have not paid yet.</p>
           <p><a class="btn btn-accent" href="${o.links.checkout}">Pay ${NAGP.money(o.amount_cents)}</a></p>`, 'Renewal not finished')}</div>` : ''}
       <h3 class="mp-sub">Renew your membership</h3>
-      <p>Your new year starts on the day you pay, so it will run until about ${NAGP.formatDate(yearFromToday())}. You can also choose a different type of membership.</p>
-      ${renewForm(m.tier || 'associate', 'Renew now')}
+      <p>Your new year starts on the day you pay, so it will run until about ${NAGP.formatDate(yearFromToday())}.</p>
+      ${renewForm('Renew now')}
       <p class="hint mt-1">On the next page you can pay by card, or choose to pay by check.</p>
     </section>`;
   }
@@ -90,7 +82,7 @@
     return html`<section class="mp-section card">
       <h2>Your membership</h2>
       <ul class="meta-list">
-        <li><b>Membership type:</b> ${m.tier_name || 'Not chosen yet'}</li>
+        <li><b>Membership:</b> NAGP membership</li>
         <li class="status-line"><b>Status:</b> ${badge}</li>
         ${m.expires ? html`<li><b>${m.expired ? 'Ended on' : 'Active until'}:</b> ${NAGP.formatDate(m.expires)}</li>` : ''}
       </ul>
@@ -99,9 +91,9 @@
       ${o ? html`<div class="mt-1">${NAGP.notice('warning', html`<p>You started a renewal (${o.description}) but have not paid yet.</p>
           <p><a class="btn btn-accent" href="${o.links.checkout}">Pay ${NAGP.money(o.amount_cents)}</a></p>`, 'Renewal not finished')}</div>` : ''}
 
-      <h3 class="mp-sub">Renew or change your membership</h3>
-      <p>${soon ? 'Your membership ends soon. ' : ''}Keep the same type to renew, or choose a different type to change it, for example to upgrade to Professional Member. You pay for one year of the type you choose. It starts right away, and one year is added to your membership.</p>
-      ${renewForm(m.tier || 'associate', 'Renew for one year', m.tier)}
+      <h3 class="mp-sub">Renew your membership</h3>
+      <p>${soon ? 'Your membership ends soon. ' : ''}You can renew at any time. One year is added to your membership, so you do not lose any time.</p>
+      ${renewForm('Renew for one year')}
 
       ${canCancel ? html`<h3 class="mp-sub">Cancel your membership</h3>
       <p>If you cancel, your membership stays active until ${NAGP.formatDate(m.expires)} and will not be renewed. The Council will be told, and will contact you if you would like a refund.</p>
@@ -155,21 +147,11 @@
   function wireRenew() {
     const form = $('#renew-form');
     if (!form) return;
-    const select = $('#renew-tier');
-    const btn = form.querySelector('[type="submit"]');
-    const label = () => {
-      const t = NAGP.tier(select.value);
-      const changing = form.dataset.current && select.value !== form.dataset.current;
-      const verb = changing ? `Switch to ${t.name}` : form.dataset.verb;
-      btn.textContent = t ? `${verb}: ${NAGP.money(t.price_cents)}` : form.dataset.verb;
-    };
-    select.addEventListener('change', label);
-    label();
     NAGP.form(form, {
       reset: false,
       busyText: 'One moment…',
-      onSubmit: async (data) => {
-        const res = await api('/api/membership/renew', { method: 'POST', body: { tier: data.tier } });
+      onSubmit: async () => {
+        const res = await api('/api/membership/renew', { method: 'POST', body: {} });
         Pay.go(res.checkout_url);
         return new Promise(() => {});
       },

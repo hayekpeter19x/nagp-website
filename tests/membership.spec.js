@@ -1,20 +1,14 @@
-// My Membership: renew or change the type of membership, and cancel (or change your mind).
+// My Membership: one membership for everyone, renew, and cancel (or change your mind).
 import { test, expect, call, signInAs, newPerson, joinMember } from './helpers.js';
 
-test('a member switches to a different type of membership and pays for it', async ({ page }) => {
+test('My Membership shows one membership and a single Renew button', async ({ page }) => {
   await joinMember(page, { tier: 'associate' });
   await page.goto('/members/payments');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('My Membership');
-  await expect(page.getByRole('button', { name: /Renew for one year: \$75/ })).toBeVisible();
-  await page.getByLabel('Membership type').selectOption('professional');
-  await page.getByRole('button', { name: /Switch to Professional Member: \$150/ }).click();
-  await expect(page).toHaveURL(/\/checkout\?order=ord_/);
-  await page.getByRole('button', { name: /^Pay \$150/ }).click();
-  await expect(page).toHaveURL(/\/payment-complete\?/);
-  const me = (await call(page, 'GET', '/api/me')).body.user;
-  expect(me).toMatchObject({ tier: 'professional', member_type: 'professional', isMember: true });
-  await page.goto('/members/payments');
-  await expect(page.getByText('Membership type: Professional Member')).toBeVisible();
+  await expect(page.getByText('Membership: NAGP membership')).toBeVisible();
+  await expect(page.getByRole('button', { name: /Renew for one year: \$100/ })).toBeVisible();
+  await expect(page.getByRole('combobox', { name: /Membership type/ })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /Switch to/ })).toHaveCount(0);
 });
 
 test('a member cancels, the Council is told, and the member can change their mind', async ({ page, playwright }) => {

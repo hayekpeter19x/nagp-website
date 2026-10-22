@@ -1,7 +1,7 @@
 // GET  /api/council/orders              every payment, newest first, with totals (?format=csv for a spreadsheet)
 // POST /api/council/orders              record a payment received by check or cash
 //   { person: 'member'|'other', user_id, name, email, kind: 'membership'|'event'|'donation',
-//     tier, event_id, amount (dollars), method: 'check'|'cash', note }
+//     event_id, amount (dollars), method: 'check'|'cash', note }   (there is one membership for everyone)
 import { json, readJson, validate, requireUser, HttpError } from '../../../lib/http.js';
 import { all, first } from '../../../lib/db.js';
 import { MEMBERSHIP_TIERS } from '../../../lib/config.js';
@@ -45,7 +45,7 @@ export async function onRequestPost(context) {
   const check = validate(body);
   const person = check.oneOf('person', ['member', 'other'], { label: 'who paid' });
   const kind = check.oneOf('kind', ['membership', 'event', 'donation'], { label: 'what the payment was for' });
-  const tier = kind === 'membership' ? check.oneOf('tier', MEMBERSHIP_TIERS.map((t) => t.key), { label: 'a membership type' }) : '';
+  const tier = kind === 'membership' ? MEMBERSHIP_TIERS[0].key : ''; // one membership for everyone
   const eventId = kind === 'event' ? check.int('event_id', { label: 'The event', required: true, min: 1 }) : null;
   if (kind === 'event' && check.fields.event_id) check.fields.event_id = 'Please choose the event.';
   const amountCents = dollarsField(check, body, 'amount', { label: 'The amount received', required: true });
@@ -75,7 +75,7 @@ export async function onRequestPost(context) {
   check.done();
 
   const { order } = await recordManualPayment(env, council, { kind, user, name, email, tier, eventId, amountCents, method, note });
-  let message = `The payment of $${dollars(order.amount_cents)} from ${order.name} was recorded.`;
+  let message = `The payment from ${order.name} was recorded.`;
   if (kind === 'membership') {
     const u = await first(env, `SELECT status, membership_expires FROM users WHERE id = ?`, user.id);
     message += u.status === 'active'

@@ -3,9 +3,9 @@
 import { json, readJson, validate, requireUser, HttpError, nowIso } from '../../../../lib/http.js';
 import { all, first, run, likeContains } from '../../../../lib/db.js';
 import { hashPassword, checkPasswordStrength } from '../../../../lib/auth.js';
-import { MEMBERSHIP_TIERS, REGIONS, regionName, tierByKey } from '../../../../lib/config.js';
+import { MEMBERSHIP_TIERS, MEMBER_TYPES, memberTypeLabel, REGIONS, regionName } from '../../../../lib/config.js';
 import {
-  csvResponse, wantsCsv, dateField, EXPIRED_SQL, dollarsField, memberTypeFor, memberRow, recordManualPayment, longDate, orderRow, theirEmail, MEMBER_COLUMNS, STATUS_LABELS, ROLE_LABELS,
+  csvResponse, wantsCsv, dateField, EXPIRED_SQL, dollarsField, memberRow, recordManualPayment, longDate, orderRow, theirEmail, MEMBER_COLUMNS, STATUS_LABELS, ROLE_LABELS,
 } from '../../../../lib/council.js';
 
 const STATUSES = ['pending', 'active', 'lapsed', 'suspended'];
@@ -29,8 +29,8 @@ export async function onRequestGet(context) {
   const role = params.get('role');
   if (role === 'council') where.push(`role IN ('council', 'admin')`);
   else if (role === 'member') where.push(`role = 'member'`);
-  const tier = params.get('tier');
-  if (MEMBERSHIP_TIERS.some((t) => t.key === tier)) { where.push('tier = ?'); args.push(tier); }
+  const type = params.get('type');
+  if (MEMBER_TYPES.some((t) => t.key === type)) { where.push('member_type = ?'); args.push(type); }
 
   const rows = await all(env,
     `SELECT ${MEMBER_COLUMNS} FROM users ${where.length ? 'WHERE ' + where.join(' AND ') : ''} ORDER BY name COLLATE NOCASE`, ...args);
@@ -38,9 +38,9 @@ export async function onRequestGet(context) {
 
   if (wantsCsv(request)) {
     return csvResponse('nagp-members',
-      ['Name', 'Email', 'Membership', 'Status', 'Active until', 'Role', 'City', 'State or province', 'Credentials',
+      ['Name', 'Email', 'Describes themselves as', 'Status', 'Active until', 'Role', 'City', 'State or province', 'Credentials',
         'In public directory', 'In members directory', 'Joined', 'Last signed in'],
-      members.map((m) => [m.name, m.email, tierByKey(m.tier)?.name || m.member_type, STATUS_LABELS[m.expired ? 'expired' : m.status] || m.status,
+      members.map((m) => [m.name, m.email, memberTypeLabel(m.member_type), STATUS_LABELS[m.expired ? 'expired' : m.status] || m.status,
         m.membership_expires, ROLE_LABELS[m.role] || m.role, m.city, regionName(m.state), m.credentials,
         m.show_public, m.show_members, (m.created_at || '').slice(0, 10), (m.last_login || '').slice(0, 10)]));
   }
@@ -60,7 +60,8 @@ export async function onRequestPost(context) {
   const check = validate(body);
   const name = check.text('name', { label: 'Their full name', required: true, max: 120 });
   const email = theirEmail(check);
-  const tier = check.oneOf('tier', MEMBERSHIP_TIERS.map((t) => t.key), { label: 'a membership type' });
+  const tier = MEMBERSHIP_TIERS[0].key; // one membership for everyone
+  const memberType = check.oneOf('member_type', MEMBER_TYPES.map((t) => t.key), { label: 'what best describes them' });
   const state = check.oneOf('state', REGIONS.map((r) => r.code), { label: 'a state or province', required: false });
   const city = check.text('city', { label: 'City', max: 80 });
   const password = typeof body.password === 'string' ? body.password : '';
@@ -86,7 +87,6 @@ export async function onRequestPost(context) {
       { email: 'This email address already has an account.' });
   }
 
-  const memberType = memberTypeFor(tier);
   const hash = await hashPassword(password);
   // With a payment, the account starts as "waiting for payment" and recording the payment
   // activates it for one year. Without one, it is active straight away.

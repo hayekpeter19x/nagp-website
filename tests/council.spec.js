@@ -1,7 +1,6 @@
-// The Council Area: events, documents, check payments, members and spreadsheet downloads.
+// The Council Area: events, check payments, members, messages and spreadsheet downloads.
 import {
   test, expect, call, uid, signInAs, newPerson, joinMember, oneYearFromToday, expectAccessOk, createEvent,
-  contextOptions,
 } from './helpers.js';
 
 test('the Council adds an event, and it appears on the Events page with the right date and time', async ({ page, request }) => {
@@ -37,41 +36,6 @@ test('the Council adds an event, and it appears on the Events page with the righ
   await expect(card).toContainText('$25');
 });
 
-test('a members-only document is in the Members\' documents but not on the public Governance page', async ({ page, browser, request }) => {
-  const title = `Minutes: test meeting ${uid()}`;
-  const decisions = `Decisions: none yet (${uid()}).`;
-  await signInAs(page, 'council');
-  await page.goto('/council/documents');
-  await page.getByRole('button', { name: 'Add a document' }).click();
-  await page.getByRole('textbox', { name: 'Title' }).fill(title);
-  await page.getByRole('combobox', { name: /Kind of document/ }).selectOption('Minutes');
-  await page.getByRole('radio', { name: /^Members/ }).check();
-  await page.getByRole('textbox', { name: /paste the text/i }).fill(`Present: the whole Council.\n\n${decisions}`);
-  await page.getByRole('button', { name: 'Save document' }).click();
-  await expect(page.getByText(`"${title}" was added.`)).toBeVisible();
-
-  // Signed out: not on /governance, not in the API
-  const visitor = await browser.newContext(contextOptions());
-  const vpage = await visitor.newPage();
-  await vpage.goto('/governance');
-  await expect(vpage.locator('#documents-list .loading')).toHaveCount(0);
-  await expect(vpage.getByText('Bylaws (draft)')).toBeVisible();
-  await expect(vpage.getByText(title)).toHaveCount(0);
-  expect((await call(request, 'GET', '/api/documents')).body.documents.some((d) => d.title === title)).toBe(false);
-
-  // A member sees it
-  await signInAs(vpage, 'member');
-  await vpage.goto('/members/documents');
-  await expect(vpage.getByRole('heading', { name: title })).toBeVisible();
-  await vpage.getByRole('heading', { name: title }).locator('..').getByText(/Read the text/).click();
-  await expect(vpage.getByText(decisions)).toBeVisible();
-  // ...but not on the public Governance page, even when signed in
-  await vpage.goto('/governance');
-  await expect(vpage.getByText('Bylaws (draft)')).toBeVisible();
-  await expect(vpage.getByText(title)).toHaveCount(0);
-  await visitor.close();
-});
-
 test('recording a check payment switches on the membership of someone who has not paid online', async ({ page, playwright }) => {
   const person = await newPerson(playwright);
   const { name, email } = await joinMember(person, { tier: 'associate', pay: false });
@@ -82,12 +46,12 @@ test('recording a check payment switches on the membership of someone who has no
   await page.getByRole('button', { name: /Record a check or cash payment/ }).click();
   const dialog = page.getByRole('dialog', { name: /Record a check or cash payment/ });
   await dialog.getByRole('combobox', { name: 'Member', exact: true }).selectOption({ label: `${name} (${email})` });
-  await expect(dialog.getByRole('combobox', { name: 'Membership type' })).toHaveValue('associate');
-  await expect(dialog.getByRole('textbox', { name: /Amount received/ })).toHaveValue('75');
+  await expect(dialog.getByRole('combobox', { name: /Membership/ })).toHaveCount(0); // one membership for everyone
+  await expect(dialog.getByRole('textbox', { name: /Amount received/ })).toHaveValue('100');
   const note = `Check number ${uid()}`;
   await dialog.getByRole('textbox', { name: /Note/ }).fill(note);
   await dialog.getByRole('button', { name: 'Record this payment' }).click();
-  await expect(page.getByText(`The payment of $75.00 from ${name} was recorded.`, { exact: false })).toBeVisible();
+  await expect(page.getByText(`The payment from ${name} was recorded.`, { exact: false })).toBeVisible();
   await expect(page.getByText(/Their membership is active until/)).toBeVisible();
   await expect(page.getByRole('cell', { name: new RegExp(note) })).toBeVisible();
 
@@ -95,7 +59,7 @@ test('recording a check payment switches on the membership of someone who has no
   expect(me).toMatchObject({ status: 'active', isMember: true, membership_expires: oneYearFromToday() });
   expect((await call(person, 'GET', '/api/board')).status).toBe(200);
   const orders = (await call(person, 'GET', '/api/me/orders')).body.orders;
-  expect(orders.find((o) => o.status === 'paid')).toMatchObject({ provider: 'manual', amount_cents: 7500 });
+  expect(orders.find((o) => o.status === 'paid')).toMatchObject({ provider: 'manual', amount_cents: 10000 });
   await person.dispose();
 });
 
@@ -109,17 +73,17 @@ test('the Council adds a member by hand with a check payment, then suspends them
   const dialog = page.getByRole('dialog', { name: 'Add a member by hand' });
   await dialog.getByRole('textbox', { name: 'Full name' }).fill(name);
   await dialog.getByRole('textbox', { name: 'Email address' }).fill(email);
-  await dialog.getByRole('combobox', { name: 'Membership type' }).selectOption('professional');
+  await dialog.getByRole('combobox', { name: 'Describes themselves as' }).selectOption('professional');
   await dialog.getByRole('textbox', { name: 'Temporary password' }).fill('quiet-river-2048');
   await dialog.getByRole('checkbox', { name: /They have paid/ }).check();
-  await expect(dialog.getByRole('textbox', { name: 'Amount received' })).toHaveValue('150');
+  await expect(dialog.getByRole('textbox', { name: 'Amount received' })).toHaveValue('100');
   await dialog.getByRole('button', { name: 'Add this member' }).click();
   await expect(page.getByText(`${name} was added.`, { exact: false })).toBeVisible();
 
   const person = await newPerson(playwright);
   const signin = await call(person, 'POST', '/api/auth/signin', { email, password: 'quiet-river-2048' });
   expect(signin.status).toBe(200);
-  expect(signin.body.user).toMatchObject({ status: 'active', isMember: true, tier: 'professional' });
+  expect(signin.body.user).toMatchObject({ status: 'active', isMember: true, tier: 'member', member_type: 'professional' });
 
   // Suspend: they are signed out and cannot sign in again
   await page.getByRole('searchbox', { name: 'Search' }).fill(id);
@@ -147,23 +111,25 @@ test('spreadsheet downloads are CSV files', async ({ page, request }) => {
   expect(members).toContain('demo.member@nagp-preview.org');
   expect(members).not.toMatch(/pbkdf2/);
 
-  // In the browser the link downloads a file
+  // The Members page starts with the search, and no longer has a download link
   await signInAs(page, 'council');
   await page.goto('/council/members');
-  const [download] = await Promise.all([
-    page.waitForEvent('download'),
-    page.getByRole('link', { name: /Download as spreadsheet/ }).click(),
-  ]);
-  expect(download.suggestedFilename()).toMatch(/^nagp-members-\d{4}-\d{2}-\d{2}\.csv$/);
+  await expect(page.getByRole('searchbox', { name: 'Search' })).toBeVisible();
+  await expect(page.getByText('Everyone who has an account on the website.')).toHaveCount(0);
+  await expect(page.getByRole('link', { name: /Download as spreadsheet/ })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Add a member by hand' })).toBeVisible();
 });
 
-test('the Council dashboard counts what needs attention', async ({ page }) => {
+test('the Council dashboard counts what needs attention', async ({ page, request }) => {
+  expect((await call(request, 'POST', '/api/contact', { name: 'Dana Dashboard', email: `d.${uid()}@example.com`, topic: 'Other', message: 'Hello' })).status).toBe(200);
   await signInAs(page, 'council');
   await page.goto('/council/');
   await expect(page.getByRole('heading', { name: 'Needs your attention' })).toBeVisible();
   await expect(page.locator('#attention .loading')).toHaveCount(0);
-  await expect(page.getByRole('link', { name: /announcements? (is|are) waiting for your approval/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /messages? from the contact form (has|have) not been answered yet/ })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Before launch' })).toBeVisible();
+  // The Approvals and Documents pages were removed
+  for (const name of ['Approvals', 'Documents']) await expect(page.getByRole('link', { name, exact: true })).toHaveCount(0);
 });
 
 test('the Council edits an event and sees who registered', async ({ page, request }) => {
@@ -214,37 +180,6 @@ test('the Council handles messages and mailing-list sign-ups', async ({ page, re
   await page.getByRole('dialog').getByRole('button', { name: 'Yes, remove' }).click();
   await expect(page.getByText(`${email} was removed from the mailing list sign-ups.`)).toBeVisible();
   await expect(page.getByRole('row', { name: new RegExp(email) })).toHaveCount(0);
-});
-
-test('the Council can keep a reported post, or unpublish an announcement', async ({ page, playwright }) => {
-  const author = await newPerson(playwright);
-  await signInAs(author, 'professional');
-  const title = `Reported but fine ${uid()}`;
-  const topic = await call(author, 'POST', '/api/board', { title, body: 'A perfectly kind post.', agree: true });
-  await author.dispose();
-  const reporter = await newPerson(playwright);
-  await signInAs(reporter, 'member');
-  expect((await call(reporter, 'POST', `/api/board/${topic.body.id}/report`, { reason: 'Not sure about this' })).status).toBe(200);
-
-  await signInAs(page, 'council');
-  await page.goto('/council/approvals#reports');
-  const card = page.locator('li[data-post]', { has: page.getByRole('heading', { name: new RegExp(title) }) });
-  await card.getByRole('button', { name: /Keep it/ }).click();
-  await expect(page.getByText(/The post stays on the board/)).toBeVisible();
-  expect((await call(reporter, 'GET', `/api/board/${topic.body.id}`)).body.topic.title).toBe(title);
-  expect((await call(page, 'GET', '/api/council/summary')).status).toBe(200);
-  await reporter.dispose();
-
-  const annTitle = `Published by the Council ${uid()}`;
-  const ann = await call(page, 'POST', '/api/announcements', { title: annTitle, body: 'Hello.', category: 'NAGP news', visibility: 'public', official: true });
-  await page.goto('/council/approvals');
-  await page.getByRole('button', { name: /Published/ }).click();
-  const annCard = page.locator(`li[data-id="${ann.body.id}"]`);
-  await annCard.getByRole('button', { name: /Unpublish/ }).click();
-  await page.getByRole('dialog').getByRole('button', { name: 'Unpublish' }).click();
-  await expect(page.getByText(`Unpublished. "${annTitle}" is no longer on the Announcements page.`)).toBeVisible();
-  const list = (await call(page, 'GET', '/api/announcements?limit=100')).body.announcements;
-  expect(list.some((a) => a.id === ann.body.id)).toBe(false);
 });
 
 test('spreadsheet cells cannot run formulas', async ({ request, playwright }) => {

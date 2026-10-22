@@ -41,7 +41,7 @@ export async function onRequestPut(context) {
     if (has('specialties')) changes.specialties = joinSpecialties(check.list('specialties', SPECIALTY_KEYS));
     if (has('show_public')) changes.show_public = check.bool('show_public') ? 1 : 0;
   } else if (has('show_public') && check.bool('show_public')) {
-    check.fail('show_public', 'The public directory is only for professional members.');
+    check.fail('show_public', 'The public directory is only for practicing professionals.');
   }
   check.done();
 

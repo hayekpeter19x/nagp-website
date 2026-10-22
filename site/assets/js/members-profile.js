@@ -6,6 +6,7 @@
   let me = null;
 
   const isPro = () => me && me.member_type === 'professional';
+  const typeLabel = (key) => ((NAGP.config.MEMBER_TYPES || []).find((t) => t.key === key) || {}).label || 'Member';
   const field = (name) => form.elements.namedItem(name);
 
   function fill(u) {
@@ -25,7 +26,7 @@
     // "Your account" summary at the top of the page
     $('#acc-name').textContent = u.name;
     $('#acc-email').textContent = u.email;
-    $('#acc-tier').textContent = (NAGP.tier(u.tier) || {}).name || 'Not chosen yet';
+    $('#acc-tier').textContent = `NAGP membership (${typeLabel(u.member_type)})`;
     $('#account-summary').hidden = false;
   }
 
@@ -39,12 +40,11 @@
     const pub = field('show_public');
     pub.disabled = !pro;
     $('#pf-public-label').classList.toggle('is-disabled', !pro);
-    const tier = NAGP.tier(me.tier);
     $('#pf-public-explain').innerHTML = pro
       ? html`<p>Anyone on the internet can see this listing: your name, credentials, Gestalt training, specialties, city and state, the few words about you, and the contact details you choose below. You can turn it off at any time.</p>`
-      : html`<p><strong>This is only for professional members.</strong> The public directory helps people find a qualified practitioner, so it lists professional members only.
-          Your membership is <strong>${tier ? tier.name : 'not a professional membership'}</strong>.
-          If you are a practicing professional, please <a href="/contact?topic=Membership">contact the Council</a> about changing your membership type.</p>`;
+      : html`<p><strong>This is only for practicing professionals.</strong> The public directory helps people find a qualified practitioner, so it lists practicing professionals only.
+          You told us you are: <strong>${typeLabel(me.member_type)}</strong>.
+          If you are a practicing professional, please <a href="/contact?topic=Membership">contact the Council</a> and they will change this for you.</p>`;
   }
 
   function current() {

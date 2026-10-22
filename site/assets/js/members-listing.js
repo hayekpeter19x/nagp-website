@@ -3,7 +3,7 @@
 (function () {
   const { html } = NAGP;
   const BIO_LIMIT = 280;
-  const TYPES = { professional: 'Professional', associate: 'Associate', student: 'Student' };
+  const TYPES = { professional: 'Professional', associate: 'Member', student: 'Student or trainee' };
 
   const safeUrl = (u) => (/^https?:\/\/[^\s]+$/i.test(String(u || '')) ? u : '');
   const prettyUrl = (u) => String(u).replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '');

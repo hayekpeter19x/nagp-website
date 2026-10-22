@@ -34,7 +34,7 @@ export default defineConfig({
     { name: 'phone', grep: /@phone/, use: { ...devices['Pixel 7'], launchOptions: { executablePath }, reducedMotion: 'reduce' } },
   ],
   webServer: external ? undefined : {
-    command: `rm -rf .wrangler/state-test && NAGP_DIST=dist-test node build.mjs && npx wrangler pages dev dist-test --d1 DB=nagp-local --binding DEMO_MODE=true --port ${PORT} --persist-to .wrangler/state-test --compatibility-date=2025-09-01`,
+    command: `rm -rf .wrangler/state-test && NAGP_SHOW_PRICES=1 NAGP_DIST=dist-test node build.mjs && npx wrangler pages dev dist-test --d1 DB=nagp-local --binding DEMO_MODE=true --port ${PORT} --persist-to .wrangler/state-test --compatibility-date=2025-09-01`,
     url: `http://localhost:${PORT}/api/session`,
     timeout: 120_000,
     reuseExistingServer: false,

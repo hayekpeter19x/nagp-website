@@ -41,7 +41,7 @@
       $('#how-it-works').innerHTML = html`<h2 id="how-heading" class="h3-size">How it works for the Council</h2>
         <p>Announcements from members wait for Council approval. Yours are published as soon as you press <strong>Publish now</strong>.</p>
         <p>Tick <strong>Post as an official NAGP announcement</strong> for news from NAGP itself. Leave it unticked to share news under your own name.</p>
-        <p class="mb-0">To approve members' announcements, go to <a href="/council/approvals">Approvals in the Council Area</a>.</p>`;
+        <p class="mb-0">Your posts as a Council member are published straight away.</p>`;
     }
 
     NAGP.form(form, {

@@ -1,5 +1,5 @@
 // POST /api/membership/join
-// { tier, name, email, password, password_confirm, city, state,
+// { member_type, name, email, password, password_confirm, city, state,
 //   credentials, training, specialties[], show_public   (Professional members only)
 //   agree }
 // Creates the account (status 'pending' until paid) and a membership order, signs the person in,
@@ -7,7 +7,7 @@
 import { json, readJson, validate, HttpError, nowIso } from '../../../lib/http.js';
 import { first, run } from '../../../lib/db.js';
 import { hashPassword, checkPasswordStrength, createSession } from '../../../lib/auth.js';
-import { MEMBERSHIP_TIERS, SPECIALTIES, REGIONS, tierByKey } from '../../../lib/config.js';
+import { MEMBERSHIP_TIERS, MEMBER_TYPES, SPECIALTIES, REGIONS } from '../../../lib/config.js';
 import { createOrder, checkoutUrl } from '../../../lib/payments.js';
 
 const EXISTS = 'An account with this email already exists. Please sign in.';
@@ -17,12 +17,13 @@ export async function onRequestPost({ request, env, data }) {
   if (body.hp) return json({ checkout_url: '/' }); // spam trap
 
   if (data.user) {
-    throw new HttpError(409, `You are already signed in as ${data.user.name}. To pay for or renew your membership, please go to My Payments in the Members' Area.`);
+    throw new HttpError(409, `You are already signed in as ${data.user.name}. To pay for or renew your membership, please go to My Membership.`);
   }
 
   const check = validate(body);
-  const tierKey = check.oneOf('tier', MEMBERSHIP_TIERS.map((t) => t.key), { label: 'a type of membership' });
-  const tier = tierByKey(tierKey);
+  // One membership for everyone; the person says what best describes them.
+  const tier = MEMBERSHIP_TIERS[0];
+  const memberType = check.oneOf('member_type', MEMBER_TYPES.map((t) => t.key), { label: 'what best describes you' });
   const name = check.text('name', { label: 'Your full name', required: true, max: 120 });
   const email = check.email('email');
   const password = typeof body.password === 'string' ? body.password : '';
@@ -37,7 +38,7 @@ export async function onRequestPost({ request, env, data }) {
   let training = '';
   let specialties = [];
   let showPublic = false;
-  if (tier && tier.professional) {
+  if (memberType === 'professional') {
     credentials = check.text('credentials', { label: 'Your credentials', required: true, max: 120 });
     training = check.text('training', { label: 'Your training', required: true, max: 1000, multiline: true });
     if (!training && check.fields.training) check.fields.training = 'Please describe your Gestalt training.';
@@ -60,7 +61,7 @@ export async function onRequestPost({ request, env, data }) {
       `INSERT INTO users (email, password_hash, name, role, status, tier, member_type, city, state,
          credentials, training, specialties, show_public, show_members, sample, created_at)
        VALUES (?, ?, ?, 'member', 'pending', ?, ?, ?, ?, ?, ?, ?, ?, 1, 0, ?)`,
-      email, passwordHash, name, tier.key, tier.key, city, state, credentials, training, specialties.join(','),
+      email, passwordHash, name, tier.key, memberType, city, state, credentials, training, specialties.join(','),
       showPublic ? 1 : 0, nowIso());
     userId = res.meta.last_row_id;
   } catch (err) {
@@ -71,7 +72,7 @@ export async function onRequestPost({ request, env, data }) {
   const order = await createOrder(env, {
     kind: 'membership',
     ref_id: userId,
-    description: `${tier.name}, one year`,
+    description: 'NAGP membership, one year',
     amount_cents: tier.price_cents,
     user_id: userId,
     name,

@@ -46,9 +46,12 @@
   NAGP.$$ = (sel, root = document) => [...root.querySelectorAll(sel)];
   NAGP.initials = (name) => String(name || '?').replace(/\(.*?\)/g, '').trim().split(/\s+/).filter(Boolean)
     .map((w) => w[0]).filter((c) => /[A-Za-z]/.test(c)).slice(0, 2).join('').toUpperCase() || '?';
-  NAGP.money = (cents, { free = 'Free' } = {}) => {
+  // Amounts show as "X$" until the Council confirms prices (ORG.showPrices in lib/config.js).
+  // { exact: true } always shows the real amount (used for the donation choices a donor picks).
+  NAGP.money = (cents, { free = 'Free', exact = false } = {}) => {
     const n = Number(cents || 0);
     if (!n) return free;
+    if (!exact && CONFIG.ORG && CONFIG.ORG.showPrices === false) return 'X$';
     return '$' + (n % 100 === 0 ? (n / 100).toLocaleString('en-US') : (n / 100).toLocaleString('en-US', { minimumFractionDigits: 2 }));
   };
   NAGP.specialtyLabel = (key) => (CONFIG.SPECIALTIES || []).find((s) => s.key === key)?.label || key;

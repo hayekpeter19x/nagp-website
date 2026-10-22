@@ -3,16 +3,17 @@ import {
   test, expect, call, uid, PASSWORD, joinMember, orderFromUrl, payDemo, oneYearFromToday, expectAccessOk,
 } from './helpers.js';
 
-test('a new Professional member joins, pays, uses the Members\' Area and is listed publicly @phone', async ({ page }) => {
+test('a practicing professional joins, pays, uses the Members\' Area and is listed publicly @phone', async ({ page }) => {
   const id = uid();
   const name = `Jordan Rivers ${id}`;
   const email = `jordan.${id}@example.com`;
 
   await page.goto('/join');
-  // Step 1: membership type
+  // Step 1: one membership for everyone; they say what best describes them
+  await expect(page.getByText('NAGP membership: $100 per year')).toBeVisible();
   await page.getByRole('button', { name: 'Continue' }).click();
-  await expect(page.getByText('Please choose a type of membership.')).toBeVisible();
-  await page.getByRole('radio', { name: /Professional Member/ }).check();
+  await expect(page.getByText('Please choose what best describes you.')).toBeVisible();
+  await page.getByRole('radio', { name: /Practicing professional/ }).check();
   await page.getByRole('button', { name: 'Continue' }).click();
 
   // Step 2: details (Continue without them shows what is missing)
@@ -41,8 +42,8 @@ test('a new Professional member joins, pays, uses the Members\' Area and is list
 
   // Checkout, then the receipt
   await expect(page).toHaveURL(/\/checkout\?order=ord_/);
-  await expect(page.getByText('$150').first()).toBeVisible();
-  await page.getByRole('button', { name: /^Pay \$150/ }).click();
+  await expect(page.getByText('$100').first()).toBeVisible();
+  await page.getByRole('button', { name: /^Pay \$100/ }).click();
   await expect(page).toHaveURL(/\/payment-complete\?order=ord_/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Thank you!');
   await expect(page.getByText('Welcome to NAGP!')).toBeVisible();
@@ -56,7 +57,7 @@ test('a new Professional member joins, pays, uses the Members\' Area and is list
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('My Profile');
   await expect(page.locator('#acc-name')).toHaveText(name);
   const me = (await call(page, 'GET', '/api/me')).body.user;
-  expect(me).toMatchObject({ status: 'active', tier: 'professional', member_type: 'professional', show_public: true, isMember: true });
+  expect(me).toMatchObject({ status: 'active', tier: 'member', member_type: 'professional', show_public: true, isMember: true });
   expect(me.membership_expires).toBe(oneYearFromToday());
 
   // They opted in, so the public directory lists them
@@ -73,16 +74,32 @@ test('a new Professional member joins, pays, uses the Members\' Area and is list
   await expect(page.getByRole('button', { name: /^Pay/ })).toHaveCount(0);
 });
 
-test('an Associate member does not get the professional questions and is not listed publicly', async ({ page }) => {
-  await page.goto('/join?tier=associate');
-  await expect(page.getByRole('radio', { name: /Associate Member/ })).toBeChecked();
+test('students and others do not get the professional questions and are not listed publicly', async ({ page }) => {
+  await page.goto('/join');
+  for (const type of [/Student or trainee/, /^Other/]) {
+    await page.getByRole('radio', { name: type }).check();
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await expect(page.getByRole('heading', { name: /Your details/ })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /credentials/i })).toHaveCount(0);
+    await expect(page.getByRole('checkbox', { name: /public directory/ })).toHaveCount(0);
+    await page.getByRole('button', { name: 'Back' }).click();
+  }
+  // A practicing professional gets them
+  await page.getByRole('radio', { name: /Practicing professional/ }).check();
   await page.getByRole('button', { name: 'Continue' }).click();
-  await expect(page.getByRole('textbox', { name: /credentials/i })).toHaveCount(0);
-  await expect(page.getByRole('checkbox', { name: /public directory/ })).toHaveCount(0);
+  await expect(page.getByRole('textbox', { name: /credentials/i })).toBeVisible();
+  await expect(page.getByRole('checkbox', { name: /public directory/ })).toBeVisible();
+});
+
+test('the server keeps people who are not practicing professionals out of the public directory', async ({ request }) => {
+  await joinMember(request, { tier: 'student', show_public: true, credentials: 'MA', training: 'x', specialties: ['clinical'] });
+  const me = (await call(request, 'GET', '/api/me')).body.user;
+  expect(me).toMatchObject({ tier: 'member', member_type: 'student', show_public: false, isMember: true });
 });
 
 test('the join form explains problems: a short password, different passwords, an email that is taken', async ({ page }) => {
-  await page.goto('/join?tier=associate');
+  await page.goto('/join');
+  await page.getByRole('radio', { name: /^Other/ }).check();
   await page.getByRole('button', { name: 'Continue' }).click();
   await page.getByRole('textbox', { name: /full name/i }).fill('Pat Example');
   await page.getByRole('textbox', { name: /^Email address/ }).fill('demo.member@nagp-preview.org');
@@ -122,8 +139,8 @@ test('paying twice at the same moment adds only one year', async ({ request }) =
 test('renewing early adds a year to the current end date, and an unfinished renewal is reused', async ({ request }) => {
   await joinMember(request, { tier: 'associate' });
   const first = (await call(request, 'GET', '/api/me')).body.user.membership_expires;
-  const r1 = await call(request, 'POST', '/api/membership/renew', { tier: 'associate' });
-  const r2 = await call(request, 'POST', '/api/membership/renew', { tier: 'associate' });
+  const r1 = await call(request, 'POST', '/api/membership/renew', {});
+  const r2 = await call(request, 'POST', '/api/membership/renew', {});
   expect(r1.status).toBe(200);
   expect(r2.body.order_id).toBe(r1.body.order_id);
   await payDemo(request, orderFromUrl(r1.body.checkout_url));
@@ -145,7 +162,7 @@ test('My Payments shows the receipt of a membership payment', async ({ page }) =
 test('each receipt keeps the end date that payment gave, even after a later renewal', async ({ page }) => {
   const { order: first } = await joinMember(page, { tier: 'associate' });
   const firstEnd = oneYearFromToday();
-  const renew = await call(page, 'POST', '/api/membership/renew', { tier: 'associate' });
+  const renew = await call(page, 'POST', '/api/membership/renew', {});
   const second = orderFromUrl(renew.body.checkout_url);
   await payDemo(page, second);
   const [y, m, d] = firstEnd.split('-');

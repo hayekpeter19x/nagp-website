@@ -28,7 +28,9 @@
   C.longDate = (iso) => (iso ? NAGP.formatDate(iso) : '');
   // "Tuesday, October 20, 2026 at 3:15 PM"
   C.dateTime = (iso) => (iso ? `${NAGP.formatDate(iso)} at ${NAGP.formatTime(iso, undefined, { zone: false })}` : '');
-  C.dollars = (cents) => '$' + (Number(cents || 0) / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  // Shown as "X$" until the Council confirms prices (ORG.showPrices in lib/config.js).
+  C.dollars = (cents) => (NAGP.config.ORG && NAGP.config.ORG.showPrices === false ? 'X$'
+    : '$' + (Number(cents || 0) / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 
   /* ---------- Dialogs ---------- */
   // Opens a <dialog> with a question. Resolves to { ok: true, value } or { ok: false }.

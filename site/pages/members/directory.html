@@ -1,13 +1,7 @@
 <!--meta { "title": "Members Directory", "description": "The members-only directory of NAGP members, by state.", "section": "members", "access": "member", "scripts": ["members-listing.js", "members-directory.js"], "styles": ["members.css"] } -->
-<section class="page-header">
+<section class="section section-first">
   <div class="container">
-    <h1>Members Directory</h1>
-    <p class="lede">Find other NAGP members near you. Only signed-in members can see this directory. It includes professional, associate and student members.</p>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container">
+    <h1 class="visually-hidden">Members Directory</h1>
     <form id="md-filters" class="filters" role="search" aria-label="Search the member directory">
       <div class="field">
         <label for="md-state">State or province</label>
@@ -17,9 +11,9 @@
         <label for="md-type">Type of member</label>
         <select id="md-type" name="type">
           <option value="">All members</option>
-          <option value="professional">Professional members</option>
-          <option value="associate">Associate members</option>
-          <option value="student">Student members</option>
+          <option value="professional">Practicing professionals</option>
+          <option value="student">Students and trainees</option>
+          <option value="associate">Other members</option>
         </select>
       </div>
       <div class="field">
@@ -34,7 +28,5 @@
 
     <p class="results-count" id="md-count" role="status" aria-live="polite"></p>
     <div id="md-results"><p class="loading">Loading the directory…</p></div>
-
-    <p class="muted mt-2">Not listed, or want to change what others see? <a href="/members/profile">Update your profile</a>. Please use this directory only to connect with colleagues, not for advertising or mailing lists.</p>
   </div>
 </section>

@@ -35,13 +35,13 @@ test('a professional turns the public listing off and on again', async ({ page }
   await expect(page.getByRole('heading', { name: new RegExp(name) })).toBeVisible();
 });
 
-test('an associate member cannot be listed publicly, but is in the Members Directory', async ({ page }) => {
+test('a member who is not a practicing professional cannot be listed publicly, but is in the Members Directory', async ({ page }) => {
   const id = uid();
   await joinMember(page, { tier: 'associate', name: `Sam Associate ${id}` });
   await page.goto('/members/profile');
   await expectAccessOk(page);
   await expect(publicCheckbox(page)).toBeDisabled();
-  await expect(page.getByText('This is only for professional members.')).toBeVisible();
+  await expect(page.getByText('This is only for practicing professionals.')).toBeVisible();
 
   const r = await call(page, 'PUT', '/api/me', { show_public: true });
   expect(r.status).toBe(400);
@@ -50,7 +50,7 @@ test('an associate member cannot be listed publicly, but is in the Members Direc
 
   await page.goto(`/members/directory?q=${id}`);
   await expect(page.locator('#md-results').getByRole('heading', { name: new RegExp(id) })).toBeVisible();
-  await expect(page.locator('#md-results').getByText('Associate', { exact: true })).toBeVisible();
+  await expect(page.locator('#md-results').getByText('Member', { exact: true })).toBeVisible();
 });
 
 test('the public directory filters by specialty and state', async ({ page }) => {
@@ -64,9 +64,9 @@ test('the public directory filters by specialty and state', async ({ page }) => 
   expect(coaches.body.practitioners.every((p) => p.specialties.includes('coaching'))).toBe(true);
   await expect(page.locator('#dir-results article')).toHaveCount(coaches.body.practitioners.length);
 
-  await page.getByRole('combobox', { name: /State or province/ }).selectOption('OR');
-  await expect(page).toHaveURL(/state=OR/);
-  await expect(page.locator('#dir-results').getByRole('heading', { name: /Susan Whitfield/ })).toBeVisible();
+  await page.getByRole('combobox', { name: /State or province/ }).selectOption('NY');
+  await expect(page).toHaveURL(/state=NY/);
+  await expect(page.locator('#dir-results').getByRole('heading', { name: /Demo Professional/ })).toBeVisible();
   // Only public fields are sent to visitors
   const { practitioners } = (await call(page, 'GET', '/api/directory')).body;
   for (const p of practitioners) {

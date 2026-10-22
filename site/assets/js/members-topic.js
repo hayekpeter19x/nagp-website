@@ -1,10 +1,10 @@
-// /members/topic?id=N: one board topic with its replies, a reply form, and "Report" for each post.
+// /members/topic?id=N: one board topic with its replies and a reply form.
+// Council members also get "Hide this post" / "Show it again" under each post.
 (function () {
   const { $, api, html } = NAGP;
   const id = NAGP.qs('id');
   const thread = $('#thread');
-  const dialog = $('#report-dialog');
-  const reportForm = $('#report-form');
+  const status = $('#topic-status');
   let council = false;
 
   function when(iso) {
@@ -16,12 +16,6 @@
     return p.mine ? 'Your post' : 'Name hidden';
   }
 
-  function reportControl(p) {
-    if (p.mine || p.hidden) return '';
-    if (p.reported_by_me) return html`<span>You reported this post. Thank you.</span>`;
-    return html`<button type="button" class="link-button" data-report="${p.id}">Report this post</button>`;
-  }
-
   function post(p, first) {
     const concealed = p.hidden && !council;
     return html`<article class="post${first ? ' post-first' : ''}${p.hidden ? ' post-hidden' : ''}" id="post-${p.id}"
@@ -30,14 +24,14 @@
         <div class="avatar" aria-hidden="true">${concealed ? '–' : NAGP.initials(p.author_name)}</div>
         <div><span class="post-author">${author(p)}</span><span class="post-when">${when(p.created_at)}</span></div>
         <div class="post-badges">${NAGP.sampleBadge(p)}
-          ${council && p.hidden ? html`<span class="badge badge-danger">Hidden</span>` : ''}
-          ${council && p.reports ? html`<span class="badge badge-warning">Reported ${p.reports === 1 ? 'once' : `${p.reports} times`}</span>` : ''}</div>
+          ${council && p.hidden ? html`<span class="badge badge-danger">Hidden</span>` : ''}</div>
       </header>
       ${council && p.hidden ? html`<div class="council-note"><p><strong>For the Council:</strong> this post is hidden. Members see only
         “This post was hidden by the Council…”.${p.hidden_reason ? html` Reason: ${p.hidden_reason}` : ''}</p></div>` : ''}
       <div class="post-body${concealed ? ' post-placeholder' : ''}">${NAGP.paragraphs(p.body)}</div>
-      <footer class="post-footer">${reportControl(p)}
-        ${council && (p.hidden || p.reports) ? html`<a href="/council/approvals#reports">Manage this in the Council Area</a>` : ''}</footer>
+      ${council ? html`<footer class="post-footer">${p.hidden
+        ? html`<button type="button" class="link-button" data-moderate="unhide" data-post="${p.id}">Show this post again</button>`
+        : html`<button type="button" class="link-button" data-moderate="hide" data-post="${p.id}">Hide this post</button>`}</footer>` : ''}
     </article>`;
   }
 
@@ -66,35 +60,30 @@
     }
   }
 
-  // ----- Report dialog -----
-  function openReport(postId) {
-    reportForm.reset();
-    NAGP.clearErrors(reportForm);
-    reportForm.elements.namedItem('post_id').value = postId;
-    reportForm.querySelector('[type="submit"]').hidden = false;
-    reportForm.querySelector('[data-close]').textContent = 'Cancel';
-    dialog.showModal();
-    $('#report-reason').focus();
-  }
-  dialog.querySelector('[data-close]').addEventListener('click', () => dialog.close());
-  thread.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-report]');
-    if (btn) openReport(btn.dataset.report);
+  // Council only: hide a post (members then see a short note instead), or show it again.
+  thread.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-moderate]');
+    if (!btn) return;
+    let body = { action: 'unhide' };
+    if (btn.dataset.moderate === 'hide') {
+      const r = await Council.ask({
+        title: 'Hide this post?',
+        message: 'Members will see a short note that the post was hidden by the Council, without its text or the author\'s name. You can show it again at any time.',
+        input: { label: 'Reason', hint: 'For the Council\'s records only. Members do not see it.' },
+        confirm: 'Hide the post',
+        cancel: 'Go back',
+      });
+      if (!r.ok) return;
+      body = { action: 'hide', reason: r.value };
+    }
+    const res = await Council.run(btn, status, () => api(`/api/council/board/${btn.dataset.post}`, { method: 'POST', body }), 'Saving…');
+    if (!res) return;
+    await load();
+    Council.say(status, 'success', res.message);
   });
 
   NAGP.whenAllowed().then(({ user }) => {
     council = !!user.isCouncil;
-
-    NAGP.form(reportForm, {
-      reset: false,
-      onSubmit: async (data) => {
-        await api(`/api/board/${encodeURIComponent(data.post_id)}/report`, { method: 'POST', body: { reason: data.reason } });
-        reportForm.querySelector('[type="submit"]').hidden = true;
-        reportForm.querySelector('[data-close]').textContent = 'Close';
-        load();
-      },
-      success: 'Thank you. Your report was sent to the Council. They will read the post and decide what to do. You can close this box now.',
-    });
 
     NAGP.form($('#reply-form'), {
       busyText: 'Posting…',
