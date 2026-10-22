@@ -64,9 +64,9 @@ test('the public directory filters by specialty and state', async ({ page }) => 
   expect(coaches.body.practitioners.every((p) => p.specialties.includes('coaching'))).toBe(true);
   await expect(page.locator('#dir-results article')).toHaveCount(coaches.body.practitioners.length);
 
-  await page.getByRole('combobox', { name: /State or province/ }).selectOption('OR');
-  await expect(page).toHaveURL(/state=OR/);
-  await expect(page.locator('#dir-results').getByRole('heading', { name: /Susan Whitfield/ })).toBeVisible();
+  await page.getByRole('combobox', { name: /State or province/ }).selectOption('NY');
+  await expect(page).toHaveURL(/state=NY/);
+  await expect(page.locator('#dir-results').getByRole('heading', { name: /Demo Professional/ })).toBeVisible();
   // Only public fields are sent to visitors
   const { practitioners } = (await call(page, 'GET', '/api/directory')).body;
   for (const p of practitioners) {

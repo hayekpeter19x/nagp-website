@@ -111,14 +111,13 @@ test('spreadsheet downloads are CSV files', async ({ page, request }) => {
   expect(members).toContain('demo.member@nagp-preview.org');
   expect(members).not.toMatch(/pbkdf2/);
 
-  // In the browser the link downloads a file
+  // The Members page starts with the search, and no longer has a download link
   await signInAs(page, 'council');
   await page.goto('/council/members');
-  const [download] = await Promise.all([
-    page.waitForEvent('download'),
-    page.getByRole('link', { name: /Download as spreadsheet/ }).click(),
-  ]);
-  expect(download.suggestedFilename()).toMatch(/^nagp-members-\d{4}-\d{2}-\d{2}\.csv$/);
+  await expect(page.getByRole('searchbox', { name: 'Search' })).toBeVisible();
+  await expect(page.getByText('Everyone who has an account on the website.')).toHaveCount(0);
+  await expect(page.getByRole('link', { name: /Download as spreadsheet/ })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Add a member by hand' })).toBeVisible();
 });
 
 test('the Council dashboard counts what needs attention', async ({ page, request }) => {

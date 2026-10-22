@@ -26,7 +26,7 @@ site/assets/js/app.js        shared browser helpers (window.NAGP)
 site/assets/js/<page>.js     one script per page that needs one
 lib/config.js      org name, the membership and its price, member types, specialties, states  (also sent to the browser)
 lib/schema.js      database tables
-lib/seed.js        sample data for the preview (every row has sample = 1)
+lib/seed.js        sample data for the preview (every row has sample = 1): three demo accounts, two events, two board topics
 lib/http.js        json(), HttpError, validate(), requireUser()
 lib/auth.js        passwords, sessions, cookies
 lib/db.js          all(), first(), run(), randomId()

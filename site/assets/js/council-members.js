@@ -38,12 +38,6 @@
     return { q: f.q.value.trim(), status: f.status.value, role: f.role.value };
   }
 
-  function updateCsvLink() {
-    const p = new URLSearchParams({ format: 'csv' });
-    for (const [k, v] of Object.entries(filters())) if (v) p.set(k, v);
-    $('#csv-link').href = '/api/council/members?' + p.toString();
-  }
-
   function untilCell(m) {
     if (!m.membership_expires) return html`<span class="muted">Not set</span>`;
     return m.expired ? html`${NAGP.formatShortDate(m.membership_expires)}<span class="cell-sub">Ended, not renewed</span>` : NAGP.formatShortDate(m.membership_expires);
@@ -89,7 +83,6 @@
   let timer = null;
   let requestNo = 0;
   async function load() {
-    updateCsvLink();
     const n = ++requestNo;
     try {
       const data = await api('/api/council/members', { query: filters() });

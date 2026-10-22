@@ -1,20 +1,7 @@
 <!--meta { "title": "Members", "description": "Look after NAGP members: status, dates, roles and passwords.", "section": "council", "access": "council", "scripts": ["council-common.js", "council-members.js"], "styles": ["council.css"], "noindex": true } -->
-<section class="page-header">
+<section class="section section-first">
   <div class="container">
-    <h1>Members</h1>
-    <p class="lede">Everyone who has an account on the website. Choose "Edit" to change someone's membership or set a new password for someone who forgot theirs.</p>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container">
-    <div class="toolbar">
-      <div class="actions">
-        <button class="btn btn-large" type="button" id="open-add">Add a member by hand</button>
-        <a class="btn btn-secondary btn-large" id="csv-link" href="/api/council/members?format=csv">Download as spreadsheet (CSV)</a>
-      </div>
-    </div>
-
+    <h1 class="visually-hidden">Members</h1>
     <form class="filters" id="member-filters" role="search">
       <div class="field">
         <label for="f-q">Search</label>
@@ -44,6 +31,8 @@
 
     <div id="page-status" class="form-status" role="status" aria-live="polite"></div>
     <div id="member-list" aria-live="polite"><p class="loading">Loading members…</p></div>
+
+    <p class="mt-2"><button class="btn btn-secondary" type="button" id="open-add">Add a member by hand</button></p>
   </div>
 </section>
 

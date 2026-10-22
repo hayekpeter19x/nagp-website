@@ -63,9 +63,11 @@ test('a member registers for a free event @phone', async ({ page, playwright }) 
 });
 
 test('a member sees the member price, pays it, and the place is confirmed @phone', async ({ page, playwright }) => {
+  const council = await person(playwright, 'council');
+  const ev = await createEvent(council, { title: `Presentation: Gestalt in Organizations ${uid()}`, price_member: '20', price_public: '35' });
+  await council.dispose();
   await joinMember(page, { tier: 'associate' });
   const me = (await call(page, 'GET', '/api/me')).body.user;
-  const ev = await sampleEvent(page, 'Presentation: Gestalt in Organizations');
   expect(ev.price_member_cents).toBe(2000);
 
   await page.goto(`/event?id=${ev.id}`);
@@ -89,9 +91,11 @@ test('a member sees the member price, pays it, and the place is confirmed @phone
   await expect(page.getByRole('link', { name: ev.title, exact: true })).toBeVisible();
 });
 
-test('members can register for a members-only salon', async ({ page }) => {
+test('members can register for a members-only salon', async ({ page, playwright }) => {
+  const council = await person(playwright, 'council');
+  const ev = await createEvent(council, { title: `Members-only Salon ${uid()}`, members_only: true });
+  await council.dispose();
   await joinMember(page, { tier: 'student' });
-  const ev = await sampleEvent(page, 'Members-only Salon');
   await page.goto(`/event?id=${ev.id}`);
   await page.getByRole('button', { name: /Register/ }).click();
   await expect(page.getByText("You're registered!")).toBeVisible();
