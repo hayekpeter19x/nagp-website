@@ -1,0 +1,22 @@
+/* The thin bar at the top of each style preview (/styles/...). It is not part of any style. */
+.style-bar {
+  background: #fbf3d9;
+  color: #3d3420;
+  border-bottom: 1px solid #eadfb8;
+  font: 1rem/1.45 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+.style-bar-inner {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: .55rem 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .4rem 1.5rem;
+}
+.style-bar p { margin: 0; }
+.style-bar ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .3rem 1.1rem; }
+.style-bar a { color: #3d3420; font-weight: 700; text-underline-offset: .2em; }
+.style-bar a[aria-current="page"] { text-decoration: none; background: #3d3420; color: #fbf3d9; padding: .1rem .55rem; border-radius: 4px; }
+.style-bar a:focus-visible { outline: 3px solid #0b57d0; outline-offset: 2px; }

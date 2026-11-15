@@ -73,8 +73,8 @@ function hashDir(dirs) {
 }
 
 // "/about.html" -> "/about", "/members/index.html" -> "/members/"
-function urlPathFor(file) {
-  const rel = '/' + relative(join(SITE, 'pages'), file).split('\\').join('/');
+function urlPathFor(file, base = join(SITE, 'pages')) {
+  const rel = '/' + relative(base, file).split('\\').join('/');
   if (rel.endsWith('/index.html')) return rel.slice(0, -'index.html'.length);
   return rel.replace(/\.html$/, '');
 }
@@ -117,6 +117,10 @@ async function build() {
 
   const pages = walk(join(SITE, 'pages')).filter((f) => f.endsWith('.html'));
   const built = new Set();
+  // Hand-made pages in site/static (for example the style previews in /styles/) are valid link targets too.
+  if (existsSync(join(SITE, 'static'))) {
+    for (const f of walk(join(SITE, 'static')).filter((x) => x.endsWith('.html'))) built.add(urlPathFor(f, join(SITE, 'static')));
+  }
   const problems = [];
   for (const file of pages) {
     let src = readFileSync(file, 'utf8');

@@ -21,7 +21,9 @@ const PAGES = walk(DIST).filter((f) => f.endsWith('.html')).sort().map((file) =>
   const path = rel.endsWith('/index.html') ? rel.slice(0, -'index.html'.length) : rel.replace(/\.html$/, '');
   const html = readFileSync(file, 'utf8');
   const access = (html.match(/<body[^>]*data-access="(\w+)"/) || html.match(/<!--meta[^>]*"access":\s*"(\w+)"/) || [])[1] || 'public';
-  return { path, access };
+  // Hand-made pages from site/static (such as the style previews in /styles/) do not load app.js.
+  const usesApp = html.includes('/assets/js/app.js') || DIST === 'site/pages';
+  return { path, access, usesApp };
 });
 
 // Gated pages may log the 401/403 of an API call they make before access is known
@@ -36,14 +38,14 @@ test('the build has pages to check @phone', () => {
   expect(PAGES.length).toBeGreaterThan(30);
 });
 
-for (const { path, access } of PAGES) {
+for (const { path, access, usesApp } of PAGES) {
   const notFound = path === '/404';
   test(`${path} loads signed out @phone`, async ({ page }) => {
     const errors = collectErrors(page);
     const url = notFound ? '/this-page-does-not-exist' : path;
     const res = await page.goto(url);
     expect(res.status()).toBe(notFound ? 404 : 200);
-    await settled(page);
+    if (usesApp) await settled(page);
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
     if (access !== 'public') await expect(page.getByRole('heading', { level: 1 })).toHaveText('Please sign in');
     const unexpected = errors.filter((e) => !((access !== 'public' || notFound) && resourceError.test(e)));
