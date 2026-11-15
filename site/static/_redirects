@@ -13,3 +13,7 @@
 /index.php/2026/*          /announcements  301
 /members/   /members/profile   302
 /members    /members/profile   302
+# The first "Style 2" preview was replaced by "Patchwork"
+/styles/figure-ground        /styles/patchwork/        301
+/styles/figure-ground/       /styles/patchwork/        301
+/styles/figure-ground/about  /styles/patchwork/about   301
