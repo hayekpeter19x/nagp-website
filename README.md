@@ -25,6 +25,7 @@ While the Council reviews the site:
 - The sign-in page has one-click buttons: **Try it as a member** and **Try it as a Council member**.
 - Payments are **simulated**. No real money moves.
 - Made-up examples (members, events, posts) show a **Sample** tag. Demo and sample accounts use the password `nagp-preview`.
+- **`/styles/`** compares the current look with two other styles the Council can choose from: **Dawn** and **The Circle** (Home and About us only). They are hand-made pages in `site/static/styles/`, each with its own stylesheet and fonts, and are not linked from the menus. Once the Council chooses, the chosen look is applied to the whole site and these previews can be deleted.
 
 ## Run it on your computer
 
